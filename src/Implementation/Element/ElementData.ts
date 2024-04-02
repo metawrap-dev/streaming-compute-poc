@@ -7,6 +7,7 @@ import { type IElement } from '../../Design/IElement.js'
  */
 export class ElementData implements IElement {
   /**
+   * The type of an element
    * @type {ElementType}
    * @readonly
    */

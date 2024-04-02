@@ -47,16 +47,19 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
     console.log('ComputeMultiply:input ', input)
     console.log('ComputeMultiply:rest ', rest)
 
+    // How many arguments did we get?
+    const args = arguments.length
+
     // Is this a data-source?
-    if (isOneSourceParameter<number>(input, rest)) {
+    if (isOneSourceParameter<number>(args, input, rest)) {
       // Yes it is. We can use it directly.
       console.log('ComputeMultiply: Source passed')
       this.Inputs = input
-    } else if (isOneParameter<number>(input) && isParameters<number>(rest)) {
+    } else if (isParameters<number>(args, rest)) {
       // Is it multiple parameters?
       console.log('ComputeMultiply: Parameters passed')
       this.Inputs = new SourceMemory<number>(input, ...rest)
-    } else if (isOneParameter<number>(input)) {
+    } else if (isOneParameter<number>(args, input)) {
       // Is it just a single parameter
       console.log('ComputeMultiply: One parameter passed')
       this.Inputs = new SourceMemory<number>(input)

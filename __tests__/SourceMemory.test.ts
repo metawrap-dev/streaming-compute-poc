@@ -8,7 +8,7 @@ describe('SourceMemory', () => {
   afterAll(() => {})
 
   it('should initialize with primitive parameters', async () => {
-    const a = new SourceMemory(1, 2, 3, 4)
+    const a = new SourceMemory<number>(1, 2, 3, 4)
 
     expect(() => a.Data).toThrow(Error)
 
@@ -54,7 +54,7 @@ describe('SourceMemory', () => {
   })
 
   it('should initialize with hybrid parameters', async () => {
-    const a = new SourceMemory(new DataNumber(1), 2, new DataNumber(3), 4)
+    const a = new SourceMemory<number>(new DataNumber(1), 2, new DataNumber(3), 4)
 
     expect(() => a.Data).toThrow(Error)
 
@@ -100,7 +100,7 @@ describe('SourceMemory', () => {
   })
 
   it('should be able to chain sources', async () => {
-    const a = new SourceMemory(new SourceMemory(1, 2, 3, 4))
+    const a = new SourceMemory<number>(new SourceMemory<number>(1, 2, 3, 4))
 
     expect(() => a.Data).toThrow(Error)
 
@@ -147,7 +147,7 @@ describe('SourceMemory', () => {
     expect(() => a.Data).not.toThrow(Error)
   })
 
-  it('should be able to batch sources', async () => {
+  it('should be able to batch sources and imply type', async () => {
     const a = new SourceMemory(new SourceMemory(1, 2, 3, 4))
 
     a.setBatchSize(2)
@@ -182,5 +182,4 @@ describe('SourceMemory', () => {
 
     expect(() => a.Data).not.toThrow(Error)
   })
-
 })

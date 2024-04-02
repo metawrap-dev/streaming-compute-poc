@@ -26,6 +26,11 @@ export enum ElementType {
    * Can compute.
    */
   Compute,
+
+  /**
+   * Is a destination stream for data.
+   */
+  Destination,
 }
 
 /**
@@ -39,28 +44,49 @@ export function isNotUndefined(object: unknown): object is object {
 
 /**
  * Type guard method to check if the a single source parameter.
+ * @param {number} args The arguments global from the scope of the calling method.
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-export function isOneSourceParameter<T>(object: unknown, rest: unknown): object is ISource<T> {
-  return isNotUndefined(object) && (object as ISource<T>).Type === ElementType.Source && !isParameters<T>(rest)
+export function isOneSourceParameter<T>(args: number, object: unknown, rest: unknown): object is ISource<T> {
+  return isSource(object) && !isParameters<T>(args, rest)
+}
+
+/**
+ * Type guard method to check if the object is a source
+ * @param {unknown} object The object to identify.
+ * @returns {boolean} True if the object is a source.
+ */
+export function isSource<T>(object: unknown): object is ISource<T> {
+  return isNotUndefined(object) && (object as ISource<T>).Type === ElementType.Source
 }
 
 /**
  * Type guard method to check if the object is a single parameter
+ * @param {number} args The arguments global from the scope of the calling method.
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-export function isOneParameter<T>(object: unknown): object is T | IData<T> {
-  return isNotUndefined(object)
+export function isOneParameter<T>(args: number, object: unknown): object is T | IData<T> {
+  return args === 1 && isNotUndefined(object)
 }
 
 /**
  * Type guard method to check if the object is a set of parameters
+ * @param {number} args The arguments global from the scope of the calling method.
  * @param {unknown} object The object to identify.
  * @returns {boolean}
  */
-export function isParameters<T>(object: unknown): object is (IData<T> | T)[] {
+export function isParameters<T>(args: number, object: unknown): object is (IData<T> | T)[] {
+  return args > 1 && isNotUndefined(object) && Array.isArray(object) && object.length > 0
+}
+
+/**
+ * Type guard method to check if the object is an array of values.
+ * @param {unknown} object The object to identify.
+ * @returns {boolean}
+ */
+export function isDataArray<T>(object: unknown): object is (IData<T> | T)[] {
   return isNotUndefined(object) && Array.isArray(object) && object.length > 0
 }
 

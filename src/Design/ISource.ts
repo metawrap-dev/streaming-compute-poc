@@ -1,4 +1,4 @@
-import { type IDataWithoutIElement } from './IDataWithoutType.js'
+import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
@@ -9,7 +9,7 @@ import { type IResolvable } from './IResolvable.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T> extends IDescribable, IResolvable<T[]>, IDataWithoutIElement<T[]>, IElement {
+export interface ISource<T> extends IDescribable, IResolvable<T[]>, IData<T[]>, IElement {
   /**
    * How many to read at once when we are consuming the data.
    * @type {number}

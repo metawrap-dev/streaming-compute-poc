@@ -88,5 +88,4 @@ describe('ComputeMultiply', () => {
 
     expect(m.Data).toBe(10000)
   })
-  
 })

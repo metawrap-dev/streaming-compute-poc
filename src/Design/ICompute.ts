@@ -1,5 +1,4 @@
 import { type IData } from './IData.js'
-import { type IDataWithoutIElement } from './IDataWithoutType.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
@@ -13,7 +12,7 @@ import { type ISource } from './ISource.js'
  * @author James McParlane
  * @interface
  */
-export interface ICompute<I, O> extends IDescribable, IResolvable<O>, IDataWithoutIElement<O>, IElement {
+export interface ICompute<I, O> extends IDescribable, IResolvable<O>, IData<O>, IElement {
   /**
    * Inputs for the computation.
    * @type {ISource<I>}

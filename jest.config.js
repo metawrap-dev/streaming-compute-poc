@@ -4,7 +4,7 @@ export default {
   detectOpenHandles: true,
   preset: 'ts-jest/presets/default-esm',
   transform: {
-    '^.+\\.m?[tj]s?$': ['ts-jest', { useESM: true }]
+    '^src/.+\\.m?[tj]s?$': ['ts-jest', { useESM: true }]
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.(m)?js$': '$1'

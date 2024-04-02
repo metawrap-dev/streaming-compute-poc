@@ -2,14 +2,14 @@ import { ElementType } from '../../Design/ElementType.js'
 import { type IElement } from '../../Design/IElement.js'
 
 /**
- * Source Element: A source of multiple data elements.
+ * Destination Element: A destination for multiple data elements.
  * @class
  */
-export class ElementSource implements IElement {
+export class ElementDestination implements IElement {
   /**
    * The type of an element
    * @type {ElementType}
    * @readonly
    */
-  readonly Type: ElementType = ElementType.Source
+  readonly Type: ElementType = ElementType.Destination
 }
