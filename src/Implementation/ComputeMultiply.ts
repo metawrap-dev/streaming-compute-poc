@@ -3,7 +3,7 @@ import { type IData } from '../Design/IData.js'
 import { DataNumber } from './DataNumber.js'
 
 /**
- * This can multiply two numbers together
+ * This can multiply numbers together
  *
  * @author James McParlane
  * @interface
