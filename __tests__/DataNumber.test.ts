@@ -1,6 +1,7 @@
-import { DataNumber } from '../Implementation/DataNumber.js'
+import { DataNumber } from "../src/Implementation/Data/DataNumber.js"
 
-describe('greeter function', () => {
+
+describe('NumberData', () => {
   // Act before assertions
   beforeAll(async () => {})
 
@@ -16,15 +17,15 @@ describe('greeter function', () => {
     expect(await number.resolve()).toBe(123)
   })
 
-  it('A number can be unresolved ans set', async () => {
+  it('A number can be unresolved and set', async () => {
     const number = new DataNumber()
+
+    await expect(async () => number.Data).rejects.toThrow(Error)
 
     expect(number.Resolved).toBe(false)
 
     expect(number.toString()).toBe('unresolved')
-
-    await expect(async () => number.Data).rejects.toThrow(Error)
-
+    
     number.set(123)
 
     expect(number.Resolved).toBe(true)
@@ -33,6 +34,6 @@ describe('greeter function', () => {
 
     expect(await number.resolve()).toBe(123)
 
-    expect(number.toString()).toBe('123')
+    expect(number.toString()).toBe("{DataNumber <= 123}")
   })
 })

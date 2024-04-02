@@ -1,6 +1,6 @@
 /**
  * Something that can be set with a value.
- * 
+ *
  * @todo: Do we want to keep this to concrete types?
  *
  * @author James McParlane

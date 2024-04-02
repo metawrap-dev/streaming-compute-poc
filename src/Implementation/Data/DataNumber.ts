@@ -1,11 +1,12 @@
-import { type IData } from '../Design/IData.js'
-import { type ISettable } from '../Design/ISettable.js'
+import { type IData } from '../../Design/IData.js'
+import { type ISettable } from '../../Design/ISettable.js'
+import { ElementData } from '../Element/ElementData.js'
 
 /**
  * A "simple" number.
  * @class
  */
-export class DataNumber implements IData<number>, ISettable<number> {
+export class DataNumber extends ElementData implements IData<number>, ISettable<number> {
   /**
    * The value of the number.
    * @type {number | undefined}
@@ -30,6 +31,7 @@ export class DataNumber implements IData<number>, ISettable<number> {
    * @param {number} number The value of the number.
    */
   constructor(number?: number) {
+    super()
     this.#Number = number
     this.#Resolved = number !== undefined
   }
@@ -56,7 +58,7 @@ export class DataNumber implements IData<number>, ISettable<number> {
    */
   toString(): string {
     if (this.Resolved) {
-      return this.#Number.toString()
+      return `{DataNumber <= ${this.#Number.toString()}}`
     } else {
       return 'unresolved'
     }

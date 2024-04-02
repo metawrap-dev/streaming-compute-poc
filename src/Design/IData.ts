@@ -1,4 +1,5 @@
 import { type IDescribable } from './IDescribable.js'
+import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
 
 /**
@@ -7,7 +8,7 @@ import { type IResolvable } from './IResolvable.js'
  * @author James McParlane
  * @interface
  */
-export interface IData<T> extends IDescribable, IResolvable<T> {
+export interface IData<T> extends IDescribable, IResolvable<T>, IElement {
   /**
    * The actual data.
    * @type {T}

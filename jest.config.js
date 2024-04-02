@@ -6,10 +6,10 @@ export default {
   transform: {
     '^.+\\.m?[tj]s?$': ['ts-jest', { useESM: true }]
   },
-  moduleNameMapper: {    
+  moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.(m)?js$': '$1'
   },
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(m)?ts$',  
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(m)?ts$',
 
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['json', 'lcov', 'text', 'clover', 'cobertura'],
