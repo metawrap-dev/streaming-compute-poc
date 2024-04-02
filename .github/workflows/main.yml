@@ -5,29 +5,16 @@ on: [push, pull_request]
 jobs: 
   build_and_test: 
     runs-on: ubuntu-22.04
-
+      
     steps:
 
     - uses: actions/checkout@v4 
     - uses: actions/setup-node@v3 
       with: 
-        node-version: '20'
-
-    - name: Install `binutils` 
-      run: sudo apt-get install -y binutils
-
-    - name: Add BookWorm  
-      run: |
-        gpg --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 &&
-        gpg --keyserver keyserver.ubuntu.com --recv-keys 6ED0E7B82643E131 &&
-        gpg --keyserver keyserver.ubuntu.com --recv-keys F8D2585B8783D481 &&
-        gpg --export 0E98404D386FA1D9 > /usr/share/keyrings/debian-bookworm-archive-keyring.gpg &&
-        gpg --export 6ED0E7B82643E131 >> /usr/share/keyrings/debian-bookworm-archive-keyring.gpg &&
-        gpg --export F8D2585B8783D481 >> /usr/share/keyrings/debian-bookworm-archive-keyring.gpg &&
-        echo "deb [signed-by=/usr/share/keyrings/debian-bookworm-archive-keyring.gpg] http://deb.debian.org/debian bookworm main" | sudo tee -a /etc/apt/sources.list > /dev/null
-
+        node-version: 20.x
+  
     - name: npm install 
-      run: npm install 
+      run: npm install       
     - name: run build
       run: npm run build
     - name: Run Tests 
