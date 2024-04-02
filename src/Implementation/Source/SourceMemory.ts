@@ -62,15 +62,21 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
 
     // Is this a data-source?
     if (isOneSourceParameter<T>(input, rest)) {
+      // Yes it is. We can use it directly.
       console.log('SourceMemory: Source passed')
       this.#Source = input
     } else if (isOneParameter<T>(input) && isParameters<T>(rest)) {
+      // Is it multiple parameters?
       console.log('SourceMemory: Parameters passed')
       this.#Data.push(input)
       this.#Data.push(...rest)
-    } else {
+    } else if (isOneParameter<T>(input)) {
+      // Is it just a single parameter
       console.log('SourceMemory: One parameter passed')
       this.#Data.push(input)
+    } else {
+      // Not a combination we can handle.
+      throw new Error(`SourceMemory: Invalid parameters`)
     }
   }
 

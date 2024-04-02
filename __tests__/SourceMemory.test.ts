@@ -182,4 +182,5 @@ describe('SourceMemory', () => {
 
     expect(() => a.Data).not.toThrow(Error)
   })
+
 })

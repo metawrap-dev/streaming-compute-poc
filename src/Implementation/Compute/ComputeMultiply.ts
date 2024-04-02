@@ -49,14 +49,20 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
 
     // Is this a data-source?
     if (isOneSourceParameter<number>(input, rest)) {
+      // Yes it is. We can use it directly.
       console.log('ComputeMultiply: Source passed')
       this.Inputs = input
     } else if (isOneParameter<number>(input) && isParameters<number>(rest)) {
+      // Is it multiple parameters?
       console.log('ComputeMultiply: Parameters passed')
       this.Inputs = new SourceMemory<number>(input, ...rest)
-    } else {
+    } else if (isOneParameter<number>(input)) {
+      // Is it just a single parameter
       console.log('ComputeMultiply: One parameter passed')
       this.Inputs = new SourceMemory<number>(input)
+    } else {
+      // Not a combination we can handle.
+      throw new Error(`ComputeMultiply: Invalid parameters`)
     }
   }
 
