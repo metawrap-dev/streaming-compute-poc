@@ -8,7 +8,6 @@ describe('ComputeMultiply', () => {
 
   afterAll(() => {})
 
-  // eslint-disable-next-line jest/no-focused-tests
   it('One Primitive Parameter', async () => {
     const m = new ComputeMultiply(10)
 
@@ -23,7 +22,6 @@ describe('ComputeMultiply', () => {
     expect(m.Data).toBe(10)
   })
 
-  // eslint-disable-next-line jest/no-focused-tests
   it('One Parameter', async () => {
     const a = new DataNumber(10)
 
@@ -40,7 +38,6 @@ describe('ComputeMultiply', () => {
     expect(m.Data).toBe(10)
   })
 
-  // eslint-disable-next-line jest/no-focused-tests
   it('Two Mixed Parameters', async () => {
     const a = new DataNumber(10)
 

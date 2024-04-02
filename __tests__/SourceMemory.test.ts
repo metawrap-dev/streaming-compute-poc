@@ -7,7 +7,6 @@ describe('SourceMemory', () => {
 
   afterAll(() => {})
 
-  // eslint-disable-next-line jest/expect-expect
   it('should initialize with primitive parameters', async () => {
     const a = new SourceMemory(1, 2, 3, 4)
 
@@ -54,7 +53,6 @@ describe('SourceMemory', () => {
     expect(() => a.Data).not.toThrow(Error)
   })
 
-  // eslint-disable-next-line jest/expect-expect, jest/no-focused-tests
   it('should initialize with hybrid parameters', async () => {
     const a = new SourceMemory(new DataNumber(1), 2, new DataNumber(3), 4)
 
@@ -101,7 +99,6 @@ describe('SourceMemory', () => {
     expect(() => a.Data).not.toThrow(Error)
   })
 
-  // eslint-disable-next-line jest/expect-expect, jest/no-focused-tests, jest/no-disabled-tests
   it('should be able to chain sources', async () => {
     const a = new SourceMemory(new SourceMemory(1, 2, 3, 4))
 
@@ -150,8 +147,7 @@ describe('SourceMemory', () => {
     expect(() => a.Data).not.toThrow(Error)
   })
 
-   // eslint-disable-next-line jest/expect-expect, jest/no-focused-tests, jest/no-disabled-tests
-   it('should be able to batch sources', async () => {
+  it('should be able to batch sources', async () => {
     const a = new SourceMemory(new SourceMemory(1, 2, 3, 4))
 
     a.setBatchSize(2)
@@ -172,13 +168,13 @@ describe('SourceMemory', () => {
 
     const d1 = await a.resolve()
 
-    expect(d1).toEqual([1,2])
+    expect(d1).toEqual([1, 2])
 
     expect(a.Empty).toBe(false)
 
     const d2 = await a.resolve()
 
-    expect(d2).toEqual([3,4])
+    expect(d2).toEqual([3, 4])
 
     expect(a.Empty).toBe(true)
 
