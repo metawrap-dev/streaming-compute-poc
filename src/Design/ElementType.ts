@@ -6,6 +6,8 @@ import { type ISource } from './ISource.js'
 /**
  * The type of the element.
  *
+ * This is used to check types of elements.
+ *
  * @author James McParlane
  * @enum
  */
@@ -36,7 +38,7 @@ export function isNotUndefined(object: unknown): object is object {
 }
 
 /**
- * Type guard method to check if the object is a source.
+ * Type guard method to check if the a single source parameter.
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */

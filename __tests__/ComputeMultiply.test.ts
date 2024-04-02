@@ -1,7 +1,6 @@
-import { ComputeMultiply } from "../src/Implementation/Compute/ComputeMultiply.js"
-import { DataNumber } from "../src/Implementation/Data/DataNumber.js"
-import { SourceMemory } from "../src/Implementation/Source/SourceMemory.js"
-
+import { ComputeMultiply } from '../src/Implementation/Compute/ComputeMultiply.js'
+import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeMultiply', () => {
   // Act before assertions
@@ -11,7 +10,6 @@ describe('ComputeMultiply', () => {
 
   // eslint-disable-next-line jest/no-focused-tests
   it('One Primitive Parameter', async () => {
-        
     const m = new ComputeMultiply(10)
 
     console.log(m.toString())
@@ -23,13 +21,10 @@ describe('ComputeMultiply', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(10)
-  
   })
-
 
   // eslint-disable-next-line jest/no-focused-tests
   it('One Parameter', async () => {
-    
     const a = new DataNumber(10)
 
     const m = new ComputeMultiply(a)
@@ -43,12 +38,10 @@ describe('ComputeMultiply', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(10)
-  
   })
 
   // eslint-disable-next-line jest/no-focused-tests
   it('Two Mixed Parameters', async () => {
-    
     const a = new DataNumber(10)
 
     const m = new ComputeMultiply(a, 10)
@@ -62,19 +55,15 @@ describe('ComputeMultiply', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(100)
-  
   })
 
-
-
-  it('Composite multiplication', async () => {
-    
+  it('Composite Multiplication', async () => {
     const a = new DataNumber(10)
     const b = new DataNumber(10)
     const c = new DataNumber(10)
     const d = new DataNumber(10)
 
-    const m = new ComputeMultiply(a, b, new ComputeMultiply(c, d))    
+    const m = new ComputeMultiply(a, b, new ComputeMultiply(c, d))
 
     console.log(m.toString())
 
@@ -85,14 +74,12 @@ describe('ComputeMultiply', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(10000)
-  
   })
 
-  it('Multiply from datasource', async () => {
-    
-    const a = new SourceMemory(10,10,10,10)
+  it('Multiply From Source', async () => {
+    const a = new SourceMemory(10, 10, 10, 10)
 
-    const m = new ComputeMultiply(a)    
+    const m = new ComputeMultiply(a)
 
     console.log(m.toString())
 
@@ -103,6 +90,5 @@ describe('ComputeMultiply', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(10000)
-  
   })
 })

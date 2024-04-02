@@ -1,5 +1,4 @@
-import { DataNumber } from "../src/Implementation/Data/DataNumber.js"
-
+import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 
 describe('NumberData', () => {
   // Act before assertions
@@ -25,7 +24,7 @@ describe('NumberData', () => {
     expect(number.Resolved).toBe(false)
 
     expect(number.toString()).toBe('unresolved')
-    
+
     number.set(123)
 
     expect(number.Resolved).toBe(true)
@@ -34,6 +33,6 @@ describe('NumberData', () => {
 
     expect(await number.resolve()).toBe(123)
 
-    expect(number.toString()).toBe("{DataNumber <= 123}")
+    expect(number.toString()).toBe('{DataNumber <= 123}')
   })
 })

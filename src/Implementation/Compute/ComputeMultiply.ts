@@ -1,4 +1,4 @@
-import { isParameters, isOneSourceParameter, isOneParameter } from '../../Design/ElementType.js'
+import { isOneParameter, isOneSourceParameter, isParameters } from '../../Design/ElementType.js'
 import { type ICompute } from '../../Design/ICompute.js'
 import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
@@ -38,10 +38,10 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
   }
 
   /**
-   * @constructor   
-   */  
-  constructor(input: ISource<number> | number | IData<number>, ...rest: (number | IData<number>)[])
-   {
+   * @constructor
+   * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
+   */
+  constructor(input: ISource<number> | number | IData<number>, ...rest: (number | IData<number>)[]) {
     super()
 
     console.log('ComputeMultiply:input ', input)
@@ -49,15 +49,15 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
 
     // Is this a data-source?
     if (isOneSourceParameter<number>(input, rest)) {
-       console.log('ComputeMultiply: Source passed')
-       this.Inputs = input
+      console.log('ComputeMultiply: Source passed')
+      this.Inputs = input
     } else if (isOneParameter<number>(input) && isParameters<number>(rest)) {
       console.log('ComputeMultiply: Parameters passed')
       this.Inputs = new SourceMemory<number>(input, ...rest)
     } else {
       console.log('ComputeMultiply: One parameter passed')
       this.Inputs = new SourceMemory<number>(input)
-    }    
+    }
   }
 
   /**
@@ -75,12 +75,11 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
   toString(): string {
     const out: string[] = []
     out.push('(')
-    
-   
+
     out.push('multiply')
 
     out.push(this.Inputs.toString())
-    
+
     out.push('=>')
     out.push(this.Output.toString())
     out.push(')')
@@ -92,25 +91,22 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
    * @async
    */
   async resolve(): Promise<number> {
-    
     // Our accumulator
-    let a = 1    
+    let a = 1
 
     // Enforce the batch size of 1 for this compute element
     this.Inputs.setBatchSize(1)
 
     // Multiply all the inputs together one element at at time.
     while (!this.Inputs.Empty) {
-
       console.log(`Try....`)
 
       const resolved = await this.Inputs.resolve()
 
-      console.log(`this.Inputs.resolve() => `,resolved)
+      console.log(`this.Inputs.resolve() => `, resolved)
 
       a *= resolved[0]
     }
-    
 
     // Set the output value
     this.Output.set(a)
