@@ -33,13 +33,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
-   * If true then this has been resolved.
-   * @type {boolean}
-   * @private
-   */
-  #Resolved: boolean = false
-
-  /**
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
@@ -127,7 +120,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    */
   get Resolved(): boolean {
     // Otherwise return the resolved status
-    return this.#Resolved
+    return this.State.Resolved
   }
 
   /**
@@ -159,7 +152,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    */
   async resolve(): Promise<T[]> {
     // If we are already resolved then throw an error
-    if (this.#Resolved) {
+    if (this.State.Resolved) {
       throw new Error(`Source is already resolved.`)
     }
 
@@ -218,7 +211,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
 
     // If we are empty, then we are done.
     if (this.Empty) {
-      this.#Resolved = true
+      this.State.setResolved(true)
     }
     return result
   }

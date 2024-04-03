@@ -54,15 +54,8 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
   constructor(number?: number) {
     super()
     this.State.setNumber(number)
-    this.#Resolved = number !== undefined
+    this.State.setResolved(number !== undefined)
   }
-
-  /**
-   * If true then this has been resolved.
-   * @type {boolean}
-   * @private
-   */
-  #Resolved: boolean
 
   /**
    * If true then this has been resolved.
@@ -70,7 +63,7 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
    * @readonly
    */
   get Resolved(): boolean {
-    return this.#Resolved
+    return this.State.Resolved
   }
 
   /**
@@ -90,7 +83,7 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
    * @async
    */
   async resolve(): Promise<number> {
-    this.#Resolved = true
+    this.State.setResolved(true)
     return this.Data
   }
 
@@ -100,6 +93,6 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
    */
   set(value: number): void {
     this.State.setNumber(value)
-    this.#Resolved = true
+    this.State.setResolved(true)
   }
 }

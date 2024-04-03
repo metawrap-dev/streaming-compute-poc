@@ -1,12 +1,12 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
-import { type IState } from '../../Design/IState.js'
+import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [SourceMemory]{@link SourceMemory}.
  * @class
  */
-export class StateSourceMemory<T> implements IState {
+export class StateSourceMemory<T> extends StateCommon {
   /**
    * How are are we into the source in memory.
    * @type {number}

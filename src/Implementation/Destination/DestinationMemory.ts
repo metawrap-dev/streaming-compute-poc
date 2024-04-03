@@ -40,13 +40,6 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
   readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
-   * If true then we have called resolved at least once
-   * @type {boolean}
-   * @private
-   */
-  #Resolved: boolean = false
-
-  /**
    * How how many elements the destination can store before we stop and force a resolve.
    * @type {number}
    * @readonly
@@ -66,7 +59,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * @readonly
    */
   get Resolved(): boolean {
-    return this.#Resolved && this.State.Buffer.length === 0
+    return this.State.Resolved && this.State.Buffer.length === 0
   }
 
   /**
@@ -212,7 +205,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    */
   async resolve(): Promise<void> {
     // We have called resolve at least once
-    this.#Resolved = true
+    this.State.setResolved(true)
 
     // Walk the buffer and resolve each element
     for (const d of this.State.Buffer) {

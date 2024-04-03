@@ -1,10 +1,10 @@
-import { type IState } from '../../Design/IState.js'
+import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [DataNumber]{@link DataNumber}.
  * @class
  */
-export class StateDataNumber implements IState {
+export class StateDataNumber extends StateCommon {
   /**
    * The value of the number.
    * @type {number | undefined}

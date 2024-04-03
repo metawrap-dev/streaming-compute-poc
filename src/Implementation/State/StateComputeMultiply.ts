@@ -1,10 +1,10 @@
-import { type IState } from '../../Design/IState.js'
+import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [ComputeMultiply]{@link ComputeMultiply}.
  * @class
  */
-export class StateComputeMultiply implements IState {
+export class StateComputeMultiply extends StateCommon {
   /**
    * The value of the accumulator.
    * @type {number}

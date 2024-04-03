@@ -4,4 +4,11 @@
  * @author James McParlane
  * @interface
  */
-export interface IState {}
+export interface IState {
+  /**
+   * Every entity can be resolved
+   * @type {boolean}
+   * @readonly
+   */
+  readonly Resolved: boolean
+}
