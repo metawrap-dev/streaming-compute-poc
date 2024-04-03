@@ -1,4 +1,4 @@
-import { isOneParameter, isOneSourceParameter, isParameters, isResolvable, isSource } from '../../Design/ElementType.js'
+import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
@@ -36,33 +36,11 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(input: ISource<T> | T | IData<T>, ...rest: (ISource<T> | T | IData<T>)[]) {
+  constructor(...input: (ISource<T> | T | IData<T>)[]) {
     super()
 
-    // How many arguments did we get?
-    const args = arguments.length
-
-    console.log('SourceMemory:input ', input)
-    console.log('SourceMemory:rest ', rest)
-
-    // Is this a data-source?
-    if (isOneSourceParameter<T>(args, input, rest)) {
-      // Yes it is. We can use it directly.
-      console.log('SourceMemory: Source passed')
-      this.State.Data.push(input)
-    } else if (isParameters<T>(args, rest)) {
-      // Is it multiple parameters?
-      console.log('SourceMemory: Parameters passed')
-      this.State.Data.push(input)
-      this.State.Data.push(...rest)
-    } else if (isOneParameter<T>(args, input)) {
-      // Is it just a single parameter
-      console.log('SourceMemory: One parameter passed')
-      this.State.Data.push(input)
-    } else {
-      // Not a combination we can handle.
-      throw new Error(`SourceMemory: Invalid parameters`)
-    }
+    // Queue the data
+    this.State.Data.push(...input)
   }
 
   /**
@@ -159,11 +137,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     const result: T[] = []
 
     // Get a complete batch out of it.
-    // @todo: Does it matter that we will sometimes be under the batch size?
-    //        The only way we can wait is by switching to a generator or being a bit more
-    //        exotic with how we use Promise.
-    //
-    while (result.length < this.Config.BatchSize && !this.Empty) {
+    while (result.length < this.Config.BatchSize) {
       // Get the current element
       const element = this.State.Data[this.State.Index]
 
@@ -207,6 +181,19 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
         // Advance the index
         this.State.Index++
       }
+
+      // Do we have a complete batch?
+      if (result.length === this.Config.BatchSize) {
+        // We have a complete batch, so we break out now.
+        break
+      } else if (this.Empty) {
+        const remaining = this.Config.BatchSize - result.length
+
+        console.log(`WAITING TO COMPLETE BATCH - need ${remaining} items to complete batch of ${this.Config.BatchSize} items.`)
+
+        // We wait for more data to come in.
+        await this.wait()
+      }
     }
 
     // If we are empty, then we are done.
@@ -214,5 +201,18 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
       this.State.setResolved(true)
     }
     return result
+  }
+
+  /**
+   * Queue some data to be fed into the source that can be resolved later on.
+   * @param {data: ISource<T> | T | (T | IData<T>)[] }
+   * @async
+   */
+  async queue(...input: (ISource<T> | T | IData<T>)[]): Promise<void> {
+    this.State.Data.push(...input)
+
+    if (this.Waiting) {
+      await this.release()
+    }
   }
 }

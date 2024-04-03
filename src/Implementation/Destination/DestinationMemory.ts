@@ -164,9 +164,18 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * Check the buffer to see if we can resolve the destination.
    */
   async #checkBuffer(): Promise<void> {
-    if (this.State.Buffer.length >= this.Config.BatchSize) {
-      console.log(`resolve chunk to memory`)
-      await this.resolve()
+    console.log(`CHECK BUFFER`)
+
+    // If we are waiting
+    if (this.Waiting) {
+      // Then release the resource
+      await this.release()
+    } else {
+      if (this.State.Buffer.length >= this.Config.BatchSize) {
+        console.log(`resolve chunk to memory`)
+        // We can resolve now because we have enough.
+        await this.resolve()
+      }
     }
   }
 
@@ -203,7 +212,15 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * Resolve the destination.
    * @async
    */
-  async resolve(): Promise<void> {
+  async resolve(wait: boolean = false): Promise<void> {
+    while (wait && this.State.Buffer.length < this.Config.BatchSize) {
+      console.log(`WAIT FOR ENOUGH DATA`)
+      // We can resolve now because we have enough.
+      await this.wait()
+
+      break
+    }
+
     // We have called resolve at least once
     this.State.setResolved(true)
 

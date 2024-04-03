@@ -208,18 +208,20 @@ describe('SourceMemory', () => {
 
     expect(a.Empty).toBe(false)
 
-    // Should we block here?
+    // Set a timeout
+    setTimeout(async () => {
+      console.log(`TIMER FIRES - write 6`)
+
+      // When this fires..
+      await a.queue(10)
+    }, 1000)
 
     const d5 = await a.resolve()
 
-    expect(d5).toEqual([9])
+    expect(d5).toEqual([9, 10])
 
     expect(a.Empty).toBe(true)
 
     await expect(async () => await a.resolve()).rejects.toThrow(Error)
-  })
-
-  it('should be fail with bad inputs', async () => {
-    expect(() => new (SourceMemory as any)()).toThrow(Error)
   })
 })

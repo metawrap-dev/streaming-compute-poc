@@ -1,3 +1,4 @@
+import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
@@ -27,4 +28,11 @@ export interface ISource<T> extends IDescribable, IResolvable<T[]>, IElement {
    * @readonly
    */
   readonly Count: number | undefined
+
+  /**
+   * Queue some data to be fed into the source that can be resolved later on.
+   * @param {ISource<T> | T | (T | IData<T>)[] } input The data to queue.
+   * @async
+   */
+  queue(...input: (ISource<T> | T | IData<T>)[]): Promise<void>
 }

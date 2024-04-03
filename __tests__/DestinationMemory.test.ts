@@ -20,6 +20,8 @@ describe('DestinationMemory', () => {
     await a.write(4)
 
     expect(a.toString()).toBe('{DestinationMemory(4 stored, 0 in buffer, 1 batch size) <= []=>[1,2,3,4]}')
+    await a.resolve()
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 0 in buffer, 1 batch size) <= []=>[1,2,3,4]}')
   })
 
   it('should batch as specified', async () => {
@@ -31,12 +33,54 @@ describe('DestinationMemory', () => {
     expect(a.Config.BatchSize).toBe(2)
 
     await a.write(1)
+
+    // Chunk is not written out of buffer to storage yet.
+    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 2 batch size) <= [1]=>[]}')
+
     await a.write(2)
+
+    // Chunk of two numbers is written out of buffer to storage.
+    expect(a.toString()).toBe('{DestinationMemory(2 stored, 0 in buffer, 2 batch size) <= []=>[1,2]}')
+
     await a.write(3)
+
+    // Chunk is not written out of buffer to storage yet.
+    expect(a.toString()).toBe('{DestinationMemory(2 stored, 1 in buffer, 2 batch size) <= [3]=>[1,2]}')
+
     await a.write(4)
+
+    // Chunk or two numbers is written out of buffer to storage yet.
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4]}')
+
     await a.write(5)
 
+    // We have a pending byte in the buffer.
     expect(a.toString()).toBe('{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [5]=>[1,2,3,4]}')
+
+    // Set a timeout
+    setTimeout(async () => {
+      console.log(`TIMER FIRES - write 6`)
+
+      // When this fires..
+      await a.write(6)
+    }, 1000)
+
+    console.log(`Resolve`)
+
+    // Resolve should wait.
+    await a.resolve(true)
+
+    // 0..1000ms We are waiting...
+
+    // tick tick tick
+
+    // ...1000ms: We have a pending byte in the buffer.
+    // The [DestinationMemory] releases the wait on the resolve above.
+
+    console.log(`Resolved`)
+
+    // This was enough to flush out a new block
+    expect(a.toString()).toBe('{DestinationMemory(6 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4,5,6]}')
   })
 
   it('should batch as specified with multiple arguments', async () => {
@@ -85,8 +129,12 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
+    const b = new ComputeMultiply(new SourceMemory(10, 10, 10, 10))
+
+    expect(b.toString()).toBe('( multiply {SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]} => unresolved )')
+
     // Because we have a batch size of 1, the result is written immediately which causes execution immediately
-    await a.write(new ComputeMultiply(new SourceMemory(10, 10, 10, 10)))
+    await a.write(b)
 
     expect(a.toString()).toBe('{DestinationMemory(1 stored, 0 in buffer, 1 batch size) <= []=>[10000]}')
     await a.resolve()
