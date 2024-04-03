@@ -33,13 +33,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
-   * Stores how large a chunk of data we want to resolve at a time.
-   * @type {number}
-   * @private
-   */
-  #BatchSize: number = 1
-
-  /**
    * If true then this has been resolved.
    * @type {boolean}
    * @private
@@ -80,15 +73,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   }
 
   /**
-   * Gets how large a chunk of data we want to resolve at a time.
-   * @type {number}
-   * @readonly
-   */
-  get BatchSize(): number {
-    return this.#BatchSize
-  }
-
-  /**
    * If true then there is no more data to read.
    * @type {number}
    * @readonly
@@ -118,7 +102,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   toString(): string {
     const result: string[] = []
 
-    result.push(`{SourceMemory(${this.State.Data.length} elements, atoms ${this.Count}, ${this.State.Index} index, ${this.#BatchSize} batch size) <= `)
+    result.push(`{SourceMemory(${this.State.Data.length} elements, atoms ${this.Count}, ${this.State.Index} index, ${this.Config.BatchSize} batch size) <= `)
 
     {
       // Otherwise just list the data
@@ -186,20 +170,20 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     //        The only way we can wait is by switching to a generator or being a bit more
     //        exotic with how we use Promise.
     //
-    while (result.length < this.BatchSize && !this.Empty) {
+    while (result.length < this.Config.BatchSize && !this.Empty) {
       // Get the current element
       const element = this.State.Data[this.State.Index]
 
       // Is it s source?
       if (isSource<T>(element)) {
         // How many elements do we need to get the batch size we want?
-        const remaining = this.#BatchSize - result.length
-        console.log(`result.length ${result.length} remaining ${remaining} batchSize ${this.#BatchSize}`)
+        const remaining = this.Config.BatchSize - result.length
+        console.log(`result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
 
         // If we need to...
-        if (element.BatchSize !== remaining) {
+        if (element.Config.BatchSize !== remaining) {
           // .. set a new batch size.
-          element.setBatchSize(remaining)
+          element.Config.setBatchSize(remaining)
         }
 
         // Get that many elements from the source
@@ -237,14 +221,5 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
       this.#Resolved = true
     }
     return result
-  }
-
-  /**
-   * Set the batch size.
-   * @param {number} batchSize The batch size to set
-   */
-  setBatchSize(batchSize: number): void {
-    // Set the batch size locally
-    this.#BatchSize = batchSize
   }
 }

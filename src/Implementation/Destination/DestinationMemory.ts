@@ -47,14 +47,6 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
   #Resolved: boolean = false
 
   /**
-   * Stores size of the batch that we hold in memory before we write to the destination.
-   * @type {number}
-   * @private
-   * @config
-   */
-  #BatchSize: number = 1
-
-  /**
    * How how many elements the destination can store before we stop and force a resolve.
    * @type {number}
    * @readonly
@@ -75,15 +67,6 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    */
   get Resolved(): boolean {
     return this.#Resolved && this.State.Buffer.length === 0
-  }
-
-  /**
-   * Gets the size of the batch that we hold in memory before we write to the destination.
-   * @type {number}
-   * @readonly
-   */
-  get BatchSize(): number {
-    return this.#BatchSize
   }
 
   /**
@@ -188,7 +171,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * Check the buffer to see if we can resolve the destination.
    */
   async #checkBuffer(): Promise<void> {
-    if (this.State.Buffer.length >= this.BatchSize) {
+    if (this.State.Buffer.length >= this.Config.BatchSize) {
       console.log(`resolve chunk to memory`)
       await this.resolve()
     }
@@ -201,7 +184,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
   toString(): string {
     const result: string[] = []
 
-    result.push('{DestinationMemory(' + this.State.Storage.length + ' stored, ' + this.State.Buffer.length + ' in buffer, ' + this.BatchSize + ' batch size) <= ')
+    result.push('{DestinationMemory(' + this.State.Storage.length + ' stored, ' + this.State.Buffer.length + ' in buffer, ' + this.Config.BatchSize + ' batch size) <= ')
 
     result.push('[')
     const buffer: string[] = []
@@ -237,7 +220,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
 
       if (isSource<T>(d)) {
         // Make it adhere to our batch-size
-        d.setBatchSize(this.#BatchSize)
+        d.Config.setBatchSize(this.Config.BatchSize)
 
         // If it is a source, then we need to resolve it.
         while (!d.Empty) {
@@ -261,13 +244,5 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
 
     // Clear the buffer
     this.State.Buffer.length = 0
-  }
-
-  /**
-   * Set the batch size.
-   * @param {number} batchSize The size of the batch.
-   */
-  setBatchSize(batchSize: number): void {
-    this.#BatchSize = batchSize
   }
 }

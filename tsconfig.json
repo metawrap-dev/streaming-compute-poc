@@ -20,6 +20,5 @@
     // "strictNullChecks": false,
     "allowJs": true
   },
-  "exclude": ["node_modules", ".vscode-test", "out"],
   "include": ["src"]
 }

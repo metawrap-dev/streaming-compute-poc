@@ -6,9 +6,26 @@ import { type IConfig } from '../../Design/IConfig.js'
  */
 export class ConfigCommon implements IConfig {
   /**
-   * The size of the batch to process in the element.
+   * How how many elements in the batch.
    * @type {number}
    * @readonly
    */
-  readonly BatchSize: number
+  #BatchSize: number = 1
+
+  /**
+   * How how many elements in the batch.
+   * @type {number}
+   * @readonly
+   */
+  get BatchSize(): number {
+    return this.#BatchSize
+  }
+
+  /**
+   * Set the batch size.
+   * @param {number} batchSize The batch size to set
+   */
+  setBatchSize(batchSize: number): void {
+    this.#BatchSize = batchSize
+  }
 }

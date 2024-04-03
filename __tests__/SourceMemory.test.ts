@@ -100,7 +100,7 @@ describe('SourceMemory', () => {
 
     expect(a.Empty).toBe(false)
 
-    expect(a.BatchSize).toBe(1)
+    expect(a.Config.BatchSize).toBe(1)
 
     expect(a.toString()).toBe('{SourceMemory(1 elements, atoms 4, 0 index, 1 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}]}')
 
@@ -138,9 +138,9 @@ describe('SourceMemory', () => {
   it('should be able to batch sources and imply type', async () => {
     const a = new SourceMemory(new SourceMemory(1, 2, 3, 4))
 
-    a.setBatchSize(2)
+    a.Config.setBatchSize(2)
 
-    expect(a.BatchSize).toBe(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     expect(a).toBeDefined()
 
@@ -170,9 +170,9 @@ describe('SourceMemory', () => {
   it('should be able to batch sources and imply type', async () => {
     const a = new SourceMemory(new SourceMemory(1, 2, 3, 4), new SourceMemory(5, 6, 7, 8), 9)
 
-    a.setBatchSize(2)
+    a.Config.setBatchSize(2)
 
-    expect(a.BatchSize).toBe(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     expect(a).toBeDefined()
 

@@ -27,8 +27,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     await a.write(1)
     await a.write(2)
@@ -44,8 +44,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     await a.write(1, 2, 3, 4, 5)
 
@@ -57,8 +57,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     await a.write([1, 2, 3, 4, 5])
 
@@ -72,8 +72,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     await a.write(new DataNumber(1), new DataNumber(2), new DataNumber(3), new DataNumber(4), new DataNumber(5))
 
@@ -99,8 +99,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(5)
-    expect(a.BatchSize).toBe(5)
+    a.Config.setBatchSize(5)
+    expect(a.Config.BatchSize).toBe(5)
 
     // Because we have a batch size of 5, the result will not be flushed until we resolve.
     await a.write(new ComputeMultiply(new SourceMemory(10, 10, 10, 10)))
@@ -115,8 +115,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one.
     await a.write(new SourceMemory(10, 10, 10, 10))
@@ -131,8 +131,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one.
     expect(async () => await a.write(undefined as any)).rejects.toThrow(Error)
@@ -143,8 +143,8 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    a.setBatchSize(2)
-    expect(a.BatchSize).toBe(2)
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
 
     // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one.
     expect(async () => await a.write(1, undefined as any)).rejects.toThrow(Error)

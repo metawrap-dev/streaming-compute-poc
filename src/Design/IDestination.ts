@@ -1,4 +1,3 @@
-import { type IBatchable } from './IBatchable.js'
 import { type IData } from './IData.js'
 import { type IDataWithoutIResolvable } from './IDataWithoutResolvable.js'
 import { type IDescribable } from './IDescribable.js'
@@ -16,7 +15,7 @@ import { type ISource } from './ISource.js'
  * @author James McParlane
  * @interface
  */
-export interface IDestination<T> extends IDescribable, IResolvable<void>, IDataWithoutIResolvable<T>, IElement, IBatchable {
+export interface IDestination<T> extends IDescribable, IResolvable<void>, IDataWithoutIResolvable<T>, IElement {
   /**
    * How how many elements the destination can store.
    * @type {number}
