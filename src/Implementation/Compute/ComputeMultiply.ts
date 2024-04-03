@@ -2,9 +2,12 @@ import { isOneParameter, isOneSourceParameter, isParameters } from '../../Design
 import { type ICompute } from '../../Design/ICompute.js'
 import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
+import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { SourceMemory } from '../Source/SourceMemory.js'
+import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
+import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 
 /**
  * This can multiply numbers together
@@ -13,6 +16,28 @@ import { SourceMemory } from '../Source/SourceMemory.js'
  * @interface
  */
 export class ComputeMultiply extends ElementCompute implements ICompute<number, number> {
+  /**
+   * The configuration for the compute multiply.
+   * This is the applied strategy.
+   * @type {IConfig}
+   * @readonly
+   */
+  readonly Config: ConfigCommon = new ConfigCommon()
+
+  /**
+   * The runtime state of the compute multiply.
+   * @type {IState}
+   * @readonly
+   */
+  readonly State: StateComputeMultiply = new StateComputeMultiply()
+
+  /**
+   * The strategy that can be applied to the compute multiply's config.
+   * @type {IStrategy}
+   * @readonly
+   */
+  readonly Strategy: StrategyCommon = new StrategyCommon()
+
   /**
    * Inputs for the computation.
    * We massage everything into a source.

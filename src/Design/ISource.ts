@@ -1,4 +1,3 @@
-import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
@@ -9,7 +8,7 @@ import { type IResolvable } from './IResolvable.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T> extends IDescribable, IResolvable<T[]>, IData<T[]>, IElement {
+export interface ISource<T> extends IDescribable, IResolvable<T[]>, IElement {
   /**
    * How many to read at once when we are consuming the data.
    * @type {number}
@@ -23,6 +22,18 @@ export interface ISource<T> extends IDescribable, IResolvable<T[]>, IData<T[]>, 
    * @readonly
    */
   readonly Empty: boolean
+
+  /**
+   * The number atoms in the source.
+   *
+   * Infinity => unbounded
+   * undefined => unknown
+   *
+   * @todo Get rid of this or make it undefined? if it is too costly to calculate.
+   * @type {number | undefined}
+   * @readonly
+   */
+  readonly Count: number | undefined
 
   /**
    * Set the batch size.

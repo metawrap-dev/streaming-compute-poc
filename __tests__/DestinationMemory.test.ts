@@ -62,13 +62,10 @@ describe('DestinationMemory', () => {
 
     await a.write([1, 2, 3, 4, 5])
 
-
-
-    expect(a.toString()).toBe("{DestinationMemory(5 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4,5]}")
+    expect(a.toString()).toBe('{DestinationMemory(5 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4,5]}')
     // @todo: This should batch properly?
     // expect(a.toString()).toBe('{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [5]=>[1,2,3,4]}')
   })
-
 
   it('should batch as specified with multiple arguments', async () => {
     const a = new DestinationMemory<number>()
@@ -78,9 +75,9 @@ describe('DestinationMemory', () => {
     a.setBatchSize(2)
     expect(a.BatchSize).toBe(2)
 
-    await a.write(new DataNumber(1),new DataNumber(2),new DataNumber(3),new DataNumber(4),new DataNumber(5))
+    await a.write(new DataNumber(1), new DataNumber(2), new DataNumber(3), new DataNumber(4), new DataNumber(5))
 
-    expect(a.toString()).toBe("{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [{DataNumber <= 5}]=>[1,2,3,4]}")
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [{DataNumber <= 5}]=>[1,2,3,4]}')
   })
 
   it('should write the result of computation immediately', async () => {
@@ -107,7 +104,7 @@ describe('DestinationMemory', () => {
 
     // Because we have a batch size of 5, the result will not be flushed until we resolve.
     await a.write(new ComputeMultiply(new SourceMemory(10, 10, 10, 10)))
-    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [( multiply {SourceMemory(4 elements, 0 index, 1 batch size) <= [10,10,10,10]} => unresolved )]=>[]}')
+    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [( multiply {SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]} => unresolved )]=>[]}')
     await a.resolve()
     expect(a.toString()).toBe('{DestinationMemory(1 stored, 0 in buffer, 5 batch size) <= []=>[10000]}')
     expect(a.Resolved).toBe(true)
@@ -121,11 +118,11 @@ describe('DestinationMemory', () => {
     a.setBatchSize(2)
     expect(a.BatchSize).toBe(2)
 
-    // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one. 
+    // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one.
     await a.write(new SourceMemory(10, 10, 10, 10))
-    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 2 batch size) <= [{SourceMemory(4 elements, 0 index, 1 batch size) <= [10,10,10,10]}]=>[]}')
+    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 2 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]}]=>[]}')
     await a.resolve()
-    expect(a.toString()).toBe("{DestinationMemory(4 stored, 0 in buffer, 2 batch size) <= []=>[10,10,10,10]}")
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 0 in buffer, 2 batch size) <= []=>[10,10,10,10]}')
     expect(a.Resolved).toBe(true)
   })
 
@@ -137,8 +134,8 @@ describe('DestinationMemory', () => {
     a.setBatchSize(2)
     expect(a.BatchSize).toBe(2)
 
-    // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one. 
-    expect(async () => await a.write(undefined)).rejects.toThrow(Error)
+    // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one.
+    expect(async () => await a.write(undefined as any)).rejects.toThrow(Error)
   })
 
   it('should be fail with invalid second parameter', async () => {
@@ -149,10 +146,7 @@ describe('DestinationMemory', () => {
     a.setBatchSize(2)
     expect(a.BatchSize).toBe(2)
 
-    // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one. 
-    expect(async () => await a.write(1, undefined)).rejects.toThrow(Error)
+    // We can chain from a source to a destination but it will be on hold until we resolve because it only counts as one.
+    expect(async () => await a.write(1, undefined as any)).rejects.toThrow(Error)
   })
-
-
-  
 })

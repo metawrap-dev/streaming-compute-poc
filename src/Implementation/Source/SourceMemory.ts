@@ -1,7 +1,10 @@
-import { isOneParameter, isOneSourceParameter, isParameters, isResolvable } from '../../Design/ElementType.js'
+import { isOneParameter, isOneSourceParameter, isParameters, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
+import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
+import { StateSourceMemory } from '../State/StateSourceMemory.js'
+import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 
 /**
  * Data Element: Some form of data that can be fed into a compute element.
@@ -9,32 +12,41 @@ import { ElementSource } from '../Element/ElementSource.js'
  */
 export class SourceMemory<T> extends ElementSource implements ISource<T> {
   /**
-   * A chained source
-   * @type {ISource<T> | undefined}
-   * @private
+   * The configuration for the source.
+   * @type {IConfig}
+   * @readonly
    */
-  #Source?: ISource<T>
+  readonly Config: ConfigCommon = new ConfigCommon()
+
+  /**
+   * The runtime state of the source.
+   * @type {IState}
+   * @readonly
+   */
+  readonly State: StateSourceMemory<T> = new StateSourceMemory<T>()
+
+  /**
+   * The strategy that can be applied to the source's state.
+   * @type {IStrategy}
+   * @readonly
+   */
+  readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
    * How are are we into the source in memory.
    * @type {number}
    * @private
+   * @state ??
    */
   #Index: number = 0
 
   /**
    * The data in memory.
-   * @type {(T | IData<T>)[]}
+   * @state ??
+   * @type {(ISource<T> | T | IData<T>)[]}
    * @private
    */
-  #Data: (T | IData<T>)[] = []
-
-  /**
-   * What we resolved the data to.
-   * @type {T[]}
-   * @private
-   */
-  #ResolvedData: T[] = []
+  #Data: (ISource<T> | T | IData<T>)[] = []
 
   /**
    * Stores how large a chunk of data we want to resolve at a time.
@@ -54,7 +66,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(input: ISource<T> | T | IData<T>, ...rest: (T | IData<T>)[]) {
+  constructor(input: ISource<T> | T | IData<T>, ...rest: (ISource<T> | T | IData<T>)[]) {
     super()
 
     // How many arguments did we get?
@@ -67,7 +79,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     if (isOneSourceParameter<T>(args, input, rest)) {
       // Yes it is. We can use it directly.
       console.log('SourceMemory: Source passed')
-      this.#Source = input
+      this.#Data.push(input)
     } else if (isParameters<T>(args, rest)) {
       // Is it multiple parameters?
       console.log('SourceMemory: Parameters passed')
@@ -89,10 +101,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @readonly
    */
   get BatchSize(): number {
-    // Chain em if you got em..
-    if (this.#Source !== undefined) return this.#Source.BatchSize
-
-    // Otherwise return the batch size
     return this.#BatchSize
   }
 
@@ -102,11 +110,21 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @readonly
    */
   get Empty(): boolean {
-    // Chain em if you got em..
-    if (this.#Source !== undefined) return this.#Source.Empty
+    // If we have data remaining
+    if (this.#Index < this.#Data.length) {
+      // If the first element is a source...
+      if (isSource<T>(this.#Data[this.#Index])) {
+        // If it is a source then check if it is empty
+        return (this.#Data[this.#Index] as ISource<T>).Empty
 
-    // Otherwise return the empty status
-    return this.#Index >= this.#Data.length
+        // TODO: We should also check if any other elements are not sources
+      } else {
+        // Otherwise we have data
+        return false
+      }
+    } else {
+      return true
+    }
   }
 
   /**
@@ -116,12 +134,9 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   toString(): string {
     const result: string[] = []
 
-    result.push(`{SourceMemory(${this.#Data.length} elements, ${this.#Index} index, ${this.#BatchSize} batch size) <= `)
+    result.push(`{SourceMemory(${this.#Data.length} elements, atoms ${this.Count}, ${this.#Index} index, ${this.#BatchSize} batch size) <= `)
 
-    // Chain em if you got em..
-    if (this.#Source !== undefined) {
-      result.push(this.#Source.toString())
-    } else {
+    {
       // Otherwise just list the data
       result.push('[')
       for (let i = 0; i < this.#Data.length; i++) {
@@ -143,11 +158,31 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @readonly
    */
   get Resolved(): boolean {
-    // Chain em if you got em..
-    if (this.#Source !== undefined) return this.#Source.Resolved
-
     // Otherwise return the resolved status
     return this.#Resolved
+  }
+
+  /**
+   *The number atoms in the source.
+   * @type {number | undefined}
+   * @readonly
+   */
+  get Count(): number {
+    // Accumulator
+    let a = 0
+
+    // Walk every element in the source
+    for (let i = this.#Index; i < this.#Data.length; i++) {
+      // If a source then we go deeper
+      if (isSource<T>(this.#Data[i])) {
+        a += (this.#Data[i] as ISource<T>).Count
+      } else {
+        a++
+      }
+    }
+
+    // return the result
+    return a
   }
 
   /**
@@ -155,9 +190,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @async
    */
   async resolve(): Promise<T[]> {
-    // Chain em if you got em..
-    if (this.#Source !== undefined) return this.#Source.resolve()
-
     // If we are already resolved then throw an error
     if (this.#Resolved) {
       throw new Error(`Source is already resolved.`)
@@ -165,34 +197,58 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
 
     const result: T[] = []
 
-    for (let i = 0; i < this.BatchSize && !this.Empty; i++) {
-      // Get the element
-      const element = this.#Data[this.#Index++]
+    // Get a complete batch out of it.
+    // @todo: Does it matter that we will sometimes be under the batch size?
+    //        The only way we can wait is by switching to a generator or being a bit more
+    //        exotic with how we use Promise.
+    //
+    while (result.length < this.BatchSize && !this.Empty) {
+      // Get the current element
+      const element = this.#Data[this.#Index]
 
-      if (isResolvable<T>(element)) {
-        if (!element.Resolved) {
-          const resolved = await element.resolve()
+      // Is it s source?
+      if (isSource<T>(element)) {
+        // How many elements do we need to get the batch size we want?
+        const remaining = this.#BatchSize - result.length
+        console.log(`result.length ${result.length} remaining ${remaining} batchSize ${this.#BatchSize}`)
 
-          this.#ResolvedData.push(resolved)
+        // If we need to...
+        if (element.BatchSize !== remaining) {
+          // .. set a new batch size.
+          element.setBatchSize(remaining)
+        }
 
-          // We need to resolve it
-          result.push(resolved)
-        } else {
-          const data = element.Data
+        // Get that many elements from the source
+        // @todo - we want this to block until resolved.
+        result.push(...(await element.resolve()))
 
-          this.#ResolvedData.push(data)
-
-          // It is already resolved
-          result.push(data)
+        // If we have trained this source.
+        if (element.Empty) {
+          // Advance the index
+          this.#Index++
         }
       } else {
-        // It is not resolvable
-        this.#ResolvedData.push(element as T)
+        // Get the element
+        if (isResolvable<T>(element)) {
+          if (!element.Resolved) {
+            // We need to resolve it
+            // @todo - we want this to block until resolved.
+            result.push(await element.resolve())
+          } else {
+            // It is already resolved
+            result.push(element.Data)
+          }
+        } else {
+          // It is not resolvable
+          result.push(element as T)
+        }
 
-        result.push(element as T)
+        // Advance the index
+        this.#Index++
       }
     }
 
+    // If we are empty, then we are done.
     if (this.Empty) {
       this.#Resolved = true
     }
@@ -200,35 +256,11 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   }
 
   /**
-   * The resolved data as an array.
-   * @type {T[]}
-   * @readonly
-   */
-  get Data(): T[] {
-    // Chain em if you got em..
-    if (this.#Source !== undefined) return this.#Source.Data
-
-    // If we are already resolved then return the data
-    if (this.Resolved) {
-      return this.#ResolvedData
-    }
-    throw new Error(`SourceMemory is not resolved.`)
-  }
-
-  /**
    * Set the batch size.
    * @param {number} batchSize The batch size to set
    */
   setBatchSize(batchSize: number): void {
-    if (this.#Source !== undefined) {
-      // Chain em if you got em..
-
-      // For now we assume that we can manipulate batch sizes so all should be OK.
-
-      this.#Source.setBatchSize(batchSize)
-    } else {
-      // Set the batch size locally
-      this.#BatchSize = batchSize
-    }
+    // Set the batch size locally
+    this.#BatchSize = batchSize
   }
 }

@@ -1,11 +1,10 @@
 import { type ElementType } from './ElementType.js'
+import { type IConfig } from './IConfig.js'
+import { type IState } from './IState.js'
+import { type IStrategy } from './IStrategy.js'
 
 /**
  * An Element: A component of a the design.
- *
- * At this point used to differentiate between different types of elements.
- *
- * In the future, some common properties may be added here.
  *
  * @author James McParlane
  * @interface
@@ -17,4 +16,24 @@ export interface IElement {
    * @readonly
    */
   readonly Type: ElementType
+
+  /**
+   * The runtime state of the element.
+   * @type {IState}
+   * @readonly
+   */
+  readonly State: IState
+
+  /**
+   * Reflects the current applied strategy and tactics.
+   * @type {IConfig}
+   */
+  readonly Config: IConfig
+
+  /**
+   * The base strategy that can be applied to the element's config.
+   * @type {IStrategy}
+   * @readonly
+   */
+  readonly Strategy: IStrategy
 }

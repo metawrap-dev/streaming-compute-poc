@@ -1,12 +1,40 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
+import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
+import { StateDataNumber } from '../State/StateDataNumber.js'
+import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 
 /**
  * A "simple" number.
  * @class
  */
 export class DataNumber extends ElementData implements IData<number>, ISettable<number> {
+  //
+  // The below is overkill for a simple number, but this is just a toy example of how to implement a data element.
+  //
+
+  /**
+   * The configuration for this number.
+   * @type {ConfigCommon}
+   * @readonly
+   */
+  readonly Config: ConfigCommon = new ConfigCommon()
+
+  /**
+   * The runtime state of the number.
+   * @type {IState}
+   * @readonly
+   */
+  readonly State: StateDataNumber = new StateDataNumber()
+
+  /**
+   * The strategy that can be applied to the number's config.
+   * @type {IStrategy}
+   * @readonly
+   */
+  readonly Strategy: StrategyCommon = new StrategyCommon()
+
   /**
    * The value of the number.
    * @type {number | undefined}

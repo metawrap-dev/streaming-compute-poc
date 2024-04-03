@@ -2,7 +2,10 @@ import { isDataArray, isOneParameter, isOneSourceParameter, isParameters, isReso
 import { type IData } from '../../Design/IData.js'
 import { type IDestination } from '../../Design/IDestination.js'
 import { type ISource } from '../../Design/ISource.js'
+import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementDestination } from '../Element/ElementDestination.js'
+import { StateDestinationMemory } from '../State/StateDestinationMemory.js'
+import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 
 /**
  * A destination for multiple data elements.
@@ -16,9 +19,31 @@ import { ElementDestination } from '../Element/ElementDestination.js'
  */
 export class DestinationMemory<T> extends ElementDestination implements IDestination<T> {
   /**
-   * The buffered data.
+   * The configuration for the destination.
+   * @type {IConfig}
+   * @readonly
+   */
+  readonly Config: ConfigCommon = new ConfigCommon()
+
+  /**
+   * The runtime state of the destination.
+   * @type {IState}
+   * @readonly
+   */
+  readonly State: StateDestinationMemory<T> = new StateDestinationMemory<T>()
+
+  /**
+   * The strategy that can be applied to the destination's state.
+   * @type {IStrategy}
+   * @readonly
+   */
+  readonly Strategy: StrategyCommon = new StrategyCommon()
+
+  /**
+   * The in memory storage data.
    * @type {(T | IData<T>)[]}
    * @private
+   * @state
    */
   #Storage: T[] = []
 
@@ -26,6 +51,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * The buffered data.
    * @type {(T | IData<T>)[]}
    * @private
+   * @state
    */
   #Buffer: (ISource<T> | T | IData<T>)[] = []
 
@@ -40,8 +66,23 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * Stores size of the batch that we hold in memory before we write to the destination.
    * @type {number}
    * @private
+   * @config
    */
   #BatchSize: number = 1
+
+  /**
+   * How how many elements the destination can store before we stop and force a resolve.
+   * @type {number}
+   * @readonly
+   */
+  readonly MaxSize: number = Number.MAX_SAFE_INTEGER
+
+  /**
+   * If true then there is no more data to write.
+   * @type {number}
+   * @readonly
+   */
+  readonly Empty: boolean
 
   /**
    * Get the value for resolved.
@@ -70,20 +111,6 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     // What do we do with this?
     throw new Error('This should not be invoked')
   }
-
-  /**
-   * How how many elements the destination can store before we stop and force a resolve.
-   * @type {number}
-   * @readonly
-   */
-  readonly MaxSize: number = Number.MAX_SAFE_INTEGER
-
-  /**
-   * If true then there is no more data to write.
-   * @type {number}
-   * @readonly
-   */
-  readonly Empty: boolean
 
   /**
    * Create a new destination.
@@ -150,10 +177,9 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * @param {T | IData<T>} data The single argument of data to write.
    */
   async #writeAtom(data: T | IData<T>): Promise<void> {
-
     if (data === undefined) {
       // Not a combination we can handle.
-      throw new Error(`SourceMemory: Invalid parameters`)  
+      throw new Error(`SourceMemory: Invalid parameters`)
     }
 
     this.#Buffer.push(data)
