@@ -121,16 +121,17 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
   }
 
   /**
-   * Executes the multiplication and return the answer.
+   * Resolve it using a promise.
+   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(): Promise<number> {
+  async resolve(_wait: boolean = false): Promise<number> {
     // Enforce the batch size of 1 for this compute element
 
     let accumulator = this.State.Accumulator
 
     // If there is no input then we are done.
-    if (this.Inputs.Empty) return accumulator
+    // if (this.Inputs.Empty) return accumulator
 
     this.Inputs.Config.setBatchSize(1)
 

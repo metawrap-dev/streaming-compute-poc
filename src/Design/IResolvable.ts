@@ -16,7 +16,8 @@ export interface IResolvable<T> {
 
   /**
    * Resolve it using a promise.
+   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  resolve(): Promise<T>
+  resolve(wait?: boolean): Promise<T>
 }

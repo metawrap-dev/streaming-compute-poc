@@ -80,9 +80,10 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
 
   /**
    * Resolve it using a promise.
+   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(): Promise<number> {
+  async resolve(_wait: boolean = false): Promise<number> {
     this.State.setResolved(true)
     return this.Data
   }

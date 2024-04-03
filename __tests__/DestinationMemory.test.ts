@@ -83,6 +83,50 @@ describe('DestinationMemory', () => {
     expect(a.toString()).toBe('{DestinationMemory(6 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4,5,6]}')
   })
 
+  it('should batch as specified', async () => {
+    const a = new DestinationMemory<number>()
+    expect(a).toBeDefined()
+    expect(() => a.Data).toThrow(Error)
+
+    a.Config.setBatchSize(2)
+    expect(a.Config.BatchSize).toBe(2)
+
+    await a.write(1)
+
+    // Chunk is not written out of buffer to storage yet.
+    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 2 batch size) <= [1]=>[]}')
+
+    await a.write(2)
+
+    // Chunk of two numbers is written out of buffer to storage.
+    expect(a.toString()).toBe('{DestinationMemory(2 stored, 0 in buffer, 2 batch size) <= []=>[1,2]}')
+
+    await a.write(3)
+
+    // Chunk is not written out of buffer to storage yet.
+    expect(a.toString()).toBe('{DestinationMemory(2 stored, 1 in buffer, 2 batch size) <= [3]=>[1,2]}')
+
+    await a.write(4)
+
+    // Chunk or two numbers is written out of buffer to storage yet.
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4]}')
+
+    await a.write(5)
+
+    // We have a pending byte in the buffer.
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [5]=>[1,2,3,4]}')
+
+    console.log(`Resolved`)
+
+    // Resolve should *not* wait.
+    await a.resolve(false)
+
+    console.log(`Resolved`)
+
+    // This was enough to flush out a new block
+    expect(a.toString()).toBe('{DestinationMemory(5 stored, 0 in buffer, 2 batch size) <= []=>[1,2,3,4,5]}')
+  })
+
   it('should batch as specified with multiple arguments', async () => {
     const a = new DestinationMemory<number>()
     expect(a).toBeDefined()

@@ -207,9 +207,9 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
 
     return result.join('')
   }
-
   /**
-   * Resolve the destination.
+   * Resolve it using a promise.
+   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
   async resolve(wait: boolean = false): Promise<void> {

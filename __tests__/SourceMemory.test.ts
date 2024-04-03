@@ -216,7 +216,7 @@ describe('SourceMemory', () => {
       await a.queue(10)
     }, 1000)
 
-    const d5 = await a.resolve()
+    const d5 = await a.resolve(true)
 
     expect(d5).toEqual([9, 10])
 

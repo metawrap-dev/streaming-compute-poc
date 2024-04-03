@@ -126,9 +126,10 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
 
   /**
    * Resolve it using a promise.
+   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(): Promise<T[]> {
+  async resolve(wait: boolean = false): Promise<T[]> {
     // If we are already resolved then throw an error
     if (this.State.Resolved) {
       throw new Error(`Source is already resolved.`)
@@ -189,10 +190,13 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
       } else if (this.Empty) {
         const remaining = this.Config.BatchSize - result.length
 
-        console.log(`WAITING TO COMPLETE BATCH - need ${remaining} items to complete batch of ${this.Config.BatchSize} items.`)
-
-        // We wait for more data to come in.
-        await this.wait()
+        if (wait) {
+          console.log(`WAITING TO COMPLETE BATCH - need ${remaining} items to complete batch of ${this.Config.BatchSize} items.`)
+          // We wait for more data to come in.
+          await this.wait()
+        } else {
+          break
+        }
       }
     }
 

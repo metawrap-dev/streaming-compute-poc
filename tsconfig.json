@@ -20,5 +20,6 @@
     // "strictNullChecks": false,
     "allowJs": true
   },
+  "exclude": ["out"],
   "include": ["src"]
 }
