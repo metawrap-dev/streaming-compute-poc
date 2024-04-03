@@ -208,6 +208,8 @@ describe('SourceMemory', () => {
 
     expect(a.Empty).toBe(false)
 
+    // Should we block here?
+
     const d5 = await a.resolve()
 
     expect(d5).toEqual([9])
@@ -215,5 +217,9 @@ describe('SourceMemory', () => {
     expect(a.Empty).toBe(true)
 
     await expect(async () => await a.resolve()).rejects.toThrow(Error)
+  })
+
+  it('should be fail with bad inputs', async () => {
+    expect(() => new (SourceMemory as any)()).toThrow(Error)
   })
 })

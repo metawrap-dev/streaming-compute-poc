@@ -88,4 +88,8 @@ describe('ComputeMultiply', () => {
 
     expect(m.Data).toBe(10000)
   })
+
+  it('should be fail with bad inputs', async () => {
+    expect(() => new (ComputeMultiply as any)()).toThrow(Error)
+  })
 })
