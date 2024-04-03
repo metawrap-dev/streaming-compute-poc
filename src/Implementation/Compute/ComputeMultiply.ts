@@ -125,11 +125,10 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
    * @async
    */
   async resolve(): Promise<number> {
-    // Our accumulator
-    let a = 1
-
     // Enforce the batch size of 1 for this compute element
     this.Inputs.setBatchSize(1)
+
+    let accumulator = this.State.Accumulator
 
     // Multiply all the inputs together one element at at time.
     while (!this.Inputs.Empty) {
@@ -139,11 +138,14 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
 
       console.log(`this.Inputs.resolve() => `, resolved)
 
-      a *= resolved[0]
+      accumulator *= resolved[0]
     }
 
+    // Set the state
+    this.State.setAccumulator(accumulator)
+
     // Set the output value
-    this.Output.set(a)
+    this.Output.set(accumulator)
 
     // Be done.
     return this.Output.Data

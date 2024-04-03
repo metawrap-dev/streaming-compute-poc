@@ -1,4 +1,5 @@
 import { type IData } from '../../Design/IData.js'
+import { type ISource } from '../../Design/ISource.js'
 import { type IState } from '../../Design/IState.js'
 
 /**
@@ -9,12 +10,14 @@ export class StateSourceMemory<T> implements IState {
   /**
    * How are are we into the source in memory.
    * @type {number}
+   * @todo This should be removed.
    */
   Index: number = 0
 
   /**
-   * The data in memory.
-   * @type {(T | IData<T>)[]}
+   * The data stored in memory that we are reading out of.
+   * @type {(ISource<T> | T | IData<T>)[]}
+   * @readonly
    */
-  Data: (T | IData<T>)[] = []
+  readonly Data: (ISource<T> | T | IData<T>)[] = []
 }

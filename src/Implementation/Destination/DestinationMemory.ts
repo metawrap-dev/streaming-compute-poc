@@ -40,22 +40,6 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
   readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
-   * The in memory storage data.
-   * @type {(T | IData<T>)[]}
-   * @private
-   * @state
-   */
-  #Storage: T[] = []
-
-  /**
-   * The buffered data.
-   * @type {(T | IData<T>)[]}
-   * @private
-   * @state
-   */
-  #Buffer: (ISource<T> | T | IData<T>)[] = []
-
-  /**
    * If true then we have called resolved at least once
    * @type {boolean}
    * @private
@@ -90,7 +74,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * @readonly
    */
   get Resolved(): boolean {
-    return this.#Resolved && this.#Buffer.length === 0
+    return this.#Resolved && this.State.Buffer.length === 0
   }
 
   /**
@@ -135,7 +119,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     if (isOneSourceParameter<T>(args, one, rest)) {
       // Yes, let's add it in order
       console.log('SourceMemory: Source passed')
-      this.#Buffer.push(one)
+      this.State.Buffer.push(one)
     } else if (isParameters<T>(args, rest)) {
       // Is it multiple parameters?
       // Multiple arguments
@@ -182,7 +166,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
       throw new Error(`SourceMemory: Invalid parameters`)
     }
 
-    this.#Buffer.push(data)
+    this.State.Buffer.push(data)
 
     // Check the buffer and see if we can resolve the destination.
     await this.#checkBuffer()
@@ -194,7 +178,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    */
   async #writeMany(data: (T | IData<T>)[]): Promise<void> {
     // Add to the memory as a batch.
-    this.#Buffer.push(...data)
+    this.State.Buffer.push(...data)
 
     // Check the buffer and see if we can resolve the destination.
     await this.#checkBuffer()
@@ -204,7 +188,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * Check the buffer to see if we can resolve the destination.
    */
   async #checkBuffer(): Promise<void> {
-    if (this.#Buffer.length >= this.BatchSize) {
+    if (this.State.Buffer.length >= this.BatchSize) {
       console.log(`resolve chunk to memory`)
       await this.resolve()
     }
@@ -217,18 +201,18 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
   toString(): string {
     const result: string[] = []
 
-    result.push('{DestinationMemory(' + this.#Storage.length + ' stored, ' + this.#Buffer.length + ' in buffer, ' + this.BatchSize + ' batch size) <= ')
+    result.push('{DestinationMemory(' + this.State.Storage.length + ' stored, ' + this.State.Buffer.length + ' in buffer, ' + this.BatchSize + ' batch size) <= ')
 
     result.push('[')
     const buffer: string[] = []
-    for (const d of this.#Buffer) {
+    for (const d of this.State.Buffer) {
       buffer.push(d.toString())
     }
     result.push(buffer.join(','))
     result.push(']=>')
     result.push('[')
     const storage: string[] = []
-    for (const s of this.#Storage) {
+    for (const s of this.State.Storage) {
       storage.push(s.toString())
     }
     result.push(storage.join(','))
@@ -247,7 +231,8 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     // We have called resolve at least once
     this.#Resolved = true
 
-    for (const d of this.#Buffer) {
+    // Walk the buffer and resolve each element
+    for (const d of this.State.Buffer) {
       console.log(`resolve`, d)
 
       if (isSource<T>(d)) {
@@ -257,20 +242,25 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
         // If it is a source, then we need to resolve it.
         while (!d.Empty) {
           // Resolve as a chunk and store
-          this.#Storage.push(...(await d.resolve()))
+          this.State.Storage.push(...(await d.resolve()))
         }
       } else if (isResolvable(d)) {
+        // If it is resolved...
         if (d.Resolved) {
-          this.#Storage.push(d.Data)
+          // Then just push the data
+          this.State.Storage.push(d.Data)
         } else {
-          this.#Storage.push(await d.resolve())
+          // Otherwise, we need to resolve and push it
+          this.State.Storage.push(await d.resolve())
         }
       } else {
-        this.#Storage.push(d)
+        // Just plain old data
+        this.State.Storage.push(d)
       }
     }
 
-    this.#Buffer.length = 0
+    // Clear the buffer
+    this.State.Buffer.length = 0
   }
 
   /**

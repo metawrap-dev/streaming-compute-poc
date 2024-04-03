@@ -36,20 +36,13 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
   readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
-   * The value of the number.
-   * @type {number | undefined}
-   * @private
-   */
-  #Number?: number
-
-  /**
    * The number value
    * @type {number}
    * @readonly
    */
   get Data(): number {
     if (this.Resolved) {
-      return this.#Number
+      return this.State.Number
     }
     throw new Error(`Number is not resolved.`)
   }
@@ -60,7 +53,7 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
    */
   constructor(number?: number) {
     super()
-    this.#Number = number
+    this.State.setNumber(number)
     this.#Resolved = number !== undefined
   }
 
@@ -86,7 +79,7 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
    */
   toString(): string {
     if (this.Resolved) {
-      return `{DataNumber <= ${this.#Number.toString()}}`
+      return `{DataNumber <= ${this.State.Number.toString()}}`
     } else {
       return 'unresolved'
     }
@@ -106,7 +99,7 @@ export class DataNumber extends ElementData implements IData<number>, ISettable<
    * @param {number} value The value to set.
    */
   set(value: number): void {
-    this.#Number = value
+    this.State.setNumber(value)
     this.#Resolved = true
   }
 }

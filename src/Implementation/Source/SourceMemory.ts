@@ -33,22 +33,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
-   * How are are we into the source in memory.
-   * @type {number}
-   * @private
-   * @state ??
-   */
-  #Index: number = 0
-
-  /**
-   * The data in memory.
-   * @state ??
-   * @type {(ISource<T> | T | IData<T>)[]}
-   * @private
-   */
-  #Data: (ISource<T> | T | IData<T>)[] = []
-
-  /**
    * Stores how large a chunk of data we want to resolve at a time.
    * @type {number}
    * @private
@@ -79,16 +63,16 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     if (isOneSourceParameter<T>(args, input, rest)) {
       // Yes it is. We can use it directly.
       console.log('SourceMemory: Source passed')
-      this.#Data.push(input)
+      this.State.Data.push(input)
     } else if (isParameters<T>(args, rest)) {
       // Is it multiple parameters?
       console.log('SourceMemory: Parameters passed')
-      this.#Data.push(input)
-      this.#Data.push(...rest)
+      this.State.Data.push(input)
+      this.State.Data.push(...rest)
     } else if (isOneParameter<T>(args, input)) {
       // Is it just a single parameter
       console.log('SourceMemory: One parameter passed')
-      this.#Data.push(input)
+      this.State.Data.push(input)
     } else {
       // Not a combination we can handle.
       throw new Error(`SourceMemory: Invalid parameters`)
@@ -111,11 +95,11 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    */
   get Empty(): boolean {
     // If we have data remaining
-    if (this.#Index < this.#Data.length) {
+    if (this.State.Index < this.State.Data.length) {
       // If the first element is a source...
-      if (isSource<T>(this.#Data[this.#Index])) {
+      if (isSource<T>(this.State.Data[this.State.Index])) {
         // If it is a source then check if it is empty
-        return (this.#Data[this.#Index] as ISource<T>).Empty
+        return (this.State.Data[this.State.Index] as ISource<T>).Empty
 
         // TODO: We should also check if any other elements are not sources
       } else {
@@ -134,14 +118,14 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
   toString(): string {
     const result: string[] = []
 
-    result.push(`{SourceMemory(${this.#Data.length} elements, atoms ${this.Count}, ${this.#Index} index, ${this.#BatchSize} batch size) <= `)
+    result.push(`{SourceMemory(${this.State.Data.length} elements, atoms ${this.Count}, ${this.State.Index} index, ${this.#BatchSize} batch size) <= `)
 
     {
       // Otherwise just list the data
       result.push('[')
-      for (let i = 0; i < this.#Data.length; i++) {
-        result.push(this.#Data[i].toString())
-        if (i !== this.#Data.length - 1) {
+      for (let i = 0; i < this.State.Data.length; i++) {
+        result.push(this.State.Data[i].toString())
+        if (i !== this.State.Data.length - 1) {
           result.push(',')
         }
       }
@@ -172,10 +156,10 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     let a = 0
 
     // Walk every element in the source
-    for (let i = this.#Index; i < this.#Data.length; i++) {
+    for (let i = this.State.Index; i < this.State.Data.length; i++) {
       // If a source then we go deeper
-      if (isSource<T>(this.#Data[i])) {
-        a += (this.#Data[i] as ISource<T>).Count
+      if (isSource<T>(this.State.Data[i])) {
+        a += (this.State.Data[i] as ISource<T>).Count
       } else {
         a++
       }
@@ -204,7 +188,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     //
     while (result.length < this.BatchSize && !this.Empty) {
       // Get the current element
-      const element = this.#Data[this.#Index]
+      const element = this.State.Data[this.State.Index]
 
       // Is it s source?
       if (isSource<T>(element)) {
@@ -225,7 +209,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
         // If we have trained this source.
         if (element.Empty) {
           // Advance the index
-          this.#Index++
+          this.State.Index++
         }
       } else {
         // Get the element
@@ -244,7 +228,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
         }
 
         // Advance the index
-        this.#Index++
+        this.State.Index++
       }
     }
 
