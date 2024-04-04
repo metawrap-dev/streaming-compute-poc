@@ -49,12 +49,12 @@ export class DataVectorN extends ElementData implements IData<number[]>, ISettab
 
   /**
    * @constructor
-   * @param {number} number The value of the number.
+   * @param {number} vector The value of the number.
    */
-  constructor(number?: number[]) {
+  constructor(vector?: number[]) {
     super()
-    this.State.setVectorN(number)
-    this.State.setResolved(number !== undefined)
+    this.State.setVectorN(vector)
+    this.State.setResolved(vector !== undefined)
   }
 
   /**

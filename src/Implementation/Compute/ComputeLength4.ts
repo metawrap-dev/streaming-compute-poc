@@ -3,7 +3,7 @@ import { type IData } from '../../Design/IData.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { type DataVectorN } from '../Data/DataVectorN.js'
 import { SourceMemory } from '../Source/SourceMemory.js'
-import { StateComputeDot4 } from '../State/StateComputeDot4.js'
+import { StateComputeLength4 } from '../State/StateComputeLength4.js'
 import { type Vector } from '../Utility/Vector.js'
 import { Compute } from './Compute.js'
 
@@ -48,31 +48,31 @@ async function resolveVector(input: inputVector): Promise<primalVector> {
 }
 
 /**
- * This can perform `dot4` on `v4`
+ * This can perform `length4` on `v4`
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
+export class ComputeLength4 extends Compute<inputVector, number> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
    * @readonly
    */
-  readonly State: StateComputeDot4 = new StateComputeDot4()
+  readonly State: StateComputeLength4 = new StateComputeLength4()
 
   /**
    * @constructor
    * @param {inputVector} a The first input vector.
    */
-  constructor(a: inputVector, b: inputVector) {
-    console.log('ComputeDot4:a ', a)
-    console.log('ComputeDot4:b ', b)
+  constructor(a: inputVector) {
+    console.log('ComputeLength4:a ', a)
+    
 
-    if (a === undefined || b === undefined) throw new Error('ComputeDot4:constructor - Missing parameters.')
+    if (a === undefined) throw new Error('ComputeLength4:constructor - Missing parameters.')
 
     // Assign inputs
-    super(new SourceMemory<[inputVector, inputVector]>([a, b]), new DataNumber())
+    super(new SourceMemory<inputVector>(a), new DataNumber())
   }
   /**
    * Resolve it using a promise.
@@ -89,14 +89,12 @@ export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
 
       console.log(`this.Inputs.resolve() => `, resolved)
 
-      for (const pair of resolved) {
-        const [a, b] = pair
+      for (const a of resolved) {
 
-        console.log(`pair `, pair)
+        
         console.log(`a `, a)
-        console.log(`b `, b)
-
-        this.Output.set(dot4(await resolveVector(a), await resolveVector(b)))
+        
+        this.Output.set(length4(await resolveVector(a)))
       }
     }
 
@@ -106,20 +104,15 @@ export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
 }
 
 /**
- *
+ * Calculate the length of a v4
  * @param {number[4]} vectorA
- * @param {number[4]} vectorB
  * @returns
  */
-function dot4(vectorA: number[], vectorB: number[]): number {
-  if (vectorA.length !== 4 || vectorB.length !== 4) {
-    throw new Error('Vectors must be of length (4)')
+function length4(vectorA: number[]): number {
+  if (vectorA.length !== 4) {
+    throw new Error('Vector must be of length (4)')
   }
 
-  let product = 0
-  for (let i = 0; i < vectorA.length; i++) {
-    product += vectorA[i] * vectorB[i]
-  }
-
-  return product
+  // Calculate the length of vectorA
+  return Math.sqrt((vectorA[0]*vectorA[0]) + (vectorA[1]*vectorA[1]) + (vectorA[2]*vectorA[2]) + (vectorA[3]*vectorA[3]))
 }

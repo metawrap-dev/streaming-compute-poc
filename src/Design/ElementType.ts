@@ -31,6 +31,11 @@ export enum ElementType {
    * Is a destination stream for data.
    */
   Destination,
+
+  /**
+   * Can take a source and stream it into a Compute element.
+   */
+  Streamer,
 }
 
 /**
