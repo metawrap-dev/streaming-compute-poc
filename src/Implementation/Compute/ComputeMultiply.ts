@@ -103,6 +103,14 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
   }
 
   /**
+   * Sets the value of the output
+   * @param {number} value The value to set.
+   */
+  set(value: number): void {
+    this.Output.set(value)
+  }
+
+  /**
    * Describe the element as a string.
    * @returns {string}
    */

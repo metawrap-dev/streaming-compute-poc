@@ -15,4 +15,10 @@ export interface IData<T> extends IDescribable, IResolvable<T>, IElement {
    * @readonly
    */
   readonly Data: T
+
+  /**
+   * Sets the value of the data and marks it as resolved.
+   * @param {T} value The value to set.
+   */
+  set(value: T): void
 }

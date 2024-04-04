@@ -7,10 +7,7 @@ describe('ComputeDot4', () => {
   afterAll(() => {})
 
   it('One Primitive Parameter', async () => {
-    const m = new ComputeDot4([
-      [1, 1, 1, 1],
-      [1, 1, 1, 1],
-    ])
+    const m = new ComputeDot4([1, 1, 1, 1], [1, 1, 1, 1])
 
     console.log(m.toString())
 
@@ -20,7 +17,7 @@ describe('ComputeDot4', () => {
 
     console.log(m.Data.toString())
 
-    expect(m.Data).toEqual([4])
+    expect(m.Data).toEqual(4)
   })
 
   /*

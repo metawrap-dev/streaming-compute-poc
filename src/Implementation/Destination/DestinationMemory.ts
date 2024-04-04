@@ -255,4 +255,13 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     // Clear the buffer
     this.State.Buffer.length = 0
   }
+
+  /**
+   * Sets the value of the output
+   * @param {number} value The value to set.
+   */
+  set(_value: T): void {
+    // this.Output.set(value)
+    // Not needed?
+  }
 }

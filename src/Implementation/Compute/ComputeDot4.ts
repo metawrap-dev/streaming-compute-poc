@@ -1,29 +1,58 @@
-import { isOneParameter, isOneSourceParameter, isParameters } from '../../Design/ElementType.js'
-import { type ICompute } from '../../Design/ICompute.js'
+import { isDataArray } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
-import { type ISource } from '../../Design/ISource.js'
-import { ConfigCommon } from '../Config/ConfigCommon.js'
-import { DataVectorN } from '../Data/DataVectorN.js'
-import { ElementCompute } from '../Element/ElementCompute.js'
+import { DataNumber } from '../Data/DataNumber.js'
+import { type DataVectorN } from '../Data/DataVectorN.js'
 import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
-import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { Compute } from './Compute.js'
 
 /**
- * This can perform dot product.
+ * Defines an input number in the various forms.
+ * @type
+ */
+export type inputNumber = number | IData<number>
+
+/**
+ * Defines an input vector in the various forms.
+ * @type
+ */
+export type primalVector = number[]
+
+/**
+ * Defines an input vector in the various forms.
+ * @type
+ */
+export type inputVector = inputNumber[] | DataVectorN
+
+/**
+ *
+ * @param input
+ * @returns
+ */
+async function resolveVector(input: inputVector): Promise<primalVector> {
+  if (isDataArray(input)) {
+    const output: number[] = []
+    for (const i of input) {
+      if (typeof i === 'number') {
+        output.push(i)
+      } else {
+        output.push(await i.resolve(true))
+      }
+    }
+    return output
+  } else {
+    // Just return a reference. (Danger! but let's not clone until we find we need to.)
+    return input.Data
+  }
+}
+
+/**
+ * This can perform `dot4` on `v4`
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeDot4 extends ElementCompute implements ICompute<[number[], number[]], number[]> {
-  /**
-   * The configuration for the compute multiply.
-   * This is the applied strategy.
-   * @type {IConfig}
-   * @readonly
-   */
-  readonly Config: ConfigCommon = new ConfigCommon()
-
+export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -32,80 +61,26 @@ export class ComputeDot4 extends ElementCompute implements ICompute<[number[], n
   readonly State: StateComputeDot4 = new StateComputeDot4()
 
   /**
-   * The strategy that can be applied to the compute multiply's config.
-   * @type {IStrategy}
-   * @readonly
-   */
-  readonly Strategy: StrategyCommon = new StrategyCommon()
-
-  /**
-   * Inputs for the computation.
-   * We massage everything into a source.
-   * @type {ISource<I>}
-   * @readonly
-   */
-  readonly Inputs: ISource<[number[], number[]]>
-
-  /**
-   * What is the output of the multiplication.
-   * @type {DataNumber}
-   * @readonly
-   */
-  readonly Output: DataVectorN = new DataVectorN()
-
-  /**
-   * If true then this has been resolved.
-   * @type {boolean}
-   * @readonly
-   */
-  get Resolved(): boolean {
-    return this.Output.Resolved
-  }
-
-  /**
    * @constructor
    * @param {ISource<number[]> | number[] | IData<number[]>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: ISource<[number[], number[]]> | [number[], number[]] | IData<[number[], number[]]>, ...rest: ([number[], number[]] | IData<[number[], number[]]>)[]) {
-    super()
+  constructor(a: (number | IData<number>)[] | DataVectorN, b: (number | IData<number>)[] | DataVectorN) {
+    console.log('ComputeDot4:a ', a)
+    console.log('ComputeDot4:b ', b)
 
-    console.log('ComputeDot4:input ', input)
-    console.log('ComputeDot4:rest ', rest)
+    if (a === undefined || b === undefined) throw new Error('ComputeDot4:constructor - Missing parameters.')
 
-    // How many arguments did we get?
-    const args = arguments.length
+    // Assign inputs
+    super(new SourceMemory<[inputVector, inputVector]>([a, b]), new DataNumber())
 
-    // Is this a data-source?
-    if (isOneSourceParameter<[number[], number[]]>(args, input, rest)) {
-      // Yes it is. We can use it directly.
-      console.log('ComputeDot4: Source passed')
-      this.Inputs = input
-    } else if (isParameters<[number[], number[]]>(args, rest)) {
-      // Is it multiple parameters?
-      console.log('ComputeDot4: Parameters passed')
-      this.Inputs = new SourceMemory<[number[], number[]]>(input, ...rest)
-    } else if (isOneParameter<[number[], number[]]>(args, input)) {
-      // Is it just a single parameter
-      console.log('ComputeDot4: One parameter passed')
-      this.Inputs = new SourceMemory<[number[], number[]]>(input)
-    } else {
-      // Not a combination we can handle.
-      throw new Error(`ComputeDot4: Invalid parameters`)
-    }
-  }
-
-  /**
-   * The output as data.
-   * @type {IData<number[]>}
-   */
-  get Data(): number[] {
-    return this.Output.Data
+    // this.Inputs =
   }
 
   /**
    * Describe the element as a string.
    * @returns {string}
    */
+  /*
   toString(): string {
     const out: string[] = []
     out.push('(')
@@ -119,23 +94,25 @@ export class ComputeDot4 extends ElementCompute implements ICompute<[number[], n
     out.push(')')
     return out.join(' ')
   }
+  */
 
   /**
    * Resolve it using a promise.
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<number[]> {
+  async resolve(_wait: boolean = false): Promise<number> {
     // Enforce the batch size of 1 for this compute element
 
-    const accumulator = this.State.Accumulator
+    //const accumulator = this.State.Accumulator
 
     // If there is no input then we are done.
     // if (this.Inputs.Empty) return accumulator
 
-    this.Inputs.Config.setBatchSize(1)
+    //this.Inputs.Config.setBatchSize(1)
 
     // Dot4 all the inputs together one element at at time.
+
     while (!this.Inputs.Empty) {
       console.log(`Try.... ${this.Inputs.Empty}`)
 
@@ -150,6 +127,7 @@ export class ComputeDot4 extends ElementCompute implements ICompute<[number[], n
         console.log(`a `, a)
         console.log(`b `, b)
 
+        /*
         if (a.length !== 4) {
           throw new Error(`dot4 requires vector of length 4`)
         } else if (b.length !== 4) {
@@ -157,6 +135,9 @@ export class ComputeDot4 extends ElementCompute implements ICompute<[number[], n
         }
 
         accumulator.push(dot4(a, b))
+        */
+
+        this.Output.set(dot4(await resolveVector(a), await resolveVector(b)))
       }
     }
 
@@ -164,7 +145,7 @@ export class ComputeDot4 extends ElementCompute implements ICompute<[number[], n
     //this.State.setAccumulator(accumulator)
 
     // Set the output value
-    this.Output.set(accumulator)
+    // this.Output.set(accumulator)
 
     // Be done.
     return this.Output.Data
