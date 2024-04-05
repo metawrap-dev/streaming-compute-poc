@@ -10,7 +10,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class Streamer<I, O> extends ElementStreamer implements IStreamer<I, O> {
+export class Streamer<I,N extends number, O> extends ElementStreamer implements IStreamer<I, O> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -44,13 +44,13 @@ export class Streamer<I, O> extends ElementStreamer implements IStreamer<I, O> {
    * @type {ICompute<I,O>}
    * @readonly
    */
-  readonly Compute: ICompute<I, O>
+  readonly Compute: ICompute<I, N, O>
 
   /**
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(source: ISource<I>, compute: ICompute<I, O>) {
+  constructor(source: ISource<I>, compute: ICompute<I,N, O>) {
     super()
     this.Source = source
     this.Compute = compute

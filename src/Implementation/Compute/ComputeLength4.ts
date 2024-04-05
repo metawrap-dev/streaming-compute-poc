@@ -53,7 +53,7 @@ async function resolveVector(input: inputVector): Promise<primalVector> {
  * @author James McParlane
  * @interface
  */
-export class ComputeLength4<I extends inputVector> extends Compute<I, number> {
+export class ComputeLength4<I extends inputVector> extends Compute<I, 1, number> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -72,7 +72,7 @@ export class ComputeLength4<I extends inputVector> extends Compute<I, number> {
     const source = a === undefined ? new SourceMemory<I>() : new SourceMemory<I>(a)
 
     // Assign input and output
-    super(source, new DataNumber())
+    super(source, 1, new DataNumber())
   }
   /**
    * Resolve it using a promise.

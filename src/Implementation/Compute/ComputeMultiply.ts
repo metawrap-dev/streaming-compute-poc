@@ -8,6 +8,9 @@ import { ElementCompute } from '../Element/ElementCompute.js'
 import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { Vector } from '../Utility/Vector.js'
+
+
 
 /**
  * This can multiply numbers together
@@ -15,7 +18,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiply extends ElementCompute implements ICompute<number, number> {
+export class ComputeMultiply4 extends ElementCompute implements ICompute<number, 4, number> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -44,7 +47,7 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
    * @type {ISource<I>}
    * @readonly
    */
-  readonly Inputs: ISource<number>
+  readonly Inputs: ISource<Vector<number,4>>
 
   /**
    * What is the output of the multiplication.
@@ -66,7 +69,7 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: ISource<number> | number | IData<number>, ...rest: (number | IData<number>)[]) {
+  constructor(input: ISource<Vector<number,4>> | number | IData<number>, ...rest: (number | IData<number>)[]) {
     super()
 
     console.log('ComputeMultiply:input ', input)
@@ -76,18 +79,18 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
     const args = arguments.length
 
     // Is this a data-source?
-    if (isOneSourceParameter<number>(args, input, rest)) {
+    if (isOneSourceParameter<Vector<number,4>>(args, input, rest)) {
       // Yes it is. We can use it directly.
       console.log('ComputeMultiply: Source passed')
       this.Inputs = input
     } else if (isParameters<number>(args, rest)) {
       // Is it multiple parameters?
       console.log('ComputeMultiply: Parameters passed')
-      this.Inputs = new SourceMemory<number>(input, ...rest)
+      //this.Inputs = new SourceMemory<Vector<number,4>>(input, ...rest)
     } else if (isOneParameter<number>(args, input)) {
       // Is it just a single parameter
       console.log('ComputeMultiply: One parameter passed')
-      this.Inputs = new SourceMemory<number>(input)
+      //this.Inputs = new SourceMemory<Vector<number,4>>(input)
     } else {
       // Not a combination we can handle.
       throw new Error(`ComputeMultiply: Invalid parameters`)

@@ -1,9 +1,11 @@
-import { isDataArray } from '../../Design/ElementType.js'
+import { isDataArray, isSource } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { type DataVectorN } from '../Data/DataVectorN.js'
 import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
+import { Argument } from '../Utility/Input.js'
+import { type Vector } from '../Utility/Vector.js'
 import { Compute } from './Compute.js'
 
 /**
@@ -52,7 +54,7 @@ async function resolveVector(input: inputVector): Promise<primalVector> {
  * @author James McParlane
  * @interface
  */
-export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
+export class ComputeDot4 extends Compute<Vector<number,4>, 2, number> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -60,19 +62,20 @@ export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
    */
   readonly State: StateComputeDot4 = new StateComputeDot4()
 
+
   /**
    * @constructor
    * @param {ISource<number[]> | number[] | IData<number[]>} input The input for the source that allows source chaining and composition
    */
-  constructor(a?: (number | IData<number>)[] | DataVectorN, b?: (number | IData<number>)[] | DataVectorN) {
+  constructor(a?: Argument<number,4>,b?: Argument<number,4>) {
     console.log('ComputeDot4:a ', a)
     console.log('ComputeDot4:b ', b)
 
     // Get the source as an empty source or a source with initial data.
-    const source = a === undefined ? new SourceMemory<[inputVector, inputVector]>() : new SourceMemory<[inputVector, inputVector]>([a, b])
+    const source = a === undefined ? new SourceMemory<Vector<number,4>, 2>() : new SourceMemory<Vector<number,4>, 2>(a, b)
 
     // Assign inputs
-    super(source, new DataNumber())
+    super(source, 2, new DataNumber())
 
     // this.Inputs =
   }
@@ -103,16 +106,12 @@ export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
    * @async
    */
   async resolve(_wait: boolean = false): Promise<number> {
-    // Enforce the batch size of 1 for this compute element
+    
+    // Two ways of processing the input
 
-    //const accumulator = this.State.Accumulator
+    if (isSource<>((this.Inputs))) {
 
-    // If there is no input then we are done.
-    // if (this.Inputs.Empty) return accumulator
-
-    //this.Inputs.Config.setBatchSize(1)
-
-    // Dot4 all the inputs together one element at at time.
+    }
 
     while (!this.Inputs.Empty) {
       console.log(`Try.... ${this.Inputs.Empty}`)

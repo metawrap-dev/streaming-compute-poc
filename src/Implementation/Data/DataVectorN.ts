@@ -4,12 +4,13 @@ import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataVectorN } from '../State/StateDataVectorN.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { type Vector } from '../Utility/Vector.js'
 
 /**
  * A "simple" number.
  * @class
  */
-export class DataVectorN extends ElementData implements IData<number[]>, ISettable<number[]> {
+export class DataVectorN extends ElementData implements IData<Vector<number,0>>, ISettable<Vector<number,0>> {
   //
   // The below is overkill for a simple number, but this is just a toy example of how to implement a data element.
   //

@@ -1,10 +1,10 @@
 import { type ICompute } from '../../Design/ICompute.js'
 import { type IData } from '../../Design/IData.js'
-import { type ISource } from '../../Design/ISource.js'
 import { type IState } from '../../Design/IState.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { type Input } from '../Utility/Input.js'
 
 /**
  * Abstract Generic [ICompute] element.
@@ -12,7 +12,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * @author James McParlane
  * @interface
  */
-export abstract class Compute<I, O> extends ElementCompute implements ICompute<I, O> {
+export abstract class Compute<I, N extends number, O> extends ElementCompute implements ICompute<I,N,O> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -39,9 +39,9 @@ export abstract class Compute<I, O> extends ElementCompute implements ICompute<I
    * Inputs for the computation.
    * We massage everything into a source.
    * @type {ISource<I>}
-   * @readonly
+   * @readonly  
    */
-  readonly Inputs: ISource<I>
+  readonly Inputs: Input<I,N>
 
   /**
    * What is the output of the multiplication.
@@ -76,14 +76,23 @@ export abstract class Compute<I, O> extends ElementCompute implements ICompute<I
   }
 
   /**
+   * Return the number of arguments
+   * @type {N}
+   * @readonly
+   */
+   readonly InputWidth: N 
+
+  /**
    *
    * @param inputs
+   * @param n 
    * @param output
    */
-  constructor(inputs: ISource<I>, output: IData<O>) {
+  constructor(inputs: Input<I,N>, n: N, output: IData<O>) {
     super()
     this.Inputs = inputs
     this.Output = output
+    this.InputWidth = n
   }
 
   /**

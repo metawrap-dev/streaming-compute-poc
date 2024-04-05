@@ -1,3 +1,4 @@
+import { type Vector } from '../Implementation/Utility/Vector.js'
 import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
@@ -8,7 +9,7 @@ import { type IElement } from './IElement.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T> extends IDescribable, IElement {
+export interface ISource<T,N extends number> extends IDescribable, IElement {
   /**
    * If true then there is no more data to read.
    * @type {number}
@@ -36,8 +37,8 @@ export interface ISource<T> extends IDescribable, IElement {
 
   /**
    * Queue some data to be fed into the source that can be resolved later on.
-   * @param {ISource<T> | T | (T | IData<T>)[] } input The data to queue.
+   * @param {} input The data to queue.
    * @async
    */
-  queue(...input: (ISource<T> | T | IData<T>)[]): Promise<void>
+  queue(...input: (ISource<T,N> | Vector<T | IData<T>, N> )[]): Promise<void>
 }

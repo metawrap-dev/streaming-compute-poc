@@ -1,4 +1,4 @@
-import { ComputeMultiply } from '../src/Implementation/Compute/ComputeMultiply.js'
+import { ComputeLength4 } from '../src/Implementation/Compute/ComputeLength4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 import { DestinationMemory } from '../src/Implementation/Destination/DestinationMemory.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
@@ -173,7 +173,7 @@ describe('DestinationMemory', () => {
     expect(a).toBeDefined()
     expect(() => a.Data).toThrow(Error)
 
-    const b = new ComputeMultiply(new SourceMemory(10, 10, 10, 10))
+    const b = new ComputeLength4(new SourceMemory(10, 10, 10, 10))
 
     expect(b.toString()).toBe('(multiply{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]}=>unresolved)')
 

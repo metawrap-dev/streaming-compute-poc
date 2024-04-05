@@ -5,12 +5,13 @@ import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateSourceMemory } from '../State/StateSourceMemory.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { type Input } from '../Utility/Input.js'
 
 /**
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class SourceMemory<T> extends ElementSource implements ISource<T> {
+export class SourceMemory<T,N extends number> extends ElementSource implements ISource<T, N> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -36,7 +37,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(...input: (ISource<T> | T | IData<T>)[]) {
+  constructor(...input: Input<T,N>[]) {
     super()
 
     // Queue the data
@@ -54,7 +55,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
       // If the first element is a source...
       if (isSource<T>(this.State.Data[this.State.Index])) {
         // If it is a source then check if it is empty
-        return (this.State.Data[this.State.Index] as ISource<T>).Empty
+        return (this.State.Data[this.State.Index] as ISource<T,N>).Empty
 
         // TODO: We should also check if any other elements are not sources
       } else {
@@ -118,7 +119,7 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
     for (let i = this.State.Index; i < this.State.Data.length; i++) {
       // If a source then we go deeper
       if (isSource<T>(this.State.Data[i])) {
-        a += (this.State.Data[i] as ISource<T>).Count
+        a += (this.State.Data[i] as ISource<T,N>).Count
       } else {
         a++
       }
