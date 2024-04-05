@@ -53,7 +53,7 @@ async function resolveVector(input: inputVector): Promise<primalVector> {
  * @author James McParlane
  * @interface
  */
-export class ComputeLength4 extends Compute<inputVector, number> {
+export class ComputeLength4<I extends inputVector> extends Compute<I, number> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -63,16 +63,16 @@ export class ComputeLength4 extends Compute<inputVector, number> {
 
   /**
    * @constructor
-   * @param {inputVector} a The first input vector.
+   * @param {I} a The first input vector.
    */
-  constructor(a: inputVector) {
+  constructor(a?: I) {
     console.log('ComputeLength4:a ', a)
-    
 
-    if (a === undefined) throw new Error('ComputeLength4:constructor - Missing parameters.')
+    // Get the source as an empty source or a source with initial data.
+    const source = a === undefined ? new SourceMemory<I>() : new SourceMemory<I>(a)
 
-    // Assign inputs
-    super(new SourceMemory<inputVector>(a), new DataNumber())
+    // Assign input and output
+    super(source, new DataNumber())
   }
   /**
    * Resolve it using a promise.
@@ -90,10 +90,9 @@ export class ComputeLength4 extends Compute<inputVector, number> {
       console.log(`this.Inputs.resolve() => `, resolved)
 
       for (const a of resolved) {
-
-        
         console.log(`a `, a)
-        
+
+        // Set the output data.
         this.Output.set(length4(await resolveVector(a)))
       }
     }
@@ -114,5 +113,5 @@ function length4(vectorA: number[]): number {
   }
 
   // Calculate the length of vectorA
-  return Math.sqrt((vectorA[0]*vectorA[0]) + (vectorA[1]*vectorA[1]) + (vectorA[2]*vectorA[2]) + (vectorA[3]*vectorA[3]))
+  return Math.sqrt(vectorA[0] * vectorA[0] + vectorA[1] * vectorA[1] + vectorA[2] * vectorA[2] + vectorA[3] * vectorA[3])
 }

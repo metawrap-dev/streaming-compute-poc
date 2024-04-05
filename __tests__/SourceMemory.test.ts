@@ -12,13 +12,9 @@ describe('SourceMemory', () => {
 
     expect(a).toBeDefined()
 
-    expect(a.Resolved).toBe(false)
-
     expect(a.Empty).toBe(false)
 
     expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}')
-
-    expect(a.Resolved).toBe(false)
 
     const d1 = await a.resolve()
 
@@ -43,10 +39,6 @@ describe('SourceMemory', () => {
     expect(d4).toEqual([4])
 
     expect(a.Empty).toBe(true)
-
-    expect(a.Resolved).toBe(true)
-
-    await expect(async () => await a.resolve()).rejects.toThrow(Error)
   })
 
   it('should initialize with hybrid parameters', async () => {
@@ -54,13 +46,9 @@ describe('SourceMemory', () => {
 
     expect(a).toBeDefined()
 
-    expect(a.Resolved).toBe(false)
-
     expect(a.Empty).toBe(false)
 
     expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [{DataNumber <= 1},2,{DataNumber <= 3},4]}')
-
-    expect(a.Resolved).toBe(false)
 
     const d1 = await a.resolve()
 
@@ -85,10 +73,6 @@ describe('SourceMemory', () => {
     expect(d4).toEqual([4])
 
     expect(a.Empty).toBe(true)
-
-    expect(a.Resolved).toBe(true)
-
-    await expect(async () => await a.resolve()).rejects.toThrow(Error)
   })
 
   it('should be able to chain sources', async () => {
@@ -96,15 +80,11 @@ describe('SourceMemory', () => {
 
     expect(a).toBeDefined()
 
-    expect(a.Resolved).toBe(false)
-
     expect(a.Empty).toBe(false)
 
     expect(a.Config.BatchSize).toBe(1)
 
     expect(a.toString()).toBe('{SourceMemory(1 elements, atoms 4, 0 index, 1 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}]}')
-
-    expect(a.Resolved).toBe(false)
 
     const d1 = await a.resolve()
 
@@ -129,10 +109,6 @@ describe('SourceMemory', () => {
     expect(d4).toEqual([4])
 
     expect(a.Empty).toBe(true)
-
-    expect(a.Resolved).toBe(true)
-
-    await expect(async () => await a.resolve()).rejects.toThrow(Error)
   })
 
   it('should be able to batch sources and imply type', async () => {
@@ -144,13 +120,9 @@ describe('SourceMemory', () => {
 
     expect(a).toBeDefined()
 
-    expect(a.Resolved).toBe(false)
-
     expect(a.Empty).toBe(false)
 
     expect(a.toString()).toBe('{SourceMemory(1 elements, atoms 4, 0 index, 2 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}]}')
-
-    expect(a.Resolved).toBe(false)
 
     const d1 = await a.resolve()
 
@@ -163,8 +135,6 @@ describe('SourceMemory', () => {
     expect(d2).toEqual([3, 4])
 
     expect(a.Empty).toBe(true)
-
-    await expect(async () => await a.resolve()).rejects.toThrow(Error)
   })
 
   it('should be able to batch sources and imply type', async () => {
@@ -176,13 +146,9 @@ describe('SourceMemory', () => {
 
     expect(a).toBeDefined()
 
-    expect(a.Resolved).toBe(false)
-
     expect(a.Empty).toBe(false)
 
     expect(a.toString()).toBe('{SourceMemory(3 elements, atoms 9, 0 index, 2 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]},{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [5,6,7,8]},9]}')
-
-    expect(a.Resolved).toBe(false)
 
     const d1 = await a.resolve()
 
@@ -221,7 +187,5 @@ describe('SourceMemory', () => {
     expect(d5).toEqual([9, 10])
 
     expect(a.Empty).toBe(true)
-
-    await expect(async () => await a.resolve()).rejects.toThrow(Error)
   })
 })

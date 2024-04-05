@@ -4,26 +4,25 @@ import { DataNumber } from '../Data/DataNumber.js'
 import { type DataVectorN } from '../Data/DataVectorN.js'
 import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
-import { type Vector } from '../Utility/Vector.js'
 import { Compute } from './Compute.js'
 
 /**
  * Defines an input number in the various forms.
  * @type
  */
-type inputNumber = number | IData<number>
+export type inputNumber = number | IData<number>
 
 /**
  * Defines an input vector in the various forms.
  * @type
  */
-type primalVector = number[]
+export type primalVector = number[]
 
 /**
  * Defines an input vector in the various forms.
  * @type
  */
-type inputVector = Vector<inputNumber, 4> | inputNumber[] | DataVectorN
+export type inputVector = inputNumber[] | DataVectorN
 
 /**
  *
@@ -63,29 +62,62 @@ export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
 
   /**
    * @constructor
-   * @param {inputVector} a The first input vector.
+   * @param {ISource<number[]> | number[] | IData<number[]>} input The input for the source that allows source chaining and composition
    */
-  constructor(a: inputVector, b: inputVector) {
+  constructor(a?: (number | IData<number>)[] | DataVectorN, b?: (number | IData<number>)[] | DataVectorN) {
     console.log('ComputeDot4:a ', a)
     console.log('ComputeDot4:b ', b)
 
-    if (a === undefined || b === undefined) throw new Error('ComputeDot4:constructor - Missing parameters.')
+    // Get the source as an empty source or a source with initial data.
+    const source = a === undefined ? new SourceMemory<[inputVector, inputVector]>() : new SourceMemory<[inputVector, inputVector]>([a, b])
 
     // Assign inputs
-    super(new SourceMemory<[inputVector, inputVector]>([a, b]), new DataNumber())
+    super(source, new DataNumber())
+
+    // this.Inputs =
   }
+
+  /**
+   * Describe the element as a string.
+   * @returns {string}
+   */
+  /*
+  toString(): string {
+    const out: string[] = []
+    out.push('(')
+
+    out.push('dot4')
+
+    out.push(this.Inputs.toString())
+
+    out.push('=>')
+    out.push(this.Output.toString())
+    out.push(')')
+    return out.join(' ')
+  }
+  */
+
   /**
    * Resolve it using a promise.
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<number> {
-    // This is a hack to keep using ISource to store parameters while we are in transition
-    // testing to see if ISource
+  async resolve(_wait: boolean = false): Promise<number> {
+    // Enforce the batch size of 1 for this compute element
+
+    //const accumulator = this.State.Accumulator
+
+    // If there is no input then we are done.
+    // if (this.Inputs.Empty) return accumulator
+
+    //this.Inputs.Config.setBatchSize(1)
+
+    // Dot4 all the inputs together one element at at time.
+
     while (!this.Inputs.Empty) {
       console.log(`Try.... ${this.Inputs.Empty}`)
 
-      const resolved = await this.Inputs.resolve(wait)
+      const resolved = await this.Inputs.resolve()
 
       console.log(`this.Inputs.resolve() => `, resolved)
 
@@ -96,9 +128,25 @@ export class ComputeDot4 extends Compute<[inputVector, inputVector], number> {
         console.log(`a `, a)
         console.log(`b `, b)
 
+        /*
+        if (a.length !== 4) {
+          throw new Error(`dot4 requires vector of length 4`)
+        } else if (b.length !== 4) {
+          throw new Error(`dot4 requires vector of length 4`)
+        }
+
+        accumulator.push(dot4(a, b))
+        */
+
         this.Output.set(dot4(await resolveVector(a), await resolveVector(b)))
       }
     }
+
+    // Set the state
+    //this.State.setAccumulator(accumulator)
+
+    // Set the output value
+    // this.Output.set(accumulator)
 
     // Be done.
     return this.Output.Data

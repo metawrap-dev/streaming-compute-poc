@@ -125,7 +125,7 @@ export class ComputeMultiply extends ElementCompute implements ICompute<number, 
     out.push('=>')
     out.push(this.Output.toString())
     out.push(')')
-    return out.join(' ')
+    return out.join('')
   }
 
   /**

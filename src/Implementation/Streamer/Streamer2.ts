@@ -1,6 +1,6 @@
 import { type ICompute } from '../../Design/ICompute.js'
 import { type ISource } from '../../Design/ISource.js'
-import { type IStreamer } from '../../Design/IStreamer.js'
+import { type IStreamer2 } from '../../Design/IStreamer2.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementStreamer } from '../Element/ElementStreamer.js'
 import { StateStreamer } from '../State/StateStreamer.js'
@@ -10,7 +10,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class Streamer<I, O> extends ElementStreamer implements IStreamer<I, O> {
+export class Streamer2<I, J, O> extends ElementStreamer implements IStreamer2<I, J, O> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -37,20 +37,20 @@ export class Streamer<I, O> extends ElementStreamer implements IStreamer<I, O> {
    * @type {ISource<I,O>}
    * @readonly
    */
-  readonly Source: ISource<I>
+  readonly Source: ISource<[I, J]>
 
   /**
    * The compute element that will process the data.
    * @type {ICompute<I,O>}
    * @readonly
    */
-  readonly Compute: ICompute<I, O>
+  readonly Compute: ICompute<[I, J], O>
 
   /**
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(source: ISource<I>, compute: ICompute<I, O>) {
+  constructor(source: ISource<[I, J]>, compute: ICompute<[I, J], O>) {
     super()
     this.Source = source
     this.Compute = compute

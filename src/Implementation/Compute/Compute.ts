@@ -92,16 +92,13 @@ export abstract class Compute<I, O> extends ElementCompute implements ICompute<I
    */
   toString(): string {
     const out: string[] = []
-    out.push('(')
-
+    out.push('{')
     out.push(this.constructor.name)
-
     out.push(this.Inputs.toString())
-
     out.push('=>')
     out.push(this.Output.toString())
-    out.push(')')
-    return out.join(' ')
+    out.push('}')
+    return out.join('')
   }
 
   /**

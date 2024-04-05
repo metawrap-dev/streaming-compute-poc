@@ -1,7 +1,6 @@
 import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
-import { type IResolvable } from './IResolvable.js'
 
 /**
  * A source of multiple data elements.
@@ -9,7 +8,7 @@ import { type IResolvable } from './IResolvable.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T> extends IDescribable, IResolvable<T[]>, IElement {
+export interface ISource<T> extends IDescribable, IElement {
   /**
    * If true then there is no more data to read.
    * @type {number}
@@ -28,6 +27,12 @@ export interface ISource<T> extends IDescribable, IResolvable<T[]>, IElement {
    * @readonly
    */
   readonly Count: number | undefined
+
+  /**
+   * Resolve the source.
+   * @param {boolean} wait If true then wait for batch sizes to be met.
+   */
+  resolve(wait?: boolean): Promise<T[]>
 
   /**
    * Queue some data to be fed into the source that can be resolved later on.

@@ -1,4 +1,4 @@
-import { isResolvable, isSource } from '../../Design/ElementType.js'
+import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
@@ -75,17 +75,19 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
 
     result.push(`{SourceMemory(${this.State.Data.length} elements, atoms ${this.Count}, ${this.State.Index} index, ${this.Config.BatchSize} batch size) <= `)
 
-    {
-      // Otherwise just list the data
-      result.push('[')
-      for (let i = 0; i < this.State.Data.length; i++) {
-        result.push(this.State.Data[i].toString())
-        if (i !== this.State.Data.length - 1) {
-          result.push(',')
-        }
+    result.push('[')
+    for (let i = 0; i < this.State.Data.length; i++) {
+      const data = this.State.Data[i]
+
+      if (isDataArray(data)) result.push('[')
+      result.push(data.toString())
+      if (isDataArray(data)) result.push(']')
+
+      if (i !== this.State.Data.length - 1) {
+        result.push(',')
       }
-      result.push(']')
     }
+    result.push(']')
 
     result.push('}')
     return result.join('')
@@ -96,10 +98,12 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @type {boolean}
    * @readonly
    */
+  /*
   get Resolved(): boolean {
     // Otherwise return the resolved status
     return this.State.Resolved
   }
+  &/
 
   /**
    *The number atoms in the source.
@@ -130,11 +134,6 @@ export class SourceMemory<T> extends ElementSource implements ISource<T> {
    * @async
    */
   async resolve(wait: boolean = false): Promise<T[]> {
-    // If we are already resolved then throw an error
-    if (this.State.Resolved) {
-      throw new Error(`Source is already resolved.`)
-    }
-
     const result: T[] = []
 
     // Get a complete batch out of it.

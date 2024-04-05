@@ -175,7 +175,7 @@ describe('DestinationMemory', () => {
 
     const b = new ComputeMultiply(new SourceMemory(10, 10, 10, 10))
 
-    expect(b.toString()).toBe('( multiply {SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]} => unresolved )')
+    expect(b.toString()).toBe('(multiply{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]}=>unresolved)')
 
     // Because we have a batch size of 1, the result is written immediately which causes execution immediately
     await a.write(b)
@@ -196,7 +196,7 @@ describe('DestinationMemory', () => {
 
     // Because we have a batch size of 5, the result will not be flushed until we resolve.
     await a.write(new ComputeMultiply(new SourceMemory(10, 10, 10, 10)))
-    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [( multiply {SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]} => unresolved )]=>[]}')
+    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [(multiply{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [10,10,10,10]}=>unresolved)]=>[]}')
     await a.resolve()
     expect(a.toString()).toBe('{DestinationMemory(1 stored, 0 in buffer, 5 batch size) <= []=>[10000]}')
     expect(a.Resolved).toBe(true)

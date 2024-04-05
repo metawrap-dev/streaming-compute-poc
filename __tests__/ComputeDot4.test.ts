@@ -1,5 +1,8 @@
+import { IData } from '../src/Design/IData.js'
 import { ComputeDot4 } from '../src/Implementation/Compute/ComputeDot4.js'
 import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
+import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
+import { Streamer2 } from '../src/Implementation/Streamer/Streamer2.js'
 import { Vector } from '../src/Implementation/Utility/Vector.js'
 
 describe('ComputeDot4', () => {
@@ -54,32 +57,34 @@ describe('ComputeDot4', () => {
     expect(m.Data).toBe(4)
   })
 
-
   /*
   it('Streamer', async () => {
+    type v4 = Vector<number, 4> | DataVectorN | (number | IData<number>)[]
 
-    type v4 = Vector<number, 4>
+    const source = new SourceMemory<[v4, v4]>(
+      [
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+      ],
+      [
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+      ],
+    )
 
-    const source = new SourceMemory<[v4,v4]>([[1,1,1,1],[1,1,1,1]],[[1,1,1,1],[1,1,1,1]])
+    const compute = new ComputeDot4()
 
-    const compute = new ComputeDot4(undefined as any, undefined as any)
+    const streamer = new Streamer2<v4, v4, number>(source, compute)
 
-    const streamer = new Streamer<[v4,v4],number>(source,compute)
+    console.log(streamer.toString())
 
-    
+    const answer = await streamer.resolve()
 
-    console.log(m.toString())
+    console.log(streamer.toString())
 
-    await m.resolve()
-
-    console.log(m.toString())
-
-    console.log(m.Data.toString())
-
-    expect(m.Data).toBe(4)
+    expect(answer).toBe(2)
   })
   */
-
 
   /*
   it('Two Mixed Parameters', async () => {
