@@ -11,30 +11,36 @@ import { type IResolvable } from './IResolvable.js'
  *
  * @author James McParlane
  * @param {type} I Input type
- * @param {number} N Number of arguments
+ * @param {number} D dimension of input
+ * @param {number} A number of arguments
  * @param {type} O Output type
+ * @param {number} D dimension of input
+ * @param {number} A number of arguments
  * @interface
  */
-export interface ICompute<I,N extends number,O> extends IDescribable, IResolvable<O>, IData<O>, IElement {
+export interface ICompute<I, D extends number, A extends number, O, OD extends number, OA extends number> extends IDescribable, IData<O, OD, OA>, IElement {
   /**
    * Inputs for the computation are a source of N inputs.
-   * @type {Input<I,N>}
+   * @type {Input<I,D>}
    * @readonly
    */
-  readonly Inputs: Input<I,N>
+  readonly Inputs: Input<I, D, A>
 
   /**
    * Return the number of arguments
-   * @type {N}
+   * @type {A}
    */
-  readonly InputWidth: N
+  readonly InputWidth: A
 
   /**
    * Output of the computation.
    *
    * It may be unresolved if not executed yet.
-   * @type {IData}
+   *
+   * Same as .Data?
+   *
+   * @type {IData<O,OD,OA>}
    * @readonly
    */
-  readonly Output: IData<O>
+  readonly Output: IData<O, OD, OA>
 }

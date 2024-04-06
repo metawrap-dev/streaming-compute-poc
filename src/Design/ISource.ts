@@ -1,5 +1,4 @@
-import { type Vector } from '../Implementation/Utility/Vector.js'
-import { type IData } from './IData.js'
+import { type Input, type Output } from '../Implementation/Utility/Input.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 
@@ -9,7 +8,7 @@ import { type IElement } from './IElement.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T,N extends number> extends IDescribable, IElement {
+export interface ISource<T, D extends number, A extends number> extends IDescribable, IElement {
   /**
    * If true then there is no more data to read.
    * @type {number}
@@ -33,12 +32,12 @@ export interface ISource<T,N extends number> extends IDescribable, IElement {
    * Resolve the source.
    * @param {boolean} wait If true then wait for batch sizes to be met.
    */
-  resolve(wait?: boolean): Promise<T[]>
+  resolve(wait?: boolean): Promise<Output<T, D, A>[]>
 
   /**
    * Queue some data to be fed into the source that can be resolved later on.
    * @param {} input The data to queue.
    * @async
    */
-  queue(...input: (ISource<T,N> | Vector<T | IData<T>, N> )[]): Promise<void>
+  queue(...input: Input<T, D, A>[]): Promise<void>
 }

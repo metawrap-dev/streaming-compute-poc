@@ -9,7 +9,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * A "simple" number.
  * @class
  */
-export class DataNumber extends ElementData implements IData<number>, ISettable<number> {
+export class DataNumber extends ElementData implements IData<number, 1, 1>, ISettable<number, 1> {
   //
   // The below is overkill for a simple number, but this is just a toy example of how to implement a data element.
   //

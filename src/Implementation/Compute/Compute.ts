@@ -4,7 +4,7 @@ import { type IState } from '../../Design/IState.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { type Input } from '../Utility/Input.js'
+import { type Input, type Output } from '../Utility/Input.js'
 
 /**
  * Abstract Generic [ICompute] element.
@@ -12,7 +12,7 @@ import { type Input } from '../Utility/Input.js'
  * @author James McParlane
  * @interface
  */
-export abstract class Compute<I, N extends number, O> extends ElementCompute implements ICompute<I,N,O> {
+export abstract class Compute<I, N extends number, A extends number, O, ON extends number, OA extends number> extends ElementCompute implements ICompute<I, N, A, O, ON, OA> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -38,17 +38,17 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
   /**
    * Inputs for the computation.
    * We massage everything into a source.
-   * @type {ISource<I>}
-   * @readonly  
+   * @type {Input<I, N, A>}
+   * @readonly
    */
-  readonly Inputs: Input<I,N>
+  readonly Inputs: Input<I, N, A>
 
   /**
    * What is the output of the multiplication.
-   * @type {IData<O>}
+   * @type {IData<O, ON, OA>}
    * @readonly
    */
-  readonly Output: IData<O>
+  readonly Output: IData<O, ON, OA>
 
   /**
    * If true then this has been resolved.
@@ -71,7 +71,7 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
    * The output as data.
    * @type {IData<O>}
    */
-  get Data(): O {
+  get Data(): Output<O, ON, OA> {
     return this.Output.Data
   }
 
@@ -80,15 +80,15 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
    * @type {N}
    * @readonly
    */
-   readonly InputWidth: N 
+  readonly InputWidth: A
 
   /**
    *
    * @param inputs
-   * @param n 
+   * @param n
    * @param output
    */
-  constructor(inputs: Input<I,N>, n: N, output: IData<O>) {
+  constructor(inputs: Input<I, N, A>, n: A, output: IData<O, ON, OA>) {
     super()
     this.Inputs = inputs
     this.Output = output
@@ -116,5 +116,5 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
    * @async
    * @abstract
    */
-  abstract resolve(wait?: boolean): Promise<O>
+  abstract resolve(wait?: boolean): Promise<Output<O, ON, OA>>
 }

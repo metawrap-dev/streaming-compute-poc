@@ -1,3 +1,5 @@
+import { type Vector } from '../Implementation/Utility/Vector.js'
+
 /**
  * Something that can be set with a value.
  *
@@ -6,10 +8,10 @@
  * @author James McParlane
  * @interface
  */
-export interface ISettable<T> {
+export interface ISettable<T, N extends number> {
   /**
    * Sets the value.
-   * @param {T} value The value to set
+   * @param {Vector<T,N>} value The value to set
    */
-  set(value: T): void
+  set(value: Vector<T, N>): void
 }

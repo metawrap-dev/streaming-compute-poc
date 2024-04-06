@@ -1,17 +1,16 @@
 import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js'
-import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateSourceMemory } from '../State/StateSourceMemory.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { type Input } from '../Utility/Input.js'
+import { type Input, type Output } from '../Utility/Input.js'
 
 /**
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class SourceMemory<T,N extends number> extends ElementSource implements ISource<T, N> {
+export class SourceMemory<T, D extends number, A extends number> extends ElementSource implements ISource<T, D, A> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -24,7 +23,7 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
    * @type {IState}
    * @readonly
    */
-  readonly State: StateSourceMemory<T> = new StateSourceMemory<T>()
+  readonly State: StateSourceMemory<T, D, A> = new StateSourceMemory<T, D, A>()
 
   /**
    * The strategy that can be applied to the source's state.
@@ -37,9 +36,8 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(...input: Input<T,N>[]) {
+  constructor(...input: Input<T, D, A>[]) {
     super()
-
     // Queue the data
     this.State.Data.push(...input)
   }
@@ -53,9 +51,9 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
     // If we have data remaining
     if (this.State.Index < this.State.Data.length) {
       // If the first element is a source...
-      if (isSource<T>(this.State.Data[this.State.Index])) {
+      if (isSource<T, D, A>(this.State.Data[this.State.Index])) {
         // If it is a source then check if it is empty
-        return (this.State.Data[this.State.Index] as ISource<T,N>).Empty
+        return (this.State.Data[this.State.Index] as ISource<T, D, A>).Empty
 
         // TODO: We should also check if any other elements are not sources
       } else {
@@ -104,7 +102,7 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
     // Otherwise return the resolved status
     return this.State.Resolved
   }
-  &/
+  */
 
   /**
    *The number atoms in the source.
@@ -118,8 +116,8 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
     // Walk every element in the source
     for (let i = this.State.Index; i < this.State.Data.length; i++) {
       // If a source then we go deeper
-      if (isSource<T>(this.State.Data[i])) {
-        a += (this.State.Data[i] as ISource<T,N>).Count
+      if (isSource<T, D, A>(this.State.Data[i])) {
+        a += (this.State.Data[i] as ISource<T, D, A>).Count
       } else {
         a++
       }
@@ -134,8 +132,8 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<T[]> {
-    const result: T[] = []
+  async resolve(wait: boolean = false): Promise<Output<T, D, A>[]> {
+    const result: Output<T, D, A>[] = []
 
     // Get a complete batch out of it.
     while (result.length < this.Config.BatchSize) {
@@ -143,7 +141,7 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
       const element = this.State.Data[this.State.Index]
 
       // Is it s source?
-      if (isSource<T>(element)) {
+      if (isSource<T, D, A>(element)) {
         // How many elements do we need to get the batch size we want?
         const remaining = this.Config.BatchSize - result.length
         console.log(`result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
@@ -165,7 +163,7 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
         }
       } else {
         // Get the element
-        if (isResolvable<T>(element)) {
+        if (isResolvable<T, D, A>(element)) {
           if (!element.Resolved) {
             // We need to resolve it
             // @todo - we want this to block until resolved.
@@ -176,7 +174,7 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
           }
         } else {
           // It is not resolvable
-          result.push(element as T)
+          ///result.push(element as T)
         }
 
         // Advance the index
@@ -212,7 +210,7 @@ export class SourceMemory<T,N extends number> extends ElementSource implements I
    * @param {data: ISource<T> | T | (T | IData<T>)[] }
    * @async
    */
-  async queue(...input: (ISource<T> | T | IData<T>)[]): Promise<void> {
+  async queue(...input: Input<T, D, A>[]): Promise<void> {
     this.State.Data.push(...input)
 
     if (this.Waiting) {
