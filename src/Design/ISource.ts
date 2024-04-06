@@ -1,6 +1,7 @@
-import { type Input, type Output } from '../Implementation/Utility/Input.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
+import { type Input } from './Types/Input.js'
+import { type Output } from './Types/Output.js'
 
 /**
  * A source of multiple data elements.

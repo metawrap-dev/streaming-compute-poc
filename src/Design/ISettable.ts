@@ -1,4 +1,4 @@
-import { type Vector } from '../Implementation/Utility/Vector.js'
+import { type Vector } from './Types/Vector.js'
 
 /**
  * Something that can be set with a value.

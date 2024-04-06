@@ -1,7 +1,7 @@
-import { type Value } from '../Implementation/Utility/Input.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
+import { type Vector } from './Types/Vector.js'
 
 /**
  * A Data Element: Some form of data that can be fed into a compute element.
@@ -14,11 +14,11 @@ export interface IData<T, D extends number, A extends number> extends IDescribab
    * Sets the value of the data and marks it as resolved.
    * @param {T} value The value to set.
    */
-  set(value: Value<T, D>): void
+  set(value: Vector<Vector<T, D>, A>): void
 
   /**
    * The data that has been resolved.
-   * @type {Vector<Vector<T, D>, A>>}
+   * @type {Vector<Vector<T, D>, A>}
    */
-  // readonly Data: Vector<Vector<T, D>, A>
+  readonly Data: Vector<Vector<T, D>, A>
 }

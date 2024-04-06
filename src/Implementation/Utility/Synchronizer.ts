@@ -2,7 +2,6 @@
  * A synchronizer for waiting and releasing resources.
  * @class
  */
-
 export class Synchronizer {
   /**
    * The promise that is resolved when the resource is available.

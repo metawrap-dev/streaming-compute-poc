@@ -1,51 +1,9 @@
-import { isDataArray } from '../../Design/ElementType.js'
-import { type IData } from '../../Design/IData.js'
+import { isPrimitiveArray, isResolvable, isSource } from '../../Design/ElementType.js'
+import { type Input } from '../../Design/Types/Input.js'
 import { DataNumber } from '../Data/DataNumber.js'
-import { type DataVectorN } from '../Data/DataVectorN.js'
-import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeLength4 } from '../State/StateComputeLength4.js'
-import { type Vector } from '../Utility/Vector.js'
+import { length4 } from '../Utility/Maths.js'
 import { Compute } from './Compute.js'
-
-/**
- * Defines an input number in the various forms.
- * @type
- */
-type inputNumber = number | IData<number>
-
-/**
- * Defines an input vector in the various forms.
- * @type
- */
-type primalVector = number[]
-
-/**
- * Defines an input vector in the various forms.
- * @type
- */
-type inputVector = Vector<inputNumber, 4> | inputNumber[] | DataVectorN
-
-/**
- *
- * @param input
- * @returns
- */
-async function resolveVector(input: inputVector): Promise<primalVector> {
-  if (isDataArray(input)) {
-    const output: number[] = []
-    for (const i of input) {
-      if (typeof i === 'number') {
-        output.push(i)
-      } else {
-        output.push(await i.resolve(true))
-      }
-    }
-    return output
-  } else {
-    // Just return a reference. (Danger! but let's not clone until we find we need to.)
-    return input.Data
-  }
-}
 
 /**
  * This can perform `length4` on `v4`
@@ -53,7 +11,7 @@ async function resolveVector(input: inputVector): Promise<primalVector> {
  * @author James McParlane
  * @interface
  */
-export class ComputeLength4<I extends inputVector> extends Compute<I, 1, number> {
+export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -65,14 +23,9 @@ export class ComputeLength4<I extends inputVector> extends Compute<I, 1, number>
    * @constructor
    * @param {I} a The first input vector.
    */
-  constructor(a?: I) {
-    console.log('ComputeLength4:a ', a)
-
-    // Get the source as an empty source or a source with initial data.
-    const source = a === undefined ? new SourceMemory<I>() : new SourceMemory<I>(a)
-
-    // Assign input and output
-    super(source, 1, new DataNumber())
+  constructor(inputs: Input<number, 4, 1>) {
+    // We pass in the inputs and the output object placeholder
+    super(inputs, 1, new DataNumber())
   }
   /**
    * Resolve it using a promise.
@@ -80,38 +33,24 @@ export class ComputeLength4<I extends inputVector> extends Compute<I, 1, number>
    * @async
    */
   async resolve(wait: boolean = false): Promise<number> {
-    // This is a hack to keep using ISource to store parameters while we are in transition
-    // testing to see if ISource
-    while (!this.Inputs.Empty) {
-      console.log(`Try.... ${this.Inputs.Empty}`)
+    // If it is a source...
+    if (isSource<number, 4, 1>(this.Inputs)) {
+      // ...if we are not waiting and there is no data then return with the null answer?
+      if (!wait && this.Inputs.Empty) return 0
 
-      const resolved = await this.Inputs.resolve(wait)
+      // We want to clock our results one at a time.
+      this.Inputs.Config.setBatchSize(1)
 
-      console.log(`this.Inputs.resolve() => `, resolved)
-
-      for (const a of resolved) {
-        console.log(`a `, a)
-
-        // Set the output data.
-        this.Output.set(length4(await resolveVector(a)))
-      }
+      // Set the output value with the returned value from the source.
+      this.set(await length4((await this.Inputs.resolve(wait))[0]))
+    } else if (isResolvable<number, 4, 1>(this.Inputs)) {
+      // Resolve and set the value.
+      this.set(await length4(await this.Inputs.resolve()))
+    } else if (isPrimitiveArray<number>(this.Inputs)) {
+      // Set the output value.
+      this.set(await length4(this.Inputs))
     }
 
-    // Be done.
-    return this.Output.Data
+    return this.Data
   }
-}
-
-/**
- * Calculate the length of a v4
- * @param {number[4]} vectorA
- * @returns
- */
-function length4(vectorA: number[]): number {
-  if (vectorA.length !== 4) {
-    throw new Error('Vector must be of length (4)')
-  }
-
-  // Calculate the length of vectorA
-  return Math.sqrt(vectorA[0] * vectorA[0] + vectorA[1] * vectorA[1] + vectorA[2] * vectorA[2] + vectorA[3] * vectorA[3])
 }

@@ -1,24 +1,22 @@
-import { isOneParameter, isOneSourceParameter, isParameters } from '../../Design/ElementType.js'
+import { isInputVector, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ICompute } from '../../Design/ICompute.js'
-import { type IData } from '../../Design/IData.js'
-import { type ISource } from '../../Design/ISource.js'
+import { type Input } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
-import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { Vector } from '../Utility/Vector.js'
-
-
+import { multiplyN } from '../Utility/Maths.js'
+import { resolve } from '../Utility/Resolve.js'
 
 /**
- * This can multiply numbers together
+ * This can multiply any number of numbers
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiply4 extends ElementCompute implements ICompute<number, 4, number> {
+export class ComputeMultiplyN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -47,7 +45,7 @@ export class ComputeMultiply4 extends ElementCompute implements ICompute<number,
    * @type {ISource<I>}
    * @readonly
    */
-  readonly Inputs: ISource<Vector<number,4>>
+  readonly Inputs: Input<number, 1, 0>
 
   /**
    * What is the output of the multiplication.
@@ -65,43 +63,25 @@ export class ComputeMultiply4 extends ElementCompute implements ICompute<number,
     return this.Output.Resolved
   }
 
+  InputWidth: 0
+
   /**
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: ISource<Vector<number,4>> | number | IData<number>, ...rest: (number | IData<number>)[]) {
+  constructor(input: Input<number, 1, 0>) {
     super()
 
     console.log('ComputeMultiply:input ', input)
-    console.log('ComputeMultiply:rest ', rest)
 
-    // How many arguments did we get?
-    const args = arguments.length
-
-    // Is this a data-source?
-    if (isOneSourceParameter<Vector<number,4>>(args, input, rest)) {
-      // Yes it is. We can use it directly.
-      console.log('ComputeMultiply: Source passed')
-      this.Inputs = input
-    } else if (isParameters<number>(args, rest)) {
-      // Is it multiple parameters?
-      console.log('ComputeMultiply: Parameters passed')
-      //this.Inputs = new SourceMemory<Vector<number,4>>(input, ...rest)
-    } else if (isOneParameter<number>(args, input)) {
-      // Is it just a single parameter
-      console.log('ComputeMultiply: One parameter passed')
-      //this.Inputs = new SourceMemory<Vector<number,4>>(input)
-    } else {
-      // Not a combination we can handle.
-      throw new Error(`ComputeMultiply: Invalid parameters`)
-    }
+    this.Inputs = input
   }
 
   /**
    * The output as data.
    * @type {IData<number>}
    */
-  get Data(): number {
+  get Data(): Output<number, 1, 1> {
     return this.Output.Data
   }
 
@@ -136,34 +116,48 @@ export class ComputeMultiply4 extends ElementCompute implements ICompute<number,
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<number> {
+  async resolve(wait: boolean = false): Promise<Output<number, 1, 1>> {
     // Enforce the batch size of 1 for this compute element
 
     let accumulator = this.State.Accumulator
 
-    // If there is no input then we are done.
-    // if (this.Inputs.Empty) return accumulator
+    if (isSource<number, 1, 0>(this.Inputs)) {
+      console.info(`isSource`)
 
-    this.Inputs.Config.setBatchSize(1)
+      // ...if we are not waiting and there is no data then return with the null answer?
+      if (!wait && this.Inputs.Empty) return 0
 
-    // Multiply all the inputs together one element at at time.
-    while (!this.Inputs.Empty) {
-      console.log(`Try.... ${this.Inputs.Empty}`)
+      // We want to clock our results one at a time.
+      this.Inputs.Config.setBatchSize(1)
 
-      const resolved = await this.Inputs.resolve()
+      // Set the output value with the returned value from the source.
+      accumulator *= await multiplyN((await this.Inputs.resolve(wait))[0])
 
-      console.log(`this.Inputs.resolve() => `, resolved)
+      // Set the state
+      this.State.setAccumulator(accumulator)
+    } else if (isResolvable<number, 1, 0>(this.Inputs)) {
 
-      accumulator *= resolved[0]
-    }
+      console.info(`isResolvable`)
 
-    // Set the state
+      // Extract the values
+      const a = await this.Inputs.resolve(wait)
+
+      // Set the output value with resolved values returned value from the source.
+      accumulator *= await multiplyN(await resolve<number, 0>(a))
+    } else if (isInputVector<number, 1, 0>(this.Inputs, 1, 0)) {
+
+      console.info(`isInputVector`)
+
+      // Set the output value.
+      accumulator *= await multiplyN(this.Inputs)
+    } 
+
+    // Save the accumulator away
     this.State.setAccumulator(accumulator)
 
-    // Set the output value
-    this.Output.set(accumulator)
+    // Set the output value to the accumulator
+    this.set(accumulator)
 
-    // Be done.
-    return this.Output.Data
+    return this.Data
   }
 }

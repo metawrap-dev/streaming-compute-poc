@@ -1,5 +1,6 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataNumber } from '../State/StateDataNumber.js'
@@ -40,7 +41,7 @@ export class DataNumber extends ElementData implements IData<number, 1, 1>, ISet
    * @type {number}
    * @readonly
    */
-  get Data(): number {
+  get Data(): Output<number, 1, 1> {
     if (this.Resolved) {
       return this.State.Number
     }
@@ -83,7 +84,7 @@ export class DataNumber extends ElementData implements IData<number, 1, 1>, ISet
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<number> {
+  async resolve(_wait: boolean = false): Promise<Output<number, 1, 1>> {
     this.State.setResolved(true)
     return this.Data
   }

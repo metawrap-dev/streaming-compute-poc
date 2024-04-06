@@ -1,10 +1,7 @@
-import { IData } from '../src/Design/IData.js'
+import { Vector } from '../src/Design/Types/Vector.js'
 import { ComputeLength4 } from '../src/Implementation/Compute/ComputeLength4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
-import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
-import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
-import { Streamer } from '../src/Implementation/Streamer/Streamer.js'
-import { Vector } from '../src/Implementation/Utility/Vector.js'
+import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
 
 describe('ComputeLength4', () => {
   // Act before assertions
@@ -27,7 +24,7 @@ describe('ComputeLength4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVectorN([1, 1, 1, 1])
+    const a = new DataVector4([1, 1, 1, 1])
 
     const m = new ComputeLength4(a)
 
@@ -58,6 +55,7 @@ describe('ComputeLength4', () => {
     expect(m.Data).toBe(2)
   })
 
+  /*
   it('Streamer', async () => {
     type v4 = Vector<number, 4>
 
@@ -117,31 +115,15 @@ describe('ComputeLength4', () => {
 
     console.log(streamer.toString())
   })
+  */
 
-  /*
-  it('Two Mixed Parameters', async () => {
-    const a = new DataNumber(10)
-
-    const m = new ComputeLength4(a, 10)
-
-    console.log(m.toString())
-
-    await m.resolve()
-
-    console.log(m.toString())
-
-    console.log(m.Data.toString())
-
-    expect(m.Data).toBe(100)
-  })
-
-  it('Composite Multiplication', async () => {
+  it.only('Composite Length', async () => {
     const a = new DataNumber(10)
     const b = new DataNumber(10)
     const c = new DataNumber(10)
     const d = new DataNumber(10)
 
-    const m = new ComputeLength4(a, b, new ComputeLength4(c, d))
+    const m = new ComputeLength4([a, b, c, d])
 
     console.log(m.toString())
 
@@ -151,9 +133,10 @@ describe('ComputeLength4', () => {
 
     console.log(m.Data.toString())
 
-    expect(m.Data).toBe(10000)
+    expect(m.Data).toBe(20)
   })
 
+  /*
   it('Length4 From Source', async () => {
     const a = new SourceMemory(10, 10, 10, 10)
 

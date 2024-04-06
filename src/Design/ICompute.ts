@@ -1,8 +1,7 @@
-import { type Input } from '../Implementation/Utility/Input.js'
 import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
-import { type IResolvable } from './IResolvable.js'
+import { type Input } from './Types/Input.js'
 
 /**
  * A Compute ELement: Something that can take some inputs and compute a value that is returned.
@@ -33,12 +32,7 @@ export interface ICompute<I, D extends number, A extends number, O, OD extends n
   readonly InputWidth: A
 
   /**
-   * Output of the computation.
-   *
-   * It may be unresolved if not executed yet.
-   *
-   * Same as .Data?
-   *
+   * Output of the computation which is wrapped in IData so that we can built the AST
    * @type {IData<O,OD,OA>}
    * @readonly
    */

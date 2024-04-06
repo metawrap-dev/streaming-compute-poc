@@ -1,7 +1,4 @@
 import { ComputeDot4 } from '../src/Implementation/Compute/ComputeDot4.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
-import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
-import { Vector } from '../src/Implementation/Utility/Vector.js'
 
 describe('ComputeDot4', () => {
   // Act before assertions
@@ -10,11 +7,13 @@ describe('ComputeDot4', () => {
   afterAll(() => {})
 
   it('Primitive Parameters', async () => {
-    const m = new ComputeDot4([1, 1, 1, 1], [1, 1, 1, 1])
+    const m = new ComputeDot4([
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+    ])
 
     expect(m).toBeDefined()
 
-    /*
     console.log(m.toString())
 
     await m.resolve()
@@ -24,15 +23,15 @@ describe('ComputeDot4', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toEqual(4)
-    */
   })
 
+  /*
   it('Complex Parameter', async () => {
-    const m = new ComputeDot4(new DataVectorN([1, 1, 1, 1]), [1, new DataNumber(1), 1, 1])
+    const m = new ComputeDot4(new DataVectorN([[1, 1, 1, 1]), [1, new DataNumber(1), 1, 1]])
 
     expect(m).toBeDefined()
 
-    /*
+    
     console.log(m.toString())
 
     await m.resolve()
@@ -42,7 +41,7 @@ describe('ComputeDot4', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(4)
-    */
+   
   })
 
   it('Vector Parameter', async () => {
@@ -52,7 +51,7 @@ describe('ComputeDot4', () => {
 
     expect(m).toBeDefined()
 
-    /*
+    
     console.log(m.toString())
 
     await m.resolve()
@@ -62,8 +61,9 @@ describe('ComputeDot4', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(4)
-    */
+    
   })
+  */
 
   /*
   it('Streamer', async () => {

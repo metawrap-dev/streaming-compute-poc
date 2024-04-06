@@ -1,31 +1,32 @@
+import { type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [DataVectorN ]{@link DataVectorN }.
  * @class
  */
-export class StateDataVectorN extends StateCommon {
+export class StateDataVectorN<T, D extends number, A extends number> extends StateCommon {
   /**
    * The value of the number.
-   * @type {number[] | undefined}
+   * @type {Vector<Vector<T,D>,A>| undefined}
    * @private
    */
-  #VectorN?: number[]
+  #VectorN?: Vector<Vector<T, D>, A>
 
   /**
    * The value of the number.
-   * @type {number[] | undefined}
+   * @type {Vector<T,D> | undefined}
    * @readonly
    */
-  get VectorN(): number[] | undefined {
+  get VectorN(): Vector<Vector<T, D>, A> | undefined {
     return this.#VectorN
   }
 
   /**
    * Set the number.
-   * @param {number[]} number The number to set.
+   * @param {Vector<Vector<T,D>,A>} number The number to set.
    */
-  setVectorN(number: number[]): void {
+  setVectorN(number: Vector<Vector<T, D>, A>): void {
     this.#VectorN = number
   }
 }

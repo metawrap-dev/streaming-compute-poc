@@ -1,7 +1,7 @@
-import { isDataArray, isOneParameter, isOneSourceParameter, isParameters, isResolvable, isSource } from '../../Design/ElementType.js'
-import { type IData } from '../../Design/IData.js'
+import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IDestination } from '../../Design/IDestination.js'
-import { type ISource } from '../../Design/ISource.js'
+import { type Input } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementDestination } from '../Element/ElementDestination.js'
 import { StateDestinationMemory } from '../State/StateDestinationMemory.js'
@@ -17,7 +17,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * @author James McParlane
  * @interface
  */
-export class DestinationMemory<T> extends ElementDestination implements IDestination<T> {
+export class DestinationMemory<T, D extends number, A extends number> extends ElementDestination implements IDestination<T, D, A> {
   /**
    * The configuration for the destination.
    * @type {IConfig}
@@ -30,7 +30,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDestinationMemory<T> = new StateDestinationMemory<T>()
+  readonly State: StateDestinationMemory<T, D, A> = new StateDestinationMemory<T, D, A>()
 
   /**
    * The strategy that can be applied to the destination's state.
@@ -63,16 +63,6 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
   }
 
   /**
-   * Get the data from the destination.
-   * @type {T}
-   * @readonly
-   */
-  get Data(): T {
-    // What do we do with this?
-    throw new Error('This should not be invoked')
-  }
-
-  /**
    * Create a new destination.
    */
   constructor() {
@@ -85,7 +75,15 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
    * @param {(T | IData<T>)} rest The rest of the data to write.
    * @async
    */
-  async write(one: ISource<T> | T | IData<T> | (T | IData<T>)[], ...rest: (T | IData<T>)[]): Promise<void> {
+  async write(...inputs: Input<T, D, A>[]): Promise<void> {
+    for (const input of inputs) {
+      this.State.Buffer.push(input)
+
+      // Check the buffer and see if we can resolve the destination.
+      await this.#checkBuffer()
+    }
+
+    /*
     console.log(`write`, one)
 
     // How many arguments did we get?
@@ -115,13 +113,15 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
       // Not a combination we can handle.
       throw new Error(`SourceMemory: Invalid parameters`)
     }
+    */
   }
 
   /**
    * Write one parameter to the destination.
    * @param {T | (T | IData<T>)[]} data The single argument of data to write.
    */
-  async #writeArgument(data: T | IData<T> | (T | IData<T>)[]): Promise<void> {
+  /*
+  async #writeArgument(data: T | IData<T,D<> | (T | IData<T>)[]): Promise<void> {
     // If it ios an array..
     if (isDataArray(data)) {
       // .. then write many
@@ -131,11 +131,13 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
       await this.#writeAtom(data)
     }
   }
+  */
 
   /**
    * Write one parameter to the destination.
    * @param {T | IData<T>} data The single argument of data to write.
    */
+  /*
   async #writeAtom(data: T | IData<T>): Promise<void> {
     if (data === undefined) {
       // Not a combination we can handle.
@@ -147,11 +149,13 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     // Check the buffer and see if we can resolve the destination.
     await this.#checkBuffer()
   }
+  */
 
   /**
    * Write one parameter to the destination.
    * @param {T | (T | IData<T>)[]}
    */
+  /*
   async #writeMany(data: (T | IData<T>)[]): Promise<void> {
     // Add to the memory as a batch.
     this.State.Buffer.push(...data)
@@ -159,10 +163,12 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     // Check the buffer and see if we can resolve the destination.
     await this.#checkBuffer()
   }
+  */
 
   /**
    * Check the buffer to see if we can resolve the destination.
    */
+
   async #checkBuffer(): Promise<void> {
     console.log(`CHECK BUFFER`)
 
@@ -228,7 +234,7 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
     for (const d of this.State.Buffer) {
       console.log(`resolve`, d)
 
-      if (isSource<T>(d)) {
+      if (isSource<T, D, A>(d)) {
         // Make it adhere to our batch-size
         d.Config.setBatchSize(this.Config.BatchSize)
 
@@ -237,31 +243,38 @@ export class DestinationMemory<T> extends ElementDestination implements IDestina
           // Resolve as a chunk and store
           this.State.Storage.push(...(await d.resolve()))
         }
-      } else if (isResolvable(d)) {
+      } else if (isResolvable<T, D, A>(d)) {
         // If it is resolved...
         if (d.Resolved) {
           // Then just push the data
           this.State.Storage.push(d.Data)
         } else {
+          console.log('d', d)
+
+          const resolved = await d.resolve(wait)
+
+          console.log('resolved', resolved)
+
+          this.State.Storage.push(resolved)
+
+          /*
+          for(const r of resolved) {
+            this.State.Storage.push(await resolve<T,D>(r) as Output<T,D,A>)
+          }
+          */
+
+          //this.State.Storage.push(...await d.resolve(wait))
+
           // Otherwise, we need to resolve and push it
-          this.State.Storage.push(await d.resolve())
+          // this.State.Storage.push(await resolve<T,D>(d))
         }
       } else {
         // Just plain old data
-        this.State.Storage.push(d)
+        this.State.Storage.push(d as Output<T, D, A>)
       }
     }
 
     // Clear the buffer
     this.State.Buffer.length = 0
-  }
-
-  /**
-   * Sets the value of the output
-   * @param {number} value The value to set.
-   */
-  set(_value: T): void {
-    // this.Output.set(value)
-    // Not needed?
   }
 }

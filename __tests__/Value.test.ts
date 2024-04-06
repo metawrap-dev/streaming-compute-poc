@@ -1,4 +1,4 @@
-import { Vector } from '../src/Implementation/Utility/Vector.js'
+import { Vector } from '../src/Design/Types/Vector'
 
 describe('Value', () => {
   // Act before assertions
@@ -19,10 +19,11 @@ describe('Value', () => {
     expect(Array.isArray(v[1])).toBe(true)
 
     for (const i of v) {
-      expect(typeof i).toBe('number')
+      expect(typeof i).toBe('object')
+      expect(Array.isArray(i)).toBe(true)
     }
 
-    expect(v.length).toBe(4)
+    expect(v.length).toBe(2)
   })
 
   it('v0', async () => {

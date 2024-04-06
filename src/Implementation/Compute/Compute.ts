@@ -1,10 +1,11 @@
 import { type ICompute } from '../../Design/ICompute.js'
 import { type IData } from '../../Design/IData.js'
 import { type IState } from '../../Design/IState.js'
+import { type Input } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { type Input, type Output } from '../Utility/Input.js'
 
 /**
  * Abstract Generic [ICompute] element.
@@ -61,9 +62,9 @@ export abstract class Compute<I, N extends number, A extends number, O, ON exten
 
   /**
    * Sets the value of the output
-   * @param {O} value The value to set.
+   * @param {Output<O,ON,OA} value The value to set.
    */
-  set(value: O): void {
+  set(value: Output<O, ON, OA>): void {
     this.Output.set(value)
   }
 

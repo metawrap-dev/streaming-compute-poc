@@ -1,51 +1,10 @@
-import { isDataArray } from '../../Design/ElementType.js'
-import { type IData } from '../../Design/IData.js'
+import { isInputVector, isResolvable, isSource } from '../../Design/ElementType.js'
+import { type Input } from '../../Design/Types/Input.js'
 import { DataNumber } from '../Data/DataNumber.js'
-import { type DataVectorN } from '../Data/DataVectorN.js'
-import { SourceMemory } from '../Source/SourceMemory.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
-import { type Value } from '../Utility/Input.js'
+import { dot4 } from '../Utility/Maths.js'
+import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
-
-/**
- * Defines an input number in the various forms.
- * @type
- */
-export type inputNumber = number | IData<number, 1, 1>
-
-/**
- * Defines an input vector in the various forms.
- * @type
- */
-export type primalVector = number[]
-
-/**
- * Defines an input vector in the various forms.
- * @type
- */
-export type inputVector = inputNumber[] | DataVectorN
-
-/**
- *
- * @param input
- * @returns
- */
-export async function resolveVector(input: inputVector): Promise<primalVector> {
-  if (isDataArray(input)) {
-    const output: number[] = []
-    for (const i of input) {
-      if (typeof i === 'number') {
-        output.push(i)
-      } else {
-        output.push(await i.resolve(true))
-      }
-    }
-    return output
-  } else {
-    // Just return a reference. (Danger! but let's not clone until we find we need to.)
-    return input.Data
-  }
-}
 
 /**
  * This can perform `dot4` on `v4`
@@ -63,66 +22,43 @@ export class ComputeDot4 extends Compute<number, 4, 2, number, 1, 1> {
 
   /**
    * @constructor
-   * @param {ISource<number[]> | number[] | IData<number[]>} input The input for the source that allows source chaining and composition
+   * @param {Input<number, 4, 2>} input The input for dot4
    */
-  constructor(a?: Value<number, 4>, b?: Value<number, 4>) {
-    console.log('ComputeDot4:a ', a)
-    console.log('ComputeDot4:b ', b)
-
-    // Get the source as an empty source or a source with initial data.
-    const source = a === undefined ? new SourceMemory<number, 4, 2>() : new SourceMemory<number, 4, 2>([a, b])
-
+  constructor(inputs: Input<number, 4, 2>) {
     // Assign inputs
-    super(source, 2, new DataNumber())
-
-    // this.Inputs =
+    super(inputs, 2, new DataNumber())
   }
-
-  /**
-   * Describe the element as a string.
-   * @returns {string}
-   */
-  /*
-  toString(): string {
-    const out: string[] = []
-    out.push('(')
-
-    out.push('dot4')
-
-    out.push(this.Inputs.toString())
-
-    out.push('=>')
-    out.push(this.Output.toString())
-    out.push(')')
-    return out.join(' ')
-  }
-  */
 
   /**
    * Resolve it using a promise.
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<number> {
-    throw new Error('Not Implemented')
-  }
-}
+  async resolve(wait: boolean = false): Promise<number> {
+    // If it is a source...
+    if (isSource<number, 4, 2>(this.Inputs)) {
+      // ...if we are not waiting and there is no data then return with the null answer?
+      if (!wait && this.Inputs.Empty) return 0
 
-/**
- *
- * @param {number[4]} vectorA
- * @param {number[4]} vectorB
- * @returns
- */
-export function dot4(vectorA: number[], vectorB: number[]): number {
-  if (vectorA.length !== 4 || vectorB.length !== 4) {
-    throw new Error('Vectors must be of length (4)')
-  }
+      // We want to clock out results one at a time.
+      this.Inputs.Config.setBatchSize(1)
 
-  let product = 0
-  for (let i = 0; i < vectorA.length; i++) {
-    product += vectorA[i] * vectorB[i]
-  }
+      const [a, b] = await this.Inputs.resolve(wait)
 
-  return product
+      // Set the output value with the returned value from the source.
+      this.set(dot4(a[0], b[0]))
+    } else if (isResolvable<number, 4, 2>(this.Inputs)) {
+      // Extract the values
+      const [a, b] = await this.Inputs.resolve(wait)
+
+      // Set the output value with resolved values returned value from the source.
+      this.set(dot4(await resolve<number, 4>(a), await resolve<number, 4>(b)))
+    } else if (isInputVector<number, 4, 2>(this.Inputs, 4, 2)) {
+      // Set the output value.
+      this.set(dot4(this.Inputs[0], this.Inputs[1]))
+    }
+
+    // Return the resolved data
+    return this.Data
+  }
 }

@@ -1,4 +1,4 @@
-import { type Input } from '../Utility/Input.js'
+import { type Input } from '../../Design/Types/Input.js'
 import { StateCommon } from './StateCommon.js'
 
 /**

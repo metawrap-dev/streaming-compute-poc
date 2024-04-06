@@ -2,6 +2,7 @@ import { type IData } from './IData.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
 import { type ISource } from './ISource.js'
+import { type Vector } from './Types/Vector.js'
 
 /**
  * The type of the element.
@@ -31,11 +32,6 @@ export enum ElementType {
    * Is a destination stream for data.
    */
   Destination,
-
-  /**
-   * Can take a source and stream it into a Compute element.
-   */
-  Streamer,
 }
 
 /**
@@ -67,6 +63,15 @@ export function isSource<T, D extends number, A extends number>(object: unknown)
 }
 
 /**
+ * Type guard method to check if the object is data
+ * @param {unknown} object The object to identify.
+ * @returns {boolean} True if the object is a source.
+ */
+export function isData<T, D extends number, A extends number>(object: unknown): object is IData<T, D, A> {
+  return isNotUndefined(object) && (object as IData<T, D, A>).Type === ElementType.Data
+}
+
+/**
  * Type guard method to check if the object is a single parameter
  * @param {number} args The arguments global from the scope of the calling method.
  * @param {unknown} object The object to identify.
@@ -93,6 +98,24 @@ export function isParameters<T, D extends number, A extends number>(args: number
  */
 export function isDataArray<T, D extends number, A extends number>(object: unknown): object is (IData<T, D, A> | T)[] {
   return isNotUndefined(object) && Array.isArray(object) && object.length > 0
+}
+
+/**
+ * Type guard method to check if the object is an array of primitive types
+ * @param {unknown} object The object to identify.
+ * @returns {boolean}
+ */
+export function isPrimitiveArray<T>(object: unknown): object is T[] {
+  return isNotUndefined(object) && Array.isArray(object) && object.length !== 0
+}
+
+/**
+ * Type guard method to check if the object is an array of values.
+ * @param {unknown} object The object to identify.
+ * @returns {boolean}
+ */
+export function isInputVector<T, D extends number, A extends number>(object: unknown, _dimension: D, width: A): object is Vector<Vector<T, D>, A> {
+  return isNotUndefined(object) && Array.isArray(object) && (width === 0 || object.length === width)
 }
 
 /**

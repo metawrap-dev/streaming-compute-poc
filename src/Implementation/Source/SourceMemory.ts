@@ -1,10 +1,11 @@
 import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ISource } from '../../Design/ISource.js'
+import { type Input } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateSourceMemory } from '../State/StateSourceMemory.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { type Input, type Output } from '../Utility/Input.js'
 
 /**
  * Data Element: Some form of data that can be fed into a compute element.
@@ -135,6 +136,20 @@ export class SourceMemory<T, D extends number, A extends number> extends Element
   async resolve(wait: boolean = false): Promise<Output<T, D, A>[]> {
     const result: Output<T, D, A>[] = []
 
+    /*
+    const resolve = async (d: Value<T, D>): Promise<T> => {
+      if (isResolvable(d)) {
+        if (d.Resolved) {
+          return d.Data as T
+        } else {
+          return (await d.resolve()) as T
+        }
+      } else {
+        return d as T
+      }
+    }
+    */
+
     // Get a complete batch out of it.
     while (result.length < this.Config.BatchSize) {
       // Get the current element
@@ -144,7 +159,7 @@ export class SourceMemory<T, D extends number, A extends number> extends Element
       if (isSource<T, D, A>(element)) {
         // How many elements do we need to get the batch size we want?
         const remaining = this.Config.BatchSize - result.length
-        console.log(`result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
+        console.log(`isSource: result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
 
         // If we need to...
         if (element.Config.BatchSize !== remaining) {
@@ -167,14 +182,23 @@ export class SourceMemory<T, D extends number, A extends number> extends Element
           if (!element.Resolved) {
             // We need to resolve it
             // @todo - we want this to block until resolved.
-            result.push(await element.resolve())
+
+            const v = await element.resolve()
+            console.log(`v`, v)
+
+            //const a = await resolve(v)
+            //console.log(`a`,a)
+
+            result.push(v as Output<T, D, A>)
+
+            //result.push(await resolve(await element.resolve()))
           } else {
             // It is already resolved
             result.push(element.Data)
           }
         } else {
           // It is not resolvable
-          ///result.push(element as T)
+          result.push(element as Output<T, D, A>)
         }
 
         // Advance the index

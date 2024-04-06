@@ -1,8 +1,7 @@
-import { type Output } from '../Implementation/Utility/Input.js'
+import { type Output } from './Types/Output.js'
 
 /**
- * Something that can be resolved to something.
- *
+ * Something that can be resolved to something concrete that requires no further execution.
  * @author James McParlane
  * @param {type} T The type of the resolved object.
  * @param {number} D The dimension of the resolved object.
