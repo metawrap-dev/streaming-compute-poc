@@ -23,7 +23,7 @@ import { resolve } from '../Utility/Resolve.js'
  *
  * @class
  */
-export class DataVectorV extends ElementData implements IData<number, 0, 1>, ISettable<number, 0> {
+export class DataVectorV extends ElementData implements IData<number, 0, 1>, ISettable<number, 0, 1> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}

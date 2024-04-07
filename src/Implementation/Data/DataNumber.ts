@@ -15,7 +15,7 @@ import { resolve } from '../Utility/Resolve.js'
  * The below is overkill for a simple number, but this is just a toy example of how to implement a data element.
  * @class
  */
-export class DataNumber extends ElementData implements IData<number, 1, 1>, ISettable<number, 1> {
+export class DataNumber extends ElementData implements IData<number, 1, 1>, ISettable<number, 1, 1> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}

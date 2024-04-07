@@ -13,7 +13,7 @@ import { resolve } from '../Utility/Resolve.js'
  * A "simple" number.
  * @class
  */
-export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISettable<number, 4> {
+export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISettable<number, 4, 1> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
