@@ -1,7 +1,6 @@
 import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
 
 describe('DataVectorN', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})

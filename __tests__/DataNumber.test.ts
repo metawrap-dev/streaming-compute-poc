@@ -1,7 +1,6 @@
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 
 describe('NumberData', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})

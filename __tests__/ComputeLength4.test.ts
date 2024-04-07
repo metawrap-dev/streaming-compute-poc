@@ -4,7 +4,6 @@ import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
 
 describe('ComputeLength4', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -54,6 +53,49 @@ describe('ComputeLength4', () => {
 
     expect(m.Data).toBe(2)
   })
+
+  it('Composite Length', async () => {
+    const a = new DataNumber(10)
+    const b = new DataNumber(10)
+    const c = new DataNumber(10)
+    const d = new DataNumber(10)
+
+    const m = new ComputeLength4([a, b, c, d])
+
+    console.log(m.toString())
+
+    await m.resolve()
+
+    console.log(m.toString())
+
+    console.log(m.Data.toString())
+
+    expect(m.Data).toBe(20)
+  })
+
+  /*
+  it('Length4 From Source', async () => {
+    const a = new SourceMemory(10, 10, 10, 10)
+
+    const m = new ComputeLength4(a)
+
+    console.log(m.toString())
+
+    await m.resolve()
+
+    console.log(m.toString())
+
+    console.log(m.Data.toString())
+
+    expect(m.Data).toBe(10000)
+  })
+  */
+
+  /*
+  it('should be fail with bad inputs', async () => {
+    expect(() => new (ComputeLength4 as any)()).toThrow(Error)
+  })
+  */
 
   /*
   it('Streamer', async () => {
@@ -114,49 +156,6 @@ describe('ComputeLength4', () => {
     await streamer.resolve()
 
     console.log(streamer.toString())
-  })
-  */
-
-  it('Composite Length', async () => {
-    const a = new DataNumber(10)
-    const b = new DataNumber(10)
-    const c = new DataNumber(10)
-    const d = new DataNumber(10)
-
-    const m = new ComputeLength4([a, b, c, d])
-
-    console.log(m.toString())
-
-    await m.resolve()
-
-    console.log(m.toString())
-
-    console.log(m.Data.toString())
-
-    expect(m.Data).toBe(20)
-  })
-
-  /*
-  it('Length4 From Source', async () => {
-    const a = new SourceMemory(10, 10, 10, 10)
-
-    const m = new ComputeLength4(a)
-
-    console.log(m.toString())
-
-    await m.resolve()
-
-    console.log(m.toString())
-
-    console.log(m.Data.toString())
-
-    expect(m.Data).toBe(10000)
-  })
-  */
-
-  /*
-  it('should be fail with bad inputs', async () => {
-    expect(() => new (ComputeLength4 as any)()).toThrow(Error)
   })
   */
 })

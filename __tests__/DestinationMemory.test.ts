@@ -5,7 +5,6 @@ import { DestinationMemory } from '../src/Implementation/Destination/Destination
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('DestinationMemory', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -20,7 +19,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should initialize with primitive parameters', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     await a.write(1)
@@ -34,7 +33,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should batch as specified', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -92,7 +91,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should batch as specified', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -135,7 +134,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should batch as specified with multiple arguments', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -147,7 +146,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should batch as specified with array arguments', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -159,7 +158,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should batch as specified with multiple arguments', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -171,7 +170,7 @@ describe('DestinationMemory', () => {
   })
 
   it('should write the result of computation immediately', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     const b = new ComputeMultiplyN(new SourceMemory([10, 10, 10, 10]))
@@ -188,22 +187,22 @@ describe('DestinationMemory', () => {
   })
 
   it('should write the result of computation after resolve', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(5)
     expect(a.Config.BatchSize).toBe(5)
 
     // Because we have a batch size of 5, the result will not be flushed until we resolve.
-    await a.write(new ComputeMultiplyN(new SourceMemory<number,1,0>([10, 10, 10, 10])))
-    expect(a.toString()).toBe( "{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [(multiply{SourceMemory(1 elements, atoms 1, 0 index, 1 batch size) <= [[10,10,10,10]]}=>unresolved)]=>[]}")
+    await a.write(new ComputeMultiplyN(new SourceMemory<number, 1, 0>([10, 10, 10, 10])))
+    expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [(multiply{SourceMemory(1 elements, atoms 1, 0 index, 1 batch size) <= [[10,10,10,10]]}=>unresolved)]=>[]}')
     await a.resolve()
     expect(a.toString()).toBe('{DestinationMemory(1 stored, 0 in buffer, 5 batch size) <= []=>[10000]}')
     expect(a.Resolved).toBe(true)
   })
 
   it('should be able to chain from a source to a destination', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -218,7 +217,7 @@ describe('DestinationMemory', () => {
   })
 
   it.skip('should be fail with invalid parameter', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)
@@ -229,7 +228,7 @@ describe('DestinationMemory', () => {
   })
 
   it.skip('should be fail with invalid second parameter', async () => {
-    const a =  new DestinationMemory<number, Dimension.Scalar, 1>()
+    const a = new DestinationMemory<number, Dimension.Scalar, 1>()
     expect(a).toBeDefined()
 
     a.Config.setBatchSize(2)

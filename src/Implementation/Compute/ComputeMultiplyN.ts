@@ -1,6 +1,6 @@
 import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ICompute } from '../../Design/ICompute.js'
-import { type InputPermissive, type Input } from '../../Design/Types/Input.js'
+import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
 import { type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
@@ -132,16 +132,17 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
       // Get the value from the source
       const a = (await inputs.resolve(wait))[0]
 
+      console.log('a', a)
+
       // Set the output value with the returned value from the source.
       this.set(multiplyN(a))
     } else if (isResolvable<number, Dimension.Scalar, 0>(inputs)) {
       // Extract the values
-      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?     
+      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
       // Set the output value with resolved values returned value from the source.
       this.set(multiplyN(value))
     } else {
-
       // Resolve the whole vector
       const resolved = await resolve<number, Dimension.Scalar, 0>(wait, inputs)
 

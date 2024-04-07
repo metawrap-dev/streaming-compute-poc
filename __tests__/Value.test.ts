@@ -1,7 +1,6 @@
 import { Dimension, Vector } from '../src/Design/Types/Vector'
 
 describe('Value', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})

@@ -1,7 +1,6 @@
 import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
 
 describe('DataVector4', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})

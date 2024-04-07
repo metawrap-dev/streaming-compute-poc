@@ -5,7 +5,6 @@ import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeDot4', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -85,35 +84,6 @@ describe('ComputeDot4', () => {
     expect(m.Data).toBe(4)
   })
 
-  /*
-  it('Streamer', async () => {
-    type v4 = Vector<number, Dimension.V4> | DataVectorN | (number | IData<number>)[]
-
-    const source = new SourceMemory<[v4, v4]>(
-      [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-      ],
-      [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-      ],
-    )
-
-    const compute = new ComputeDot4()
-
-    const streamer = new Streamer2<v4, v4, number>(source, compute)
-
-    console.log(streamer.toString())
-
-    const answer = await streamer.resolve()
-
-    console.log(streamer.toString())
-
-    expect(answer).toBe(2)
-  })
-  */
-
   it('Composite Dot', async () => {
     const a = new DataNumber(10)
     const b = new DataNumber(10)
@@ -168,6 +138,35 @@ describe('ComputeDot4', () => {
 
     expect(m.Data).toBe(400)
   })
+
+  /*
+  it('Streamer', async () => {
+    type v4 = Vector<number, Dimension.V4> | DataVectorN | (number | IData<number>)[]
+
+    const source = new SourceMemory<[v4, v4]>(
+      [
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+      ],
+      [
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+      ],
+    )
+
+    const compute = new ComputeDot4()
+
+    const streamer = new Streamer2<v4, v4, number>(source, compute)
+
+    console.log(streamer.toString())
+
+    const answer = await streamer.resolve()
+
+    console.log(streamer.toString())
+
+    expect(answer).toBe(2)
+  })
+  */
 
   /*
   it('should be fail with bad inputs', async () => {

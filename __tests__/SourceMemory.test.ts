@@ -5,13 +5,9 @@ import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('SourceMemory', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})
-
-
-  
 
   it('should initialize with primitive parameters', async () => {
     // A source of an array of number
@@ -34,10 +30,9 @@ describe('SourceMemory', () => {
     }
   })
 
-
   it('should initialize with primitive parameters', async () => {
     // A source of an array of number
-    const a = new SourceMemory<number,1,0>([1, 2, 3, 4])
+    const a = new SourceMemory<number, 1, 0>([1, 2, 3, 4])
 
     expect(a).toBeDefined()
 
@@ -53,9 +48,8 @@ describe('SourceMemory', () => {
 
     console.log(d[0])
 
-    expect(d[0]).toEqual([1,2,3,4])    
+    expect(d[0]).toEqual([1, 2, 3, 4])
   })
-
 
   it('should initialize with hybrid parameters', async () => {
     const a = new SourceMemory<number, 1, 1>(new DataNumber(1), 2, new DataNumber(3), 4)

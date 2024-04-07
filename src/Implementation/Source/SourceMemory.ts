@@ -2,17 +2,18 @@ import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js
 import { type ISource } from '../../Design/ISource.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Dimension } from '../../Design/Types/Vector.js'
+import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateSourceMemory } from '../State/StateSourceMemory.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { resolve } from '../Utility/Resolve.js'
 
 /**
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class SourceMemory<T, D extends Dimension, C extends number> extends ElementSource implements ISource<T, D, C> {
+export class SourceMemory<T, D extends Dimension, C extends Cardinality> extends ElementSource implements ISource<T, D, C> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -95,18 +96,6 @@ export class SourceMemory<T, D extends Dimension, C extends number> extends Elem
   }
 
   /**
-   * If true then this has been resolved.
-   * @type {boolean}
-   * @readonly
-   */
-  /*
-  get Resolved(): boolean {
-    // Otherwise return the resolved status
-    return this.State.Resolved
-  }
-  */
-
-  /**
    *The number atoms in the source.
    * @type {number | undefined}
    * @readonly
@@ -135,21 +124,8 @@ export class SourceMemory<T, D extends Dimension, C extends number> extends Elem
    * @async
    */
   async resolve(wait: boolean = false): Promise<Output<T, D, C>[]> {
+    // We will build this result.
     const result: Output<T, D, C>[] = []
-
-    /*
-    const resolve = async (d: Value<T, D>): Promise<T> => {
-      if (isResolvable(d)) {
-        if (d.Resolved) {
-          return d.Data as T
-        } else {
-          return (await d.resolve()) as T
-        }
-      } else {
-        return d as T
-      }
-    }
-    */
 
     // Get a complete batch out of it.
     while (result.length < this.Config.BatchSize) {
@@ -158,7 +134,7 @@ export class SourceMemory<T, D extends Dimension, C extends number> extends Elem
 
       // Is it s source?
       if (isSource<T, D, C>(element)) {
-        // How many elements do we need to get the batch size we want?
+        // How many remaining in the source?
         const remaining = this.Config.BatchSize - result.length
         console.log(`isSource: result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
 
@@ -181,25 +157,16 @@ export class SourceMemory<T, D extends Dimension, C extends number> extends Elem
         // Get the element
         if (isResolvable<T, D, C>(element)) {
           if (!element.Resolved) {
-            // We need to resolve it
-            // @todo - we want this to block until resolved.
-
-            const v = await element.resolve()
-            console.log(`v`, v)
-
-            //const a = await resolve(v)
-            //console.log(`a`,a)
-
-            result.push(v as Output<T, D, C>)
-
-            //result.push(await resolve(await element.resolve()))
+            // Resolve and push it.
+            result.push(await element.resolve(wait))
           } else {
-            // It is already resolved
+            // It is already resolved, get the data.
             result.push(element.Data)
           }
         } else {
-          // It is not resolvable
-          result.push(element as Output<T, D, C>)
+          // It is not resolvable, but maybe it's children are, so we
+          // pass it through resolve() to see if we can resolve it deeper.
+          result.push(await resolve<T, D, C>(wait, element))
         }
 
         // Advance the index
@@ -211,6 +178,7 @@ export class SourceMemory<T, D extends Dimension, C extends number> extends Elem
         // We have a complete batch, so we break out now.
         break
       } else if (this.Empty) {
+        // How many remaining in the source?
         const remaining = this.Config.BatchSize - result.length
 
         if (wait) {
@@ -225,6 +193,7 @@ export class SourceMemory<T, D extends Dimension, C extends number> extends Elem
 
     // If we are empty, then we are done.
     if (this.Empty) {
+      // Say we are resolved.
       this.State.setResolved(true)
     }
     return result

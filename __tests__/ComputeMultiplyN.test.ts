@@ -4,7 +4,6 @@ import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeMultiplyN', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -59,6 +58,22 @@ describe('ComputeMultiplyN', () => {
 
   it('Source', async () => {
     const m = new ComputeMultiplyN(new SourceMemory([10, 10, 10, 10]))
+
+    expect(m).toBeDefined()
+
+    console.log(m.toString())
+
+    await m.resolve()
+
+    console.log(m.toString())
+
+    console.log(m.Data.toString())
+
+    expect(m.Data).toEqual(10000)
+  })
+
+  it.only('Source', async () => {
+    const m = new ComputeMultiplyN(new SourceMemory([new DataNumber(10), new DataNumber(10), new DataNumber(10), new DataNumber(10)]))
 
     expect(m).toBeDefined()
 

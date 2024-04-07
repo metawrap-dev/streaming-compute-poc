@@ -1,10 +1,8 @@
-
 import { isResolvable } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { type IResolvable } from '../../Design/IResolvable.js'
 import { type Value } from '../../Design/Types/Value.js'
 import { type Cardinality, type Dimension, type Vector } from '../../Design/Types/Vector.js'
-
 
 /**
  * Resolves a value into a Vector.
@@ -31,12 +29,12 @@ async function resolveValue<T, D extends Dimension>(wait: boolean, data: IResolv
       const d = data[a]
       // if it is resolvable..
       if (isResolvable<T, D, Cardinality.One>(d)) {
-        // Replacing the cells of a `Value<T, D>` transforms it into `Vector<T, D>`        
+        // Replacing the cells of a `Value<T, D>` transforms it into `Vector<T, D>`
         if (d.Resolved) {
           // So we do some coercion here, just get the pre-resolved data
           data[a] = d.Data
         } else {
-          // Resolve it from scratch. 
+          // Resolve it from scratch.
           data[a] = (await resolveValue<T, D>(wait, d)) as T
         }
       }
@@ -48,12 +46,12 @@ async function resolveValue<T, D extends Dimension>(wait: boolean, data: IResolv
 }
 
 /**
- * 
+ *
  * @warning This mutates and returns [data]. Note that we replace each cell in `Vector<Value<T, D>, A>` with `Value<T, D>` transforming it into a `Vector<Vector<T, D>, A>`
  * @param data Value<T, T>[] | IData<Value<number, 1>, 0, 1> | Value<number, 0>[]
  * @returns
  */
-export async function resolve<T, D extends Dimension, C extends number>(wait: boolean, data: T | IData<T, D, Cardinality.One> | IResolvable<T, D, C> | Vector<Value<T, D>, C | Cardinality.Unbounded>): Promise<Vector<Vector<T, D>, C>> {
+export async function resolve<T, D extends Dimension, C extends Cardinality>(wait: boolean, data: T | IData<T, D, Cardinality.One> | IResolvable<T, D, C> | Vector<Value<T, D>, C | Cardinality.Unbounded>): Promise<Vector<Vector<T, D>, C>> {
   console.log(`resolveWhole`, data)
 
   // Cheap test for being a vector
