@@ -1,11 +1,11 @@
-import { type Vector } from '../../Design/Types/Vector.js'
+import { type Dimension, type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [DataVectorN ]{@link DataVectorN }.
  * @class
  */
-export class StateDataVectorN<T, D extends number, A extends number> extends StateCommon {
+export class StateDataVectorN<T, D extends Dimension, A extends number> extends StateCommon {
   /**
    * The value of the number.
    * @type {Vector<Vector<T,D>,A>| undefined}

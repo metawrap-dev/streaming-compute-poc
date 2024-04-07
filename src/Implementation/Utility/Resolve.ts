@@ -2,7 +2,7 @@ import { isResolvable } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { type IResolvable } from '../../Design/IResolvable.js'
 import { type Value } from '../../Design/Types/Value.js'
-import { type Vector } from '../../Design/Types/Vector.js'
+import { type Dimension, type Vector } from '../../Design/Types/Vector.js'
 
 /**
  * Resolves a value into a Vector.
@@ -13,7 +13,7 @@ import { type Vector } from '../../Design/Types/Vector.js'
  * @param {Value<T,D>} data
  * @returns
  */
-async function resolveValue<T, D extends number>(wait: boolean, data: Value<T, D>): Promise<Vector<T, D>> {
+async function resolveValue<T, D extends Dimension>(wait: boolean, data: Value<T, D>): Promise<Vector<T, D>> {
   // Is the value itself resolvable?
   if (isResolvable<T, D, 1>(data)) {
     // If it is resolvable..
@@ -53,7 +53,7 @@ async function resolveValue<T, D extends number>(wait: boolean, data: Value<T, D
  * @param data Value<T, T>[] | IData<Value<number, 1>, 0, 1> | Value<number, 0>[]
  * @returns
  */
-export async function resolve<T, D extends number, A extends number>(wait: boolean, data: T | IData<T, D, 1> | IResolvable<T, D, A> | Vector<Value<T, D>, A | 0>): Promise<Vector<Vector<T, D>, A>> {
+export async function resolve<T, D extends Dimension, A extends number>(wait: boolean, data: T | IData<T, D, 1> | IResolvable<T, D, A> | Vector<Value<T, D>, A | 0>): Promise<Vector<Vector<T, D>, A>> {
   console.log(`resolveWhole`, data)
 
   // Cheap test for being a vector

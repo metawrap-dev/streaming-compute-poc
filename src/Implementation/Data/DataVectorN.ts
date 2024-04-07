@@ -1,6 +1,6 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
-import { type Vector } from '../../Design/Types/Vector.js'
+import { type Dimension, type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataVectorN } from '../State/StateDataVectorN.js'
@@ -10,7 +10,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * A "simple" number.
  * @class
  */
-export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISettable<number, 0> {
+export class DataVectorN extends ElementData implements IData<number, Dimension.Unbounded, 1>, ISettable<number, 0> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
@@ -23,7 +23,7 @@ export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISe
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDataVectorN<number, 0, 1> = new StateDataVectorN<number, 0, 1>()
+  readonly State: StateDataVectorN<number, Dimension.Unbounded, 1> = new StateDataVectorN<number, Dimension.Unbounded, 1>()
 
   /**
    * The strategy that can be applied to the number's config.
@@ -89,7 +89,7 @@ export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISe
    * Sets the value of the number data and marks it as resolved.
    * @param {number[]} value The value to set.
    */
-  set(value: Vector<number, 0>): void {
+  set(value: Vector<number, Dimension.Unbounded>): void {
     this.State.setVectorN(value)
     this.State.setResolved(true)
   }

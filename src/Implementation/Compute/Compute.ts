@@ -3,6 +3,7 @@ import { type IData } from '../../Design/IData.js'
 import { type IState } from '../../Design/IState.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
@@ -13,7 +14,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * @author James McParlane
  * @interface
  */
-export abstract class Compute<I, N extends number, A extends number, O, ON extends number, OA extends number> extends ElementCompute implements ICompute<I, N, A, O, ON, OA> {
+export abstract class Compute<I, D extends Dimension, A extends number, O, OD extends Dimension, OA extends number> extends ElementCompute implements ICompute<I, D, A, O, OD, OA> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -39,17 +40,17 @@ export abstract class Compute<I, N extends number, A extends number, O, ON exten
   /**
    * Inputs for the computation.
    * We massage everything into a source.
-   * @type {Input<I, N, A>}
+   * @type {Input<I, D, A>}
    * @readonly
    */
-  readonly Inputs: Input<I, N, A>
+  readonly Inputs: Input<I, D, A>
 
   /**
    * What is the output of the multiplication.
-   * @type {IData<O, ON, OA>}
+   * @type {IData<O, OD, OA>}
    * @readonly
    */
-  readonly Output: IData<O, ON, OA>
+  readonly Output: IData<O, OD, OA>
 
   /**
    * If true then this has been resolved.
@@ -62,9 +63,9 @@ export abstract class Compute<I, N extends number, A extends number, O, ON exten
 
   /**
    * Sets the value of the output
-   * @param {Output<O,ON,OA} value The value to set.
+   * @param {Output<O,OD,OA} value The value to set.
    */
-  set(value: Output<O, ON, OA>): void {
+  set(value: Output<O, OD, OA>): void {
     this.Output.set(value)
   }
 
@@ -72,13 +73,13 @@ export abstract class Compute<I, N extends number, A extends number, O, ON exten
    * The output as data.
    * @type {IData<O>}
    */
-  get Data(): Output<O, ON, OA> {
+  get Data(): Output<O, OD, OA> {
     return this.Output.Data
   }
 
   /**
    * Return the number of arguments
-   * @type {N}
+   * @type {D}
    * @readonly
    */
   readonly InputWidth: A
@@ -89,7 +90,7 @@ export abstract class Compute<I, N extends number, A extends number, O, ON exten
    * @param n
    * @param output
    */
-  constructor(inputs: Input<I, N, A>, n: A, output: IData<O, ON, OA>) {
+  constructor(inputs: Input<I, D, A>, n: A, output: IData<O, OD, OA>) {
     super()
     this.Inputs = inputs
     this.Output = output
@@ -117,5 +118,5 @@ export abstract class Compute<I, N extends number, A extends number, O, ON exten
    * @async
    * @abstract
    */
-  abstract resolve(wait?: boolean): Promise<Output<O, ON, OA>>
+  abstract resolve(wait?: boolean): Promise<Output<O, OD, OA>>
 }

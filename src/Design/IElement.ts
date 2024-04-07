@@ -2,7 +2,7 @@ import { type ElementType } from './ElementType.js'
 import { type IConfig } from './IConfig.js'
 import { type IState } from './IState.js'
 import { type IStrategy } from './IStrategy.js'
-import { type ISynchronizable } from './ISynchronzable.js'
+import { type ISynchronizable } from './ISynchronizable.js'
 
 /**
  * An Element: A component of a the design.

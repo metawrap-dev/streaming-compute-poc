@@ -1,4 +1,4 @@
-import { type Vector } from '../../Design/Types/Vector.js'
+import { type Dimension, type Vector } from '../../Design/Types/Vector.js'
 
 /**
  * Calculate the length of a v4
@@ -15,12 +15,12 @@ export function length4(vectorA: number[]): number {
 }
 
 /**
- *
+ * Dot product v4
  * @param {number[4]} vectorA
  * @param {number[4]} vectorB
  * @returns
  */
-export function dot4(vectorA: Vector<number, 4>, vectorB: Vector<number, 4>): number {
+export function dot4(vectorA: Vector<number, Dimension.V4>, vectorB: Vector<number, Dimension.V4>): number {
   if (vectorA.length !== 4) {
     throw new Error(`dot4:Vectors must be of length (4) ${vectorA.length}`)
   }
@@ -38,12 +38,14 @@ export function dot4(vectorA: Vector<number, 4>, vectorB: Vector<number, 4>): nu
 }
 
 /**
- *
+ * Multiply all the values in the vector together
  * @param {number[4]} vectorA
  * @returns
  */
-export function multiplyN(vectorA: Vector<number, 0>): number {
+export function multiplyN(vectorA: Vector<number, Dimension.Unbounded>): number {
+  
   let accumulator = 1
+
   for (let i = 0; i < vectorA.length; i++) {
     accumulator *= vectorA[i]
   }

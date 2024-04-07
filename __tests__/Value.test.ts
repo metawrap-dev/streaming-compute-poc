@@ -1,4 +1,4 @@
-import { Vector } from '../src/Design/Types/Vector'
+import { Dimension, Vector } from '../src/Design/Types/Vector'
 
 describe('Value', () => {
   // Act before assertions
@@ -27,7 +27,7 @@ describe('Value', () => {
   })
 
   it('v0', async () => {
-    type v0 = Vector<number, 0>
+    type v0 = Vector<number, Dimension.Unbounded>
 
     const v: v0 = [1, 2, 3, 4]
 
@@ -41,7 +41,7 @@ describe('Value', () => {
   })
 
   it('v1', async () => {
-    type v1 = Vector<number, 1>
+    type v1 = Vector<number, Dimension.Scalar>
 
     const v: v1 = 1
 
@@ -51,7 +51,7 @@ describe('Value', () => {
   })
 
   it('Value Magic (N = 4)', async () => {
-    type v4 = Vector<number, 4>
+    type v4 = Vector<number, Dimension.V4>
 
     const v: v4 = [1, 2, 3, 4]
 

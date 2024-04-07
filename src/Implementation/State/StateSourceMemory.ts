@@ -1,11 +1,12 @@
 import { type Input } from '../../Design/Types/Input.js'
+import { type Dimension } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [SourceMemory]{@link SourceMemory}.
  * @class
  */
-export class StateSourceMemory<T, D extends number, A extends number> extends StateCommon {
+export class StateSourceMemory<T, D extends Dimension, A extends number> extends StateCommon {
   /**
    * How are are we into the source in memory.
    * @type {number}

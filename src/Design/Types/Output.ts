@@ -1,6 +1,6 @@
 // import { type IData } from '../IData.js'
 // import { type IData } from "../IData.js";
-import { type Vector } from './Vector.js'
+import { type Dimension, type Vector } from './Vector.js'
 
 /**
  * Defines a generic output type that is similar in structure to the `Input` type.
@@ -12,7 +12,7 @@ import { type Vector } from './Vector.js'
  * @type {Vector<Value<T, D>, A>} - Specifies that the output can be a vector of values, with a precise number of elements.
  * @type {Vector<Value<T, D>, 0>} - Allows for an output that is a dynamic-sized array, providing flexibility in the output size.
  */
-export type Output<T, D extends number, A extends number> =
+export type Output<T, D extends Dimension, A extends number> =
   //| Vector<Value<T, D>, A> // Defines a structured vector as output, with a specific number of elements.
   // | Vector<Value<T, D>, 0> // Specifies that the output can be a dynamically sized vector, not limited by a fixed number of elements.
   //| IData<Value<T, 1>, D, 1> //

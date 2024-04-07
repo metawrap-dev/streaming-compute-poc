@@ -2,6 +2,7 @@ import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type Input } from './Types/Input.js'
+import { type Dimension } from './Types/Vector.js'
 
 /**
  * A Compute ELement: Something that can take some inputs and compute a value that is returned.
@@ -17,7 +18,7 @@ import { type Input } from './Types/Input.js'
  * @param {number} A number of arguments
  * @interface
  */
-export interface ICompute<I, D extends number, A extends number, O, OD extends number, OA extends number> extends IDescribable, IData<O, OD, OA>, IElement {
+export interface ICompute<I, D extends Dimension, A extends number, O, OD extends number, OA extends number> extends IDescribable, IData<O, OD, OA>, IElement {
   /**
    * Inputs for the computation are a source of N inputs.
    * @type {Input<I,D>}

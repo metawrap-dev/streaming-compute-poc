@@ -2,6 +2,7 @@ import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js
 import { type ISource } from '../../Design/ISource.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateSourceMemory } from '../State/StateSourceMemory.js'
@@ -11,7 +12,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class SourceMemory<T, D extends number, A extends number> extends ElementSource implements ISource<T, D, A> {
+export class SourceMemory<T, D extends Dimension, A extends number> extends ElementSource implements ISource<T, D, A> {
   /**
    * The configuration for the source.
    * @type {IConfig}

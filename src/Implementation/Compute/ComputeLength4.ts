@@ -1,5 +1,6 @@
-import { isInputValue, isResolvable, isSource } from '../../Design/ElementType.js'
+import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
+import { type Dimension } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeLength4 } from '../State/StateComputeLength4.js'
 import { length4 } from '../Utility/Maths.js'
@@ -12,7 +13,7 @@ import { Compute } from './Compute.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
+export class ComputeLength4 extends Compute<number, Dimension.V4, 1, number, 1, 1> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -24,7 +25,7 @@ export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
    * @constructor
    * @param {I} a The first input vector.
    */
-  constructor(inputs: Input<number, 4, 1>) {
+  constructor(inputs: Input<number, Dimension.V4, 1>) {
     // We pass in the inputs and the output object placeholder
     super(inputs, 1, new DataNumber())
   }
@@ -39,7 +40,7 @@ export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
     const inputs = this.Inputs
 
     // If it is a source...
-    if (isSource<number, 4, 1>(inputs)) {
+    if (isSource<number, Dimension.V4, 1>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
@@ -50,39 +51,20 @@ export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
 
       // Set the output value with the returned value from the source.
       this.set(length4(a))
-    } else if (isResolvable<number, 4, 1>(inputs)) {
+    } else if (isResolvable<number, Dimension.V4, 1>(inputs)) {
       // Extract the values
       const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
-      // Resolve deeply
-      const resolved = await resolve<number, 4, 1>(wait, value)
-
       // Set the output value with resolved values returned value from the source.
-      this.set(length4(resolved))
-    } else if (isInputValue<number, 4, 1>(inputs, 4, 1)) {
-      // Resolve the whole set of arguments.
-      const resolved = await resolve<number, 4, 1>(wait, inputs)
-
-      // Set the output value.
-      this.set(length4(resolved))
+      this.set(length4(value))
     } else {
-      console.log('inputs', inputs)
-      throw new Error('Unexpected case....?')
-    }
-
-    /*
-      console.log(inputs)
-
-      console.log('inputs', inputs)
-
-      const resolved = await resolve<number, 4, 1>(wait, inputs as Vector<Value<number, 4>, 1>)
-
-      console.log('resolved', resolved)
+      // Resolve the whole set of arguments.
+      const resolved = await resolve<number, Dimension.V4, 1>(wait, inputs)
 
       // Set the output value.
       this.set(length4(resolved))
     }
-*/
+  
     // Return the resolved data
     return this.Data
   }
