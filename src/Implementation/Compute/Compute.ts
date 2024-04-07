@@ -83,23 +83,14 @@ export abstract class Compute<IT, ID extends number, IC extends number, OT, OD e
   }
 
   /**
-   * Return the number of arguments
-   * @type {ID}
-   * @readonly
-   */
-  readonly InputWidth: IC
-
-  /**
    *
    * @param inputs
-   * @param n
    * @param output
    */
-  constructor(inputs: Input<IT, ID, IC>, n: IC, output: IData<OT, OD, OC>) {
+  constructor(inputs: Input<IT, ID, IC>, output: IData<OT, OD, OC>) {
     super()
     this.Inputs = inputs
     this.Output = output
-    this.InputWidth = n
   }
 
   /**

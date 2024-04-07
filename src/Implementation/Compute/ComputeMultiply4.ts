@@ -126,6 +126,9 @@ export class ComputeMultiply4 extends ElementCompute implements ICompute<number,
     // Grab a reference here to we can reduce types as we progress through the type-guards
     const inputs = this.Inputs
 
+    // Get the accumulator
+    let accumulator = this.State.Accumulator
+
     // If it is a source...
     if (isSource<number, 1, 4>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
@@ -134,26 +137,19 @@ export class ComputeMultiply4 extends ElementCompute implements ICompute<number,
       // We want to clock out results one at a time.
       inputs.Config.setBatchSize(1)
 
-      // Get the value from the source
-      const a = (await inputs.resolve(wait))[0]
-
-      console.log('a', a)
-
-      // Set the output value with the returned value from the source.
-      this.set(multiplyN(a))
+      // Resolve one element from source and multiply
+      accumulator *= multiplyN((await inputs.resolve(wait))[0])
     } else if (isResolvable<number, 1, 4>(inputs)) {
-      // Extract the values
-      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
-
-      // Set the output value with resolved values returned value from the source.
-      this.set(multiplyN(value))
+      accumulator *= multiplyN(await inputs.resolve(wait))
     } else {
-      // Resolve the whole vector
-      const resolved = await resolve<number, 1, 4>(wait, inputs)
-
-      // Set the output value.
-      this.set(multiplyN(resolved))
+      accumulator *= multiplyN(await resolve<number, 1, 4>(wait, inputs))
     }
+
+    // Save the state
+    this.State.setAccumulator(accumulator)
+
+    // Set the result so far
+    this.set(accumulator)
 
     return this.Data
   }

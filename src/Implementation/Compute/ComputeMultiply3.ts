@@ -1,32 +1,32 @@
 import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { DataNumber } from '../Data/DataNumber.js'
-import { StateComputeLength4 } from '../State/StateComputeLength4.js'
-import { length4 } from '../Utility/Maths.js'
+import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
+import { multiplyN } from '../Utility/Maths.js'
 import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
- * This can perform `length4` on `v4`
+ * This can perform `multiply` on 3 scalars.
  *
- * Provides an example GPU small kernel
+ * Provides an example GPU
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
+export class ComputeMultiply3 extends Compute<number, 1, 3, number, 1, 1> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
    * @readonly
    */
-  readonly State: StateComputeLength4 = new StateComputeLength4()
+  readonly State: StateComputeMultiply = new StateComputeMultiply()
 
   /**
    * @constructor
    * @param {I} a The first input vector.
    */
-  constructor(inputs: Input<number, 4, 1>) {
+  constructor(inputs: Input<number, 1, 3>) {
     // We pass in the inputs and the output object placeholder
     super(inputs, new DataNumber())
   }
@@ -40,31 +40,30 @@ export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
     // Grab a reference here to we can reduce types as we progress through the type-guards
     const inputs = this.Inputs
 
+    // Get the accumulator
+    let accumulator = this.State.Accumulator
+
     // If it is a source...
-    if (isSource<number, 4, 1>(inputs)) {
+    if (isSource<number, 1, 3>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
       // We want to clock out results one at a time.
       inputs.Config.setBatchSize(1)
 
-      const a = (await inputs.resolve(wait))[0]
-
       // Set the output value with the returned value from the source.
-      this.set(length4(a))
+      accumulator *= multiplyN((await inputs.resolve(wait))[0])
     } else if (isResolvable<number, 4, 1>(inputs)) {
-      // Extract the values
-      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
-
-      // Set the output value with resolved values returned value from the source.
-      this.set(length4(value))
+      accumulator *= multiplyN(await inputs.resolve(wait))
     } else {
-      // Resolve the whole set of arguments.
-      const resolved = await resolve<number, 4, 1>(wait, inputs)
-
-      // Set the output value.
-      this.set(length4(resolved))
+      accumulator *= multiplyN(await resolve<number, 1, 3>(wait, inputs))
     }
+
+    // Save the state
+    this.State.setAccumulator(accumulator)
+
+    // Set the result so far
+    this.set(accumulator)
 
     // Return the resolved data
     return this.Data

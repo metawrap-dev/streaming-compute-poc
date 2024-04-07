@@ -6,7 +6,9 @@ import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
- * This can perform `dot4` on `v4`
+ * This can perform `sqrt` on `scalar`
+ *
+ * This is an example of a very simple GPU compute instruction.
  *
  * @author James McParlane
  * @interface
@@ -21,10 +23,10 @@ export class ComputeSqrt extends Compute<number, 1, 1, number, 1, 1> {
 
   /**
    * @constructor
-   * @param {InputPermissive<number, 1, 1>)} input The input for dot4
+   * @param {InputPermissive<number, 1, 1>} input The input for sqrt
    */
   constructor(inputs: InputPermissive<number, 1, 1>) {
-    super(inputs as Input<number, 1, 1>, 1, new DataNumber())
+    super(inputs as Input<number, 1, 1>, new DataNumber())
   }
 
   /**

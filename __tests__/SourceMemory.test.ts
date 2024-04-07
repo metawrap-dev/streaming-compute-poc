@@ -1,6 +1,6 @@
 import { ComputeMultiplyN } from '../src/Implementation/Compute/ComputeMultiplyN.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
-import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
+import { DataVectorV } from '../src/Implementation/Data/DataVectorV.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('SourceMemory', () => {
@@ -165,7 +165,7 @@ describe('SourceMemory', () => {
 
   it('should initialize with primitive parameters', async () => {
     // A source of an array of number
-    const a = new SourceMemory<number, 1, 1>(new ComputeMultiplyN(new DataVectorN([1, 2, 3, 4, 5])), new ComputeMultiplyN(new DataVectorN([1, 2, 3, 4, 5])), new ComputeMultiplyN(new DataVectorN([1, 2, 3, 4, 5])), new ComputeMultiplyN(new DataVectorN([1, 2, 3, 4, 5])))
+    const a = new SourceMemory<number, 1, 1>(new ComputeMultiplyN(new DataVectorV([1, 2, 3, 4, 5])), new ComputeMultiplyN(new DataVectorV([1, 2, 3, 4, 5])), new ComputeMultiplyN(new DataVectorV([1, 2, 3, 4, 5])), new ComputeMultiplyN(new DataVectorV([1, 2, 3, 4, 5])))
 
     expect(a).toBeDefined()
 

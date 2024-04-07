@@ -1,5 +1,6 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
@@ -8,9 +9,20 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 
 /**
  * A "simple" number.
+ *
+ * Example of an entity with Dimension Unlimited and Cardinality 1
+ *
+ * "Horizontal" vector.
+ *
+ *```
+ *  +-                  -+
+ *  | n1, n2, n3, n4, nN |
+ *  +-                  -+
+ *```
+ *
  * @class
  */
-export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISettable<number, 0> {
+export class DataVectorH extends ElementData implements IData<number, 1, 0>, ISettable<number, 0> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
@@ -23,7 +35,7 @@ export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISe
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDataVectorN<number, 0, 1> = new StateDataVectorN<number, 0, 1>()
+  readonly State: StateDataVectorN<number, 1, 0> = new StateDataVectorN<number, 1, 0>()
 
   /**
    * The strategy that can be applied to the number's config.
@@ -37,7 +49,7 @@ export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISe
    * @type {number}
    * @readonly
    */
-  get Data(): number[] {
+  get Data(): Output<number, 1, 0> {
     if (this.Resolved) {
       return this.State.VectorN
     }
@@ -80,7 +92,7 @@ export class DataVectorN extends ElementData implements IData<number, 0, 1>, ISe
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<number[]> {
+  async resolve(_wait: boolean = false): Promise<Output<number, 1, 0>> {
     this.State.setResolved(true)
     return this.Data
   }

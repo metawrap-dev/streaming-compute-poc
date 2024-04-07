@@ -28,7 +28,7 @@ export class ComputeDot4 extends Compute<number, 4, 2, number, 1, 1> {
    */
   constructor(inputs: InputPermissive<number, 4, 2>) {
     // Assign inputs
-    super(inputs as Input<number, 4, 2>, 2, new DataNumber())
+    super(inputs as Input<number, 4, 2>, new DataNumber())
   }
 
   /**

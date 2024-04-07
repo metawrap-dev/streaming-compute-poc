@@ -26,12 +26,6 @@ export interface ICompute<IT, ID extends number, IC extends number, OT, OD exten
   readonly Inputs: Input<IT, ID, IC>
 
   /**
-   * Return the number of arguments
-   * @type {IC}
-   */
-  readonly InputWidth: IC
-
-  /**
    * Output of the computation which is wrapped in IData so that we can built the AST
    * @type {IData<OT,OD,OC>}
    * @readonly
