@@ -10,7 +10,7 @@ import { ElementCompute } from '../Element/ElementCompute.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 import { multiplyN } from '../Utility/Maths.js'
-import { resolveWhole } from '../Utility/Resolve.js'
+import { resolve } from '../Utility/Resolve.js'
 
 /**
  * This can multiply any number of numbers
@@ -119,33 +119,39 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @async
    */
   async resolve(wait: boolean = false): Promise<Output<number, 1, 1>> {
+    // Grab a reference here to we can reduce types as we progress through the type-guards
+    const inputs = this.Inputs
+
     // If it is a source...
-    if (isSource<number, 1, 0>(this.Inputs)) {
+    if (isSource<number, 1, 0>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
-      if (!wait && this.Inputs.Empty) return 0
+      if (!wait && inputs.Empty) return 0
 
       // We want to clock out results one at a time.
-      this.Inputs.Config.setBatchSize(1)
+      inputs.Config.setBatchSize(1)
 
       // Get the value from the source
-      const a = (await this.Inputs.resolve(wait))[0]
+      const a = (await inputs.resolve(wait))[0]
 
       // Set the output value with the returned value from the source.
       this.set(multiplyN(a))
-    } else if (isResolvable<number, 1, 0>(this.Inputs)) {
+    } else if (isResolvable<number, 1, 0>(inputs)) {
       // Extract the values
-      const value = await this.Inputs.resolve(wait) // Why does this return a Value<T,D>?
+      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
       // Resolve deeply
-      const resolved = await resolveWhole<number, 1, 0>(wait, value)
+      const resolved = await resolve<number, 1, 0>(wait, value)
 
       // Set the output value with resolved values returned value from the source.
       this.set(multiplyN(resolved))
     } else {
-      console.log(this.Inputs)
+      // inputs is
+      //  Value<number, 0>[] | *Value<number, 1>[]* | IData<Value<number, 1>, 0, 1>
+      // resolve wants
+      // number | *Value<number, 1>[]* | IResolvable<number, 1, 0>
 
       // Resolve the whole vector
-      const resolved = await resolveWhole<number, 1, 0>(wait, this.Inputs as Vector<Value<number, 1>, 0>)
+      const resolved = await resolve<number, 1, 0>(wait, inputs as Vector<Value<number, 1>, 0>)
 
       // Set the output value.
       this.set(multiplyN(resolved))

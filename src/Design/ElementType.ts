@@ -2,6 +2,7 @@ import { type IData } from './IData.js'
 import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
 import { type ISource } from './ISource.js'
+import { Value } from './Types/Value.js'
 import { type Vector } from './Types/Vector.js'
 
 /**
@@ -114,8 +115,8 @@ export function isPrimitiveArray<T>(object: unknown): object is T[] {
  * @param {unknown} object The object to identify.
  * @returns {boolean}
  */
-export function isInputVector<T, D extends number, A extends number>(object: unknown, _dimension: D, width: A): object is Vector<Vector<T, D>, A> {
-  return isNotUndefined(object) && Array.isArray(object) && (width === 0 || object.length === width)
+export function isInputValue<T, D extends number, A extends number>(object: unknown, dimension: D, width: A): object is Vector<Value<T, D>, A> {
+  return isNotUndefined(object) && Array.isArray(object) && ((width === 1 && (dimension == 0 || object.length === dimension)) || width === 0 || object.length === width)
 }
 
 /**

@@ -1,11 +1,9 @@
-import { isResolvable, isSource } from '../../Design/ElementType.js'
+import { isInputValue, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
-import { type Value } from '../../Design/Types/Value.js'
-import { type Vector } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeLength4 } from '../State/StateComputeLength4.js'
 import { length4 } from '../Utility/Maths.js'
-import { resolveWhole } from '../Utility/Resolve.js'
+import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
@@ -30,46 +28,61 @@ export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
     // We pass in the inputs and the output object placeholder
     super(inputs, 1, new DataNumber())
   }
+
   /**
    * Resolve it using a promise.
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
   async resolve(wait: boolean = false): Promise<number> {
+    // Grab a reference here to we can reduce types as we progress through the type-guards
+    const inputs = this.Inputs
+
     // If it is a source...
-    if (isSource<number, 4, 1>(this.Inputs)) {
+    if (isSource<number, 4, 1>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
-      if (!wait && this.Inputs.Empty) return 0
+      if (!wait && inputs.Empty) return 0
 
       // We want to clock out results one at a time.
-      this.Inputs.Config.setBatchSize(1)
+      inputs.Config.setBatchSize(1)
 
-      const a = (await this.Inputs.resolve(wait))[0]
+      const a = (await inputs.resolve(wait))[0]
 
       // Set the output value with the returned value from the source.
       this.set(length4(a))
-    } else if (isResolvable<number, 4, 1>(this.Inputs)) {
+    } else if (isResolvable<number, 4, 1>(inputs)) {
       // Extract the values
-      const value = await this.Inputs.resolve(wait) // Why does this return a Value<T,D>?
+      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
       // Resolve deeply
-      const resolved = await resolveWhole<number, 4, 1>(wait, value)
+      const resolved = await resolve<number, 4, 1>(wait, value)
 
       // Set the output value with resolved values returned value from the source.
       this.set(length4(resolved))
+    } else if (isInputValue<number, 4, 1>(inputs, 4, 1)) {
+      // Resolve the whole set of arguments.
+      const resolved = await resolve<number, 4, 1>(wait, inputs)
+
+      // Set the output value.
+      this.set(length4(resolved))
     } else {
-      console.log(this.Inputs)
+      console.log('inputs', inputs)
+      throw new Error('Unexpected case....?')
+    }
 
-      console.log('this.Inputs', this.Inputs)
+    /*
+      console.log(inputs)
 
-      const resolved = await resolveWhole<number, 4, 1>(wait, this.Inputs as Vector<Value<number, 4>, 1>)
+      console.log('inputs', inputs)
+
+      const resolved = await resolve<number, 4, 1>(wait, inputs as Vector<Value<number, 4>, 1>)
 
       console.log('resolved', resolved)
 
       // Set the output value.
       this.set(length4(resolved))
     }
-
+*/
     // Return the resolved data
     return this.Data
   }

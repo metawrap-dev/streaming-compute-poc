@@ -1,11 +1,9 @@
-import { isResolvable, isSource } from '../../Design/ElementType.js'
+import { isInputValue, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
-import { type Value } from '../../Design/Types/Value.js'
-import { type Vector } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { dot4 } from '../Utility/Maths.js'
-import { resolve, resolveWhole } from '../Utility/Resolve.js'
+import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
@@ -37,36 +35,42 @@ export class ComputeDot4 extends Compute<number, 4, 2, number, 1, 1> {
    * @async
    */
   async resolve(wait: boolean = false): Promise<number> {
+    // Grab a reference here to we can reduce types as we progress through the type-guards
+    const inputs = this.Inputs
+
     // If it is a source...
-    if (isSource<number, 4, 2>(this.Inputs)) {
+    if (isSource<number, 4, 2>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
-      if (!wait && this.Inputs.Empty) return 0
+      if (!wait && inputs.Empty) return 0
 
       // We want to clock out results one at a time.
-      this.Inputs.Config.setBatchSize(1)
+      inputs.Config.setBatchSize(1)
 
       // Get the value from the source (There will only be one because we set the batch size to 1.)
-      const [a, b] = (await this.Inputs.resolve(wait))[0]
+      const [a, b] = (await inputs.resolve(wait))[0]
 
       // Set the output value with the returned value from the source.
       this.set(dot4(a, b))
-    } else if (isResolvable<number, 4, 2>(this.Inputs)) {
+    } else if (isResolvable<number, 4, 2>(inputs)) {
       // Extract the values
-      const [a, b] = await this.Inputs.resolve(wait)
+      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
+
+      // Resolve deeply
+      const resolved = await resolve<number, 4, 2>(wait, value)
+
+      // Extract the values
+      const [a, b] = resolved
 
       // Set the output value with resolved values returned value from the source.
-      this.set(dot4(await resolve<number, 4>(wait, a), await resolve<number, 4>(wait, b)))
-    } else {
-      console.log(this.Inputs)
-
-      console.log('this.Inputs', this.Inputs)
-
-      const resolved = await resolveWhole<number, 4, 2>(wait, this.Inputs as Vector<Value<number, 4>, 2>)
-
-      console.log('resolved', resolved)
+      this.set(dot4(a, b))
+    } else if (isInputValue<number, 4, 2>(inputs, 4, 2)) {
+      // Resolve the whole set of arguments.
+      const resolved = await resolve<number, 4, 2>(wait, inputs)
 
       // Set the output value.
       this.set(dot4(resolved[0], resolved[1]))
+    } else {
+      throw new Error('Unexpected case....?')
     }
 
     // Return the resolved data

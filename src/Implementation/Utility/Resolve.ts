@@ -1,4 +1,5 @@
 import { isResolvable } from '../../Design/ElementType.js'
+import { type IData } from '../../Design/IData.js'
 import { type IResolvable } from '../../Design/IResolvable.js'
 import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
@@ -12,7 +13,7 @@ import { type Vector } from '../../Design/Types/Vector.js'
  * @param {Value<T,D>} data
  * @returns
  */
-export async function resolve<T, D extends number>(wait: boolean, data: Value<T, D>): Promise<Vector<T, D>> {
+async function resolveValue<T, D extends number>(wait: boolean, data: Value<T, D>): Promise<Vector<T, D>> {
   // Is the value itself resolvable?
   if (isResolvable<T, D, 1>(data)) {
     // If it is resolvable..
@@ -29,12 +30,13 @@ export async function resolve<T, D extends number>(wait: boolean, data: Value<T,
       // if it is resolvable..
       if (isResolvable<T, D, 1>(d)) {
         // Replacing the cells of a Value<T, D> transforms it into Vector<T, D>
+        // No way to formally express this in Typescript...
         if (d.Resolved) {
-          // Just get the pre-resolved data
+          // So we do some coercion here, just get the pre-resolved data
           ;(data[a] as Vector<T, D>) = d.Data
         } else {
           // Resolve it from scratch
-          data[a] = (await resolve<T, D>(wait, d as Value<T, D>)) as T
+          data[a] = (await resolveValue<T, D>(wait, d as Value<T, D>)) as T
         }
       }
     }
@@ -48,25 +50,22 @@ export async function resolve<T, D extends number>(wait: boolean, data: Value<T,
 
 /**
  * @warning This mutates and returns [data]
- * @param data
+ * @param data Value<T, T>[] | IData<Value<number, 1>, 0, 1> | Value<number, 0>[]
  * @returns
  */
-export async function resolveWhole<T, D extends number, A extends number>(wait: boolean, data: IResolvable<T, D, A> | Vector<Value<T, D>, A>): Promise<Vector<Vector<T, D>, A>> {
+export async function resolve<T, D extends number, A extends number>(wait: boolean, data: T | IData<T, D, 1> | IResolvable<T, D, A> | Vector<Value<T, D>, A | 0>): Promise<Vector<Vector<T, D>, A>> {
   console.log(`resolveWhole`, data)
 
-  // Is it a vector ot scalar?
+  // Cheap test for being a vector
   if (Array.isArray(data)) {
     // Look at each element
     for (let a = 0; a < data.length; a++) {
       // Resolve each element of the vector
       // Note that we replace each cell in `Vector<Value<T, D>, A>` with `Value<T, D>` transforming it into a `Vector<Vector<T, D>, A>`
-      data[a] = await resolve<T, D>(wait, data[a])
+      data[a] = await resolveValue<T, D>(wait, data[a])
     }
-    return data as Vector<Vector<T, D>, A>
-  } else {
-    // Typescript Type system breaks here and does not
-    // Consider that A could be 1
-    throw new Error(`resolveWhole: Scalar?`)
-    // return resolve(wait, data)
   }
+
+  // Return
+  return data as Vector<Vector<T, D>, A>
 }
