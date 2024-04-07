@@ -16,7 +16,9 @@ import { type Vector } from './Vector.js'
  */
 export type Input<T, D extends number, A extends number> =
   | ISource<T, D, A> // Represents a source of data that matches the specified type, dimension, and argument count.
+  // | ISource<T, D, 0> // Unconstrained source of data, with no fixed number of arguments.
   | Vector<Value<T, D>, A> // A structured vector containing values, with a fixed number of elements.
-  //  | Vector<Value<T, D>, 0> // A vector with a dynamic size, flexible in terms of the number of elements it can contain.
+  // | Vector<Value<T, D>, 0> // A vector with a dynamic size, flexible in terms of the number of elements it can contain.
   // | IData<Value<T, 1>, D, 1> //
   | IData<Value<T, D>, 0, 1> //
+  | Vector<Value<T, 0>, 0> // Completely unconstrained array of array of values.

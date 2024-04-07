@@ -1,4 +1,7 @@
 import { ComputeDot4 } from '../src/Implementation/Compute/ComputeDot4.js'
+import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
+import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeDot4', () => {
   // Act before assertions
@@ -25,13 +28,13 @@ describe('ComputeDot4', () => {
     expect(m.Data).toEqual(4)
   })
 
-  /*
   it('Complex Parameter', async () => {
-    const m = new ComputeDot4(new DataVectorN([[1, 1, 1, 1]), [1, new DataNumber(1), 1, 1]])
+    const a = new DataVector4([1, 1, 1, 1])
+
+    const m = new ComputeDot4([a, a])
 
     expect(m).toBeDefined()
 
-    
     console.log(m.toString())
 
     await m.resolve()
@@ -41,17 +44,35 @@ describe('ComputeDot4', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(4)
-   
+  })
+
+  it('Complex Parameter', async () => {
+    const a = new DataVector4([1, 1, 1, 1])
+
+    const b = [1, new DataNumber(1), 1, 1] //  as Value<number,4>
+
+    const m = new ComputeDot4([a, b])
+
+    expect(m).toBeDefined()
+
+    console.log(m.toString())
+
+    await m.resolve()
+
+    console.log(m.toString())
+
+    console.log(m.Data.toString())
+
+    expect(m.Data).toBe(4)
   })
 
   it('Vector Parameter', async () => {
-    const a = [1, 1, 1, 1] as Vector<number, 4>
+    const a = [1, 1, 1, 1]
 
-    const m = new ComputeDot4(a, a)
+    const m = new ComputeDot4([a, a])
 
     expect(m).toBeDefined()
 
-    
     console.log(m.toString())
 
     await m.resolve()
@@ -61,9 +82,7 @@ describe('ComputeDot4', () => {
     console.log(m.Data.toString())
 
     expect(m.Data).toBe(4)
-    
   })
-  */
 
   /*
   it('Streamer', async () => {
@@ -94,30 +113,24 @@ describe('ComputeDot4', () => {
   })
   */
 
-  /*
-  it('Two Mixed Parameters', async () => {
-    const a = new DataNumber(10)
-
-    const m = new ComputeDot4(a, 10)
-
-    console.log(m.toString())
-
-    await m.resolve()
-
-    console.log(m.toString())
-
-    console.log(m.Data.toString())
-
-    expect(m.Data).toBe(100)
-  })
-
-  it('Composite Multiplication', async () => {
+  it('Composite Dot', async () => {
     const a = new DataNumber(10)
     const b = new DataNumber(10)
     const c = new DataNumber(10)
     const d = new DataNumber(10)
 
-    const m = new ComputeDot4(a, b, new ComputeDot4(c, d))
+    const m = new ComputeDot4([
+      [
+        a,
+        b,
+        new ComputeDot4([
+          [a, b, c, d],
+          [a, b, c, d],
+        ]),
+        d,
+      ],
+      [a, b, c, d],
+    ])
 
     console.log(m.toString())
 
@@ -127,11 +140,20 @@ describe('ComputeDot4', () => {
 
     console.log(m.Data.toString())
 
-    expect(m.Data).toBe(10000)
+    expect(m.Data).toBe(4300)
   })
 
   it('Dot4 From Source', async () => {
-    const a = new SourceMemory(10, 10, 10, 10)
+    const a = new SourceMemory<number, 4, 2>(
+      [
+        [10, 10, 10, 10],
+        [10, 10, 10, 10],
+      ],
+      [
+        [10, 10, 10, 10],
+        [10, 10, 10, 10],
+      ],
+    )
 
     const m = new ComputeDot4(a)
 
@@ -143,9 +165,8 @@ describe('ComputeDot4', () => {
 
     console.log(m.Data.toString())
 
-    expect(m.Data).toBe(10000)
+    expect(m.Data).toBe(400)
   })
-  */
 
   /*
   it('should be fail with bad inputs', async () => {

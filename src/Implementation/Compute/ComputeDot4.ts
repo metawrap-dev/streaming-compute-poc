@@ -1,9 +1,11 @@
-import { isInputVector, isResolvable, isSource } from '../../Design/ElementType.js'
+import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { dot4 } from '../Utility/Maths.js'
-import { resolve } from '../Utility/Resolve.js'
+import { resolve, resolveWhole } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
@@ -43,19 +45,27 @@ export class ComputeDot4 extends Compute<number, 4, 2, number, 1, 1> {
       // We want to clock out results one at a time.
       this.Inputs.Config.setBatchSize(1)
 
-      const [a, b] = await this.Inputs.resolve(wait)
+      const [a, b] = (await this.Inputs.resolve(wait))[0]
 
       // Set the output value with the returned value from the source.
-      this.set(dot4(a[0], b[0]))
+      this.set(dot4(a, b))
     } else if (isResolvable<number, 4, 2>(this.Inputs)) {
       // Extract the values
       const [a, b] = await this.Inputs.resolve(wait)
 
       // Set the output value with resolved values returned value from the source.
-      this.set(dot4(await resolve<number, 4>(a), await resolve<number, 4>(b)))
-    } else if (isInputVector<number, 4, 2>(this.Inputs, 4, 2)) {
+      this.set(dot4(await resolve<number, 4>(wait, a), await resolve<number, 4>(wait, b)))
+    } else {
+      console.log(this.Inputs)
+
+      console.log('this.Inputs', this.Inputs)
+
+      const resolved = await resolveWhole<number, 4, 2>(wait, this.Inputs as Vector<Value<number, 4>, 2>)
+
+      console.log('resolved', resolved)
+
       // Set the output value.
-      this.set(dot4(this.Inputs[0], this.Inputs[1]))
+      this.set(dot4(resolved[0], resolved[1]))
     }
 
     // Return the resolved data

@@ -1,14 +1,16 @@
-import { isInputVector, isResolvable, isSource } from '../../Design/ElementType.js'
+import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ICompute } from '../../Design/ICompute.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 import { multiplyN } from '../Utility/Maths.js'
-import { resolve } from '../Utility/Resolve.js'
+import { resolveWhole } from '../Utility/Resolve.js'
 
 /**
  * This can multiply any number of numbers
@@ -117,46 +119,36 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @async
    */
   async resolve(wait: boolean = false): Promise<Output<number, 1, 1>> {
-    // Enforce the batch size of 1 for this compute element
-
-    let accumulator = this.State.Accumulator
-
+    // If it is a source...
     if (isSource<number, 1, 0>(this.Inputs)) {
-      console.info(`isSource`)
-
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && this.Inputs.Empty) return 0
 
-      // We want to clock our results one at a time.
+      // We want to clock out results one at a time.
       this.Inputs.Config.setBatchSize(1)
 
+      // Get the value from the source
+      const a = (await this.Inputs.resolve(wait))[0]
+
       // Set the output value with the returned value from the source.
-      accumulator *= await multiplyN((await this.Inputs.resolve(wait))[0])
-
-      // Set the state
-      this.State.setAccumulator(accumulator)
+      this.set(multiplyN(a))
     } else if (isResolvable<number, 1, 0>(this.Inputs)) {
-
-      console.info(`isResolvable`)
-
       // Extract the values
-      const a = await this.Inputs.resolve(wait)
+      const a = await this.Inputs.resolve(wait) // Why does this return a Value<T,D>?
+
+      // Resolve deeply
+      const resolved = await resolveWhole<number, 1, 0>(wait, a)
 
       // Set the output value with resolved values returned value from the source.
-      accumulator *= await multiplyN(await resolve<number, 0>(a))
-    } else if (isInputVector<number, 1, 0>(this.Inputs, 1, 0)) {
+      this.set(multiplyN(resolved))
+    } else {
+      console.log(this.Inputs)
 
-      console.info(`isInputVector`)
+      const resolved = await resolveWhole<number, 1, 0>(wait, this.Inputs as Vector<Value<number, 1>, 0>)
 
       // Set the output value.
-      accumulator *= await multiplyN(this.Inputs)
-    } 
-
-    // Save the accumulator away
-    this.State.setAccumulator(accumulator)
-
-    // Set the output value to the accumulator
-    this.set(accumulator)
+      this.set(multiplyN(resolved))
+    }
 
     return this.Data
   }

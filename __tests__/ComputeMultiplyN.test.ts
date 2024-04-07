@@ -25,7 +25,7 @@ describe('ComputeMultiplyN', () => {
     expect(m.Data).toEqual(120)
   })
 
-  it('Mixed Parameters', async () => {
+  it('Mixed Parameters 1', async () => {
     const m = new ComputeMultiplyN([1, new DataNumber(2), 3, 4, 5])
 
     expect(m).toBeDefined()
@@ -41,7 +41,7 @@ describe('ComputeMultiplyN', () => {
     expect(m.Data).toEqual(120)
   })
 
-  it('Mixed Parameters', async () => {
+  it('Mixed Parameters 2', async () => {
     const m = new ComputeMultiplyN(new DataVectorN([1, 2, 3, 4, 5]))
 
     expect(m).toBeDefined()
@@ -57,7 +57,7 @@ describe('ComputeMultiplyN', () => {
     expect(m.Data).toEqual(120)
   })
 
-  it('Mixed Parameters', async () => {
+  it('Source', async () => {
     const m = new ComputeMultiplyN(new SourceMemory([10, 10, 10, 10]))
 
     expect(m).toBeDefined()

@@ -117,7 +117,7 @@ describe('ComputeLength4', () => {
   })
   */
 
-  it.only('Composite Length', async () => {
+  it('Composite Length', async () => {
     const a = new DataNumber(10)
     const b = new DataNumber(10)
     const c = new DataNumber(10)

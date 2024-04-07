@@ -1,18 +1,17 @@
 import { type Vector } from '../../Design/Types/Vector.js'
-import { resolve } from './Resolve.js'
 
 /**
  * Calculate the length of a v4
  * @param {number[4]} vectorA
  * @returns
  */
-export async function length4(vectorA: number[]): Promise<number> {
+export function length4(vectorA: number[]): number {
   if (vectorA.length !== 4) {
     throw new Error('Vector must be of length (4)')
   }
 
   // Calculate the length of vectorA
-  return Math.sqrt(await resolve<number,1>(vectorA[0]) * await resolve<number,1>(vectorA[0]) + await resolve<number,1>(vectorA[1]) * await resolve<number,1>(vectorA[1]) + await resolve<number,1>(vectorA[2]) * await resolve<number,1>(vectorA[2]) + await resolve<number,1>(vectorA[3]) * await resolve<number,1>(vectorA[3]))
+  return Math.sqrt(vectorA[0] * vectorA[0] + vectorA[1] * vectorA[1] + vectorA[2] * vectorA[2] + vectorA[3] * vectorA[3])
 }
 
 /**
@@ -22,8 +21,12 @@ export async function length4(vectorA: number[]): Promise<number> {
  * @returns
  */
 export function dot4(vectorA: Vector<number, 4>, vectorB: Vector<number, 4>): number {
-  if (vectorA.length !== 4 || vectorB.length !== 4) {
-    throw new Error('Vectors must be of length (4)')
+  if (vectorA.length !== 4) {
+    throw new Error(`dot4:Vectors must be of length (4) ${vectorA.length}`)
+  }
+
+  if (vectorB.length !== 4) {
+    throw new Error(`dot4:Vectors must be of length (4) ${vectorB.length}`)
   }
 
   let product = 0
@@ -39,10 +42,10 @@ export function dot4(vectorA: Vector<number, 4>, vectorB: Vector<number, 4>): nu
  * @param {number[4]} vectorA
  * @returns
  */
-export async function multiplyN(vectorA: Vector<number, 0>): Promise<number> {
+export function multiplyN(vectorA: Vector<number, 0>): number {
   let accumulator = 1
   for (let i = 0; i < vectorA.length; i++) {
-    accumulator *= await resolve<number,1>(vectorA[i])
+    accumulator *= vectorA[i]
   }
 
   return accumulator
