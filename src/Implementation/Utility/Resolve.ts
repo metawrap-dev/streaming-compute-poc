@@ -1,4 +1,5 @@
 import { isResolvable } from '../../Design/ElementType.js'
+import { type IResolvable } from '../../Design/IResolvable.js'
 import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 
@@ -50,7 +51,7 @@ export async function resolve<T, D extends number>(wait: boolean, data: Value<T,
  * @param data
  * @returns
  */
-export async function resolveWhole<T, D extends number, A extends number>(wait: boolean, data: Vector<Value<T, D>, A>): Promise<Vector<Vector<T, D>, A>> {
+export async function resolveWhole<T, D extends number, A extends number>(wait: boolean, data: IResolvable<T, D, A> | Vector<Value<T, D>, A>): Promise<Vector<Vector<T, D>, A>> {
   console.log(`resolveWhole`, data)
 
   // Is it a vector ot scalar?

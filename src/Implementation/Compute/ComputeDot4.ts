@@ -45,6 +45,7 @@ export class ComputeDot4 extends Compute<number, 4, 2, number, 1, 1> {
       // We want to clock out results one at a time.
       this.Inputs.Config.setBatchSize(1)
 
+      // Get the value from the source (There will only be one because we set the batch size to 1.)
       const [a, b] = (await this.Inputs.resolve(wait))[0]
 
       // Set the output value with the returned value from the source.

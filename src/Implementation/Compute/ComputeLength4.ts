@@ -5,7 +5,7 @@ import { type Vector } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeLength4 } from '../State/StateComputeLength4.js'
 import { length4 } from '../Utility/Maths.js'
-import { resolve, resolveWhole } from '../Utility/Resolve.js'
+import { resolveWhole } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
@@ -50,10 +50,13 @@ export class ComputeLength4 extends Compute<number, 4, 1, number, 1, 1> {
       this.set(length4(a))
     } else if (isResolvable<number, 4, 1>(this.Inputs)) {
       // Extract the values
-      const a = await this.Inputs.resolve(wait)
+      const value = await this.Inputs.resolve(wait) // Why does this return a Value<T,D>?
+
+      // Resolve deeply
+      const resolved = await resolveWhole<number, 4, 1>(wait, value)
 
       // Set the output value with resolved values returned value from the source.
-      this.set(length4(await resolve<number, 4>(wait, a)))
+      this.set(length4(resolved))
     } else {
       console.log(this.Inputs)
 

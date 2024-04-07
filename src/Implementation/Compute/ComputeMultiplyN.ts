@@ -134,16 +134,17 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
       this.set(multiplyN(a))
     } else if (isResolvable<number, 1, 0>(this.Inputs)) {
       // Extract the values
-      const a = await this.Inputs.resolve(wait) // Why does this return a Value<T,D>?
+      const value = await this.Inputs.resolve(wait) // Why does this return a Value<T,D>?
 
       // Resolve deeply
-      const resolved = await resolveWhole<number, 1, 0>(wait, a)
+      const resolved = await resolveWhole<number, 1, 0>(wait, value)
 
       // Set the output value with resolved values returned value from the source.
       this.set(multiplyN(resolved))
     } else {
       console.log(this.Inputs)
 
+      // Resolve the whole vector
       const resolved = await resolveWhole<number, 1, 0>(wait, this.Inputs as Vector<Value<number, 1>, 0>)
 
       // Set the output value.
