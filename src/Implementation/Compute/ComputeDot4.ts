@@ -1,5 +1,5 @@
 import { isResolvable, isSource } from '../../Design/ElementType.js'
-import { type InputPermissive, type Input } from '../../Design/Types/Input.js'
+import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
 import { Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
@@ -9,6 +9,8 @@ import { Compute } from './Compute.js'
 
 /**
  * This can perform `dot4` on `v4`
+ *
+ * Provides an example GPU primitive.
  *
  * @author James McParlane
  * @interface
@@ -27,7 +29,7 @@ export class ComputeDot4 extends Compute<number, Dimension.V4, Cardinality.Two, 
    */
   constructor(inputs: InputPermissive<number, Dimension.V4, Cardinality.Two>) {
     // Assign inputs
-    super(inputs  as Input<number, Dimension.V4, Cardinality.Two>, Cardinality.Two, new DataNumber())
+    super(inputs as Input<number, Dimension.V4, Cardinality.Two>, Cardinality.Two, new DataNumber())
   }
 
   /**
@@ -64,7 +66,7 @@ export class ComputeDot4 extends Compute<number, Dimension.V4, Cardinality.Two, 
 
       // Set the output value.
       this.set(dot4(a, b))
-    } 
+    }
 
     // Return the resolved data
     return this.Data

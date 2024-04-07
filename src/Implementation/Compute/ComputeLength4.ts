@@ -10,6 +10,8 @@ import { Compute } from './Compute.js'
 /**
  * This can perform `length4` on `v4`
  *
+ * Provides an example GPU small kernel
+ *
  * @author James McParlane
  * @interface
  */
@@ -64,7 +66,7 @@ export class ComputeLength4 extends Compute<number, Dimension.V4, 1, number, 1, 
       // Set the output value.
       this.set(length4(resolved))
     }
-  
+
     // Return the resolved data
     return this.Data
   }

@@ -14,14 +14,16 @@ import { resolve } from '../Utility/Resolve.js'
 /**
  * This can multiply any number of numbers
  *
- * Provides an example GPU small kernel that can be built up with other instructions.
+ * Provides an example GPU kernel
  *
- * eg. We implement it with sets of multiply4/3/2
+ * This takes in 4 values (See Cardinality)
+ *
+ * This is an experiment in using numbers instead of a vector.
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiplyN extends ElementCompute implements ICompute<number, Dimension.Scalar, Cardinality.Unbounded, number, Dimension.Scalar, 1> {
+export class ComputeMultiply4 extends ElementCompute implements ICompute<number, Dimension.Scalar, Cardinality.Four, number, Dimension.Scalar, Cardinality.One> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -50,7 +52,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @type {ISource<I>}
    * @readonly
    */
-  readonly Inputs: Input<number, Dimension.Scalar, Cardinality.Unbounded>
+  readonly Inputs: Input<number, Dimension.Scalar, Cardinality.Four>
 
   /**
    * What is the output of the multiplication.
@@ -68,18 +70,18 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
     return this.Output.Resolved
   }
 
-  InputWidth: 0
+  InputWidth: 4
 
   /**
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: InputPermissive<number, Dimension.Scalar, Cardinality.Unbounded>) {
+  constructor(input: InputPermissive<number, Dimension.Scalar, Cardinality.Four>) {
     super()
 
-    console.log('ComputeMultiply:input ', input)
+    console.log('ComputeMultiply4:input ', input)
 
-    this.Inputs = input as Input<number, Dimension.Scalar, Cardinality.Unbounded>
+    this.Inputs = input as Input<number, Dimension.Scalar, Cardinality.Four>
   }
 
   /**
@@ -121,12 +123,12 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<Output<number, Dimension.Scalar, Cardinality.One>> {
+  async resolve(wait: boolean = false): Promise<Output<number, Dimension.Scalar, 1>> {
     // Grab a reference here to we can reduce types as we progress through the type-guards
     const inputs = this.Inputs
 
     // If it is a source...
-    if (isSource<number, Dimension.Scalar, Cardinality.Unbounded>(inputs)) {
+    if (isSource<number, Dimension.Scalar, Cardinality.Four>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
@@ -140,7 +142,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
 
       // Set the output value with the returned value from the source.
       this.set(multiplyN(a))
-    } else if (isResolvable<number, Dimension.Scalar, Cardinality.Unbounded>(inputs)) {
+    } else if (isResolvable<number, Dimension.Scalar, Cardinality.Four>(inputs)) {
       // Extract the values
       const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
@@ -148,7 +150,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
       this.set(multiplyN(value))
     } else {
       // Resolve the whole vector
-      const resolved = await resolve<number, Dimension.Scalar, 0>(wait, inputs)
+      const resolved = await resolve<number, Dimension.Scalar, Cardinality.Four>(wait, inputs)
 
       // Set the output value.
       this.set(multiplyN(resolved))
