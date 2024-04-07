@@ -1,12 +1,12 @@
 import { type Input } from '../../Design/Types/Input.js'
-import { type Dimension } from '../../Design/Types/Vector.js'
+import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [SourceMemory]{@link SourceMemory}.
  * @class
  */
-export class StateSourceMemory<T, D extends Dimension, A extends number> extends StateCommon {
+export class StateSourceMemory<T, D extends Dimension, C extends Cardinality> extends StateCommon {
   /**
    * How are are we into the source in memory.
    * @type {number}
@@ -16,8 +16,8 @@ export class StateSourceMemory<T, D extends Dimension, A extends number> extends
 
   /**
    * The data stored in memory that we are reading out of.
-   * @type {Input<T,D,A>[]}
+   * @type {Input<T,D,C>[]}
    * @readonly
    */
-  readonly Data: Input<T, D, A>[] = []
+  readonly Data: Input<T, D, C>[] = []
 }

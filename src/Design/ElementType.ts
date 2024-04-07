@@ -3,7 +3,7 @@ import { type IElement } from './IElement.js'
 import { type IResolvable } from './IResolvable.js'
 import { type ISource } from './ISource.js'
 import { type Value } from './Types/Value.js'
-import { type Dimension, type Vector } from './Types/Vector.js'
+import { type Cardinality, type Dimension, type Vector } from './Types/Vector.js'
 
 /**
  * The type of the element.
@@ -50,8 +50,8 @@ export function isNotUndefined(object: unknown): object is object {
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-export function isOneSourceParameter<T, D extends Dimension, A extends number>(args: number, object: unknown, rest: unknown): object is ISource<T, D, A> {
-  return isSource(object) && !isParameters<T, D, A>(args, rest)
+export function isOneSourceParameter<T, D extends Dimension, C extends Cardinality>(args: number, object: unknown, rest: unknown): object is ISource<T, D, C> {
+  return isSource(object) && !isParameters<T, D, C>(args, rest)
 }
 
 /**
@@ -59,8 +59,8 @@ export function isOneSourceParameter<T, D extends Dimension, A extends number>(a
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-export function isSource<T, D extends Dimension, A extends number>(object: unknown): object is ISource<T, D, A> {
-  return isNotUndefined(object) && (object as ISource<T, D, A>).Type === ElementType.Source
+export function isSource<T, D extends Dimension, C extends Cardinality>(object: unknown): object is ISource<T, D, C> {
+  return isNotUndefined(object) && (object as ISource<T, D, C>).Type === ElementType.Source
 }
 
 /**
@@ -68,8 +68,8 @@ export function isSource<T, D extends Dimension, A extends number>(object: unkno
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-export function isData<T, D extends Dimension, A extends number>(object: unknown): object is IData<T, D, A> {
-  return isNotUndefined(object) && (object as IData<T, D, A>).Type === ElementType.Data
+export function isData<T, D extends Dimension, C extends Cardinality>(object: unknown): object is IData<T, D, C> {
+  return isNotUndefined(object) && (object as IData<T, D, C>).Type === ElementType.Data
 }
 
 /**
@@ -78,7 +78,7 @@ export function isData<T, D extends Dimension, A extends number>(object: unknown
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-export function isOneParameter<T, D extends Dimension, A extends number>(args: number, object: unknown): object is T | IData<T, D, A> {
+export function isOneParameter<T, D extends Dimension, C extends Cardinality>(args: number, object: unknown): object is T | IData<T, D, C> {
   return args === 1 && isNotUndefined(object)
 }
 
@@ -88,7 +88,7 @@ export function isOneParameter<T, D extends Dimension, A extends number>(args: n
  * @param {unknown} object The object to identify.
  * @returns {boolean}
  */
-export function isParameters<T, D extends Dimension, A extends number>(args: number, object: unknown): object is (IData<T, D, A> | T)[] {
+export function isParameters<T, D extends Dimension, C extends Cardinality>(args: number, object: unknown): object is (IData<T, D, C> | T)[] {
   return args > 1 && isNotUndefined(object) && Array.isArray(object) && object.length > 0
 }
 
@@ -97,7 +97,7 @@ export function isParameters<T, D extends Dimension, A extends number>(args: num
  * @param {unknown} object The object to identify.
  * @returns {boolean}
  */
-export function isDataArray<T, D extends Dimension, A extends number>(object: unknown): object is (IData<T, D, A> | T)[] {
+export function isDataArray<T, D extends Dimension, C extends Cardinality>(object: unknown): object is (IData<T, D, C> | T)[] {
   return isNotUndefined(object) && Array.isArray(object) && object.length > 0
 }
 
@@ -115,7 +115,7 @@ export function isPrimitiveArray<T>(object: unknown): object is T[] {
  * @param {unknown} object The object to identify.
  * @returns {boolean}
  */
-export function isInputValue<T, D extends Dimension, A extends number>(object: unknown, dimension: D, width: A): object is Vector<Value<T, D>, A> {
+export function isInputValue<T, D extends Dimension, C extends Cardinality>(object: unknown, dimension: D, width: C): object is Vector<Value<T, D>, C> {
   return isNotUndefined(object) && Array.isArray(object) && ((width === 1 && (dimension == 0 || object.length === dimension)) || width === 0 || object.length === width)
 }
 
@@ -124,7 +124,7 @@ export function isInputValue<T, D extends Dimension, A extends number>(object: u
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the entity is resolvable.
  */
-export function isResolvable<T, D extends Dimension, R extends number>(object: unknown): object is IResolvable<T, D, R> {
+export function isResolvable<T, D extends Dimension, C extends Cardinality>(object: unknown): object is IResolvable<T, D, C> {
   // At this point it is just a soft convention that an element is also resolvable
   return isNotUndefined(object) && (object as IElement).Type !== undefined
 }

@@ -12,7 +12,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class SourceMemory<T, D extends Dimension, A extends number> extends ElementSource implements ISource<T, D, A> {
+export class SourceMemory<T, D extends Dimension, C extends number> extends ElementSource implements ISource<T, D, C> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -25,7 +25,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
    * @type {IState}
    * @readonly
    */
-  readonly State: StateSourceMemory<T, D, A> = new StateSourceMemory<T, D, A>()
+  readonly State: StateSourceMemory<T, D, C> = new StateSourceMemory<T, D, C>()
 
   /**
    * The strategy that can be applied to the source's state.
@@ -38,7 +38,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(...input: Input<T, D, A>[]) {
+  constructor(...input: Input<T, D, C>[]) {
     super()
     // Queue the data
     this.State.Data.push(...input)
@@ -53,9 +53,9 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
     // If we have data remaining
     if (this.State.Index < this.State.Data.length) {
       // If the first element is a source...
-      if (isSource<T, D, A>(this.State.Data[this.State.Index])) {
+      if (isSource<T, D, C>(this.State.Data[this.State.Index])) {
         // If it is a source then check if it is empty
-        return (this.State.Data[this.State.Index] as ISource<T, D, A>).Empty
+        return (this.State.Data[this.State.Index] as ISource<T, D, C>).Empty
 
         // TODO: We should also check if any other elements are not sources
       } else {
@@ -118,8 +118,8 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
     // Walk every element in the source
     for (let i = this.State.Index; i < this.State.Data.length; i++) {
       // If a source then we go deeper
-      if (isSource<T, D, A>(this.State.Data[i])) {
-        a += (this.State.Data[i] as ISource<T, D, A>).Count
+      if (isSource<T, D, C>(this.State.Data[i])) {
+        a += (this.State.Data[i] as ISource<T, D, C>).Count
       } else {
         a++
       }
@@ -134,8 +134,8 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<Output<T, D, A>[]> {
-    const result: Output<T, D, A>[] = []
+  async resolve(wait: boolean = false): Promise<Output<T, D, C>[]> {
+    const result: Output<T, D, C>[] = []
 
     /*
     const resolve = async (d: Value<T, D>): Promise<T> => {
@@ -157,7 +157,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
       const element = this.State.Data[this.State.Index]
 
       // Is it s source?
-      if (isSource<T, D, A>(element)) {
+      if (isSource<T, D, C>(element)) {
         // How many elements do we need to get the batch size we want?
         const remaining = this.Config.BatchSize - result.length
         console.log(`isSource: result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
@@ -179,7 +179,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
         }
       } else {
         // Get the element
-        if (isResolvable<T, D, A>(element)) {
+        if (isResolvable<T, D, C>(element)) {
           if (!element.Resolved) {
             // We need to resolve it
             // @todo - we want this to block until resolved.
@@ -190,7 +190,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
             //const a = await resolve(v)
             //console.log(`a`,a)
 
-            result.push(v as Output<T, D, A>)
+            result.push(v as Output<T, D, C>)
 
             //result.push(await resolve(await element.resolve()))
           } else {
@@ -199,7 +199,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
           }
         } else {
           // It is not resolvable
-          result.push(element as Output<T, D, A>)
+          result.push(element as Output<T, D, C>)
         }
 
         // Advance the index
@@ -235,7 +235,7 @@ export class SourceMemory<T, D extends Dimension, A extends number> extends Elem
    * @param {data: ISource<T> | T | (T | IData<T>)[] }
    * @async
    */
-  async queue(...input: Input<T, D, A>[]): Promise<void> {
+  async queue(...input: Input<T, D, C>[]): Promise<void> {
     this.State.Data.push(...input)
 
     if (this.Waiting) {

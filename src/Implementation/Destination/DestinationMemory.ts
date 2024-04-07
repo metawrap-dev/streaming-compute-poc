@@ -2,7 +2,7 @@ import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IDestination } from '../../Design/IDestination.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Dimension } from '../../Design/Types/Vector.js'
+import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementDestination } from '../Element/ElementDestination.js'
 import { StateDestinationMemory } from '../State/StateDestinationMemory.js'
@@ -18,7 +18,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * @author James McParlane
  * @interface
  */
-export class DestinationMemory<T, D extends Dimension, A extends number> extends ElementDestination implements IDestination<T, D, A> {
+export class DestinationMemory<T, D extends Dimension, C extends Cardinality> extends ElementDestination implements IDestination<T, D, C> {
   /**
    * The configuration for the destination.
    * @type {IConfig}
@@ -31,7 +31,7 @@ export class DestinationMemory<T, D extends Dimension, A extends number> extends
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDestinationMemory<T, D, A> = new StateDestinationMemory<T, D, A>()
+  readonly State: StateDestinationMemory<T, D, C> = new StateDestinationMemory<T, D, C>()
 
   /**
    * The strategy that can be applied to the destination's state.
@@ -76,7 +76,7 @@ export class DestinationMemory<T, D extends Dimension, A extends number> extends
    * @param {(T | IData<T>)} rest The rest of the data to write.
    * @async
    */
-  async write(...inputs: Input<T, D, A>[]): Promise<void> {
+  async write(...inputs: Input<T, D, C>[]): Promise<void> {
     for (const input of inputs) {
       this.State.Buffer.push(input)
 
@@ -235,7 +235,7 @@ export class DestinationMemory<T, D extends Dimension, A extends number> extends
     for (const d of this.State.Buffer) {
       console.log(`resolve`, d)
 
-      if (isSource<T, D, A>(d)) {
+      if (isSource<T, D, C>(d)) {
         // Make it adhere to our batch-size
         d.Config.setBatchSize(this.Config.BatchSize)
 
@@ -244,7 +244,7 @@ export class DestinationMemory<T, D extends Dimension, A extends number> extends
           // Resolve as a chunk and store
           this.State.Storage.push(...(await d.resolve()))
         }
-      } else if (isResolvable<T, D, A>(d)) {
+      } else if (isResolvable<T, D, C>(d)) {
         // If it is resolved...
         if (d.Resolved) {
           // Then just push the data
@@ -271,7 +271,7 @@ export class DestinationMemory<T, D extends Dimension, A extends number> extends
         }
       } else {
         // Just plain old data
-        this.State.Storage.push(d as Output<T, D, A>)
+        this.State.Storage.push(d as Output<T, D, C>)
       }
     }
 

@@ -1,7 +1,7 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Dimension, type Vector } from '../../Design/Types/Vector.js'
+import { type Cardinality, type Dimension, type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataVectorN } from '../State/StateDataVectorN.js'
@@ -11,7 +11,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * A "simple" number.
  * @class
  */
-export class DataVector4 extends ElementData implements IData<number, Dimension.V4, 1>, ISettable<number, Dimension.V4> {
+export class DataVector4 extends ElementData implements IData<number, Dimension.V4, Cardinality.One>, ISettable<number, Dimension.V4> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
@@ -24,7 +24,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDataVectorN<number, Dimension.V4, 1> = new StateDataVectorN<number, Dimension.V4, 1>()
+  readonly State: StateDataVectorN<number, Dimension.V4, Cardinality.One> = new StateDataVectorN<number, Dimension.V4, Cardinality.One>()
 
   /**
    * The strategy that can be applied to the number's config.
@@ -38,7 +38,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * @type {number}
    * @readonly
    */
-  get Data(): Output<number, Dimension.V4, 1> {
+  get Data(): Output<number, Dimension.V4, Cardinality.One> {
     if (this.Resolved) {
       return this.State.VectorN
     }

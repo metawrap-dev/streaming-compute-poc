@@ -1,15 +1,15 @@
 import { type Output } from './Types/Output.js'
-import { type Dimension } from './Types/Vector.js'
+import { type Cardinality, type Dimension } from './Types/Vector.js'
 
 /**
  * Something that can be resolved to something concrete that requires no further execution.
  * @author James McParlane
  * @param {type} T The type of the resolved object.
  * @param {number} D The dimension of the resolved object.
- * @param {number} R The number objects resolved.
+ * @param {number} C The number objects resolved.
  * @interface
  */
-export interface IResolvable<T, D extends Dimension, R extends number> {
+export interface IResolvable<T, D extends Dimension, C extends Cardinality> {
   /**
    * If true then this has been resolved.
    *
@@ -24,11 +24,11 @@ export interface IResolvable<T, D extends Dimension, R extends number> {
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  resolve(wait?: boolean): Promise<Output<T, D, R>>
+  resolve(wait?: boolean): Promise<Output<T, D, C>>
 
   /**
    * The data that has been resolved.
-   * @type {Output<T, D, R>}
+   * @type {Output<T, D, C>}
    */
-  readonly Data: Output<T, D, R>
+  readonly Data: Output<T, D, C>
 }

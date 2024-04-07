@@ -2,7 +2,7 @@ import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type Input } from './Types/Input.js'
 import { type Output } from './Types/Output.js'
-import { type Dimension } from './Types/Vector.js'
+import { type Cardinality, type Dimension } from './Types/Vector.js'
 
 /**
  * A source of multiple data elements.
@@ -10,7 +10,7 @@ import { type Dimension } from './Types/Vector.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T, D extends Dimension, A extends number> extends IDescribable, IElement {
+export interface ISource<T, D extends Dimension, C extends Cardinality> extends IDescribable, IElement {
   /**
    * If true then there is no more data to read.
    * @type {number}
@@ -34,12 +34,12 @@ export interface ISource<T, D extends Dimension, A extends number> extends IDesc
    * Resolve the source.
    * @param {boolean} wait If true then wait for batch sizes to be met.
    */
-  resolve(wait?: boolean): Promise<Output<T, D, A>[]>
+  resolve(wait?: boolean): Promise<Output<T, D, C>[]>
 
   /**
    * Queue some data to be fed into the source that can be resolved later on.
    * @param {} input The data to queue.
    * @async
    */
-  queue(...input: Input<T, D, A>[]): Promise<void>
+  queue(...input: Input<T, D, C>[]): Promise<void>
 }

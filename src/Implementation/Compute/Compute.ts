@@ -3,7 +3,7 @@ import { type IData } from '../../Design/IData.js'
 import { type IState } from '../../Design/IState.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Dimension } from '../../Design/Types/Vector.js'
+import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
@@ -13,8 +13,14 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  *
  * @author James McParlane
  * @interface
+ * @template {type} IT The compute input type
+ * @template {Dimension} ID The compute input dimension (The width of the input vector)
+ * @template {Cardinality} IC The compute input cardinality (The number of items consumed by an invocation)
+ * @template {type} IT The compute output type
+ * @template {Dimension} ID The compute output dimension (The width of the output vector)
+ * @template {Cardinality} IC The compute output cardinality (The number of items emitted by an invocation) 
  */
-export abstract class Compute<I, D extends Dimension, A extends number, O, OD extends Dimension, OA extends number> extends ElementCompute implements ICompute<I, D, A, O, OD, OA> {
+export abstract class Compute<IT, ID extends Dimension, IC extends Cardinality, OT, OD extends Dimension, OC extends Cardinality> extends ElementCompute implements ICompute<IT, ID, IC, OT, OD, OC> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -40,17 +46,17 @@ export abstract class Compute<I, D extends Dimension, A extends number, O, OD ex
   /**
    * Inputs for the computation.
    * We massage everything into a source.
-   * @type {Input<I, D, A>}
+   * @type {Input<IT, ID, IC>}
    * @readonly
    */
-  readonly Inputs: Input<I, D, A>
+  readonly Inputs: Input<IT, ID, IC>
 
   /**
    * What is the output of the multiplication.
-   * @type {IData<O, OD, OA>}
+   * @type {IData<OT, OD, OC>}
    * @readonly
    */
-  readonly Output: IData<O, OD, OA>
+  readonly Output: IData<OT, OD, OC>
 
   /**
    * If true then this has been resolved.
@@ -63,26 +69,26 @@ export abstract class Compute<I, D extends Dimension, A extends number, O, OD ex
 
   /**
    * Sets the value of the output
-   * @param {Output<O,OD,OA} value The value to set.
+   * @param {Output<OT,OD,OC} value The value to set.
    */
-  set(value: Output<O, OD, OA>): void {
+  set(value: Output<OT, OD, OC>): void {
     this.Output.set(value)
   }
 
   /**
    * The output as data.
-   * @type {IData<O>}
+   * @type {IData<OT>}
    */
-  get Data(): Output<O, OD, OA> {
+  get Data(): Output<OT, OD, OC> {
     return this.Output.Data
   }
 
   /**
    * Return the number of arguments
-   * @type {D}
+   * @type {ID}
    * @readonly
    */
-  readonly InputWidth: A
+  readonly InputWidth: IC
 
   /**
    *
@@ -90,7 +96,7 @@ export abstract class Compute<I, D extends Dimension, A extends number, O, OD ex
    * @param n
    * @param output
    */
-  constructor(inputs: Input<I, D, A>, n: A, output: IData<O, OD, OA>) {
+  constructor(inputs: Input<IT, ID, IC>, n: IC, output: IData<OT, OD, OC>) {
     super()
     this.Inputs = inputs
     this.Output = output
@@ -118,5 +124,5 @@ export abstract class Compute<I, D extends Dimension, A extends number, O, OD ex
    * @async
    * @abstract
    */
-  abstract resolve(wait?: boolean): Promise<Output<O, OD, OA>>
+  abstract resolve(wait?: boolean): Promise<Output<OT, OD, OC>>
 }

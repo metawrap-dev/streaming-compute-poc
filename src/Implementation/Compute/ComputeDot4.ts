@@ -1,6 +1,6 @@
 import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type InputPermissive, type Input } from '../../Design/Types/Input.js'
-import { type Dimension } from '../../Design/Types/Vector.js'
+import { Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { dot4 } from '../Utility/Maths.js'
@@ -13,7 +13,7 @@ import { Compute } from './Compute.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeDot4 extends Compute<number, Dimension.V4, 2, number, 1, 1> {
+export class ComputeDot4 extends Compute<number, Dimension.V4, Cardinality.Two, number, Dimension.Scalar, Cardinality.One> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -25,9 +25,9 @@ export class ComputeDot4 extends Compute<number, Dimension.V4, 2, number, 1, 1> 
    * @constructor
    * @param {InputPermissive<number, Dimension.V4, 2>} input The input for dot4
    */
-  constructor(inputs: InputPermissive<number, Dimension.V4, 2>) {
+  constructor(inputs: InputPermissive<number, Dimension.V4, Cardinality.Two>) {
     // Assign inputs
-    super(inputs  as Input<number, Dimension.V4, 2>, 2, new DataNumber())
+    super(inputs  as Input<number, Dimension.V4, Cardinality.Two>, Cardinality.Two, new DataNumber())
   }
 
   /**
@@ -40,7 +40,7 @@ export class ComputeDot4 extends Compute<number, Dimension.V4, 2, number, 1, 1> 
     const inputs = this.Inputs
 
     // If it is a source...
-    if (isSource<number, Dimension.V4, 2>(inputs)) {
+    if (isSource<number, Dimension.V4, Cardinality.Two>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
@@ -52,7 +52,7 @@ export class ComputeDot4 extends Compute<number, Dimension.V4, 2, number, 1, 1> 
 
       // Set the output value with the returned value from the source.
       this.set(dot4(a, b))
-    } else if (isResolvable<number, Dimension.V4, 2>(inputs)) {
+    } else if (isResolvable<number, Dimension.V4, Cardinality.Two>(inputs)) {
       // Extract the values
       const [a, b] = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
@@ -60,7 +60,7 @@ export class ComputeDot4 extends Compute<number, Dimension.V4, 2, number, 1, 1> 
       this.set(dot4(a, b))
     } else {
       // Resolve it as a Value
-      const [a, b] = await resolve<number, Dimension.V4, 2>(wait, inputs)
+      const [a, b] = await resolve<number, Dimension.V4, Cardinality.Two>(wait, inputs)
 
       // Set the output value.
       this.set(dot4(a, b))

@@ -12,6 +12,19 @@ export enum Dimension {
 }
 
 /**
+ * The cardinality of a result.
+ * @enum
+ */
+export enum Cardinality {
+  Unbounded = 0,
+  One = 1,
+  Two = 2,
+  Three = 3,
+  Four = 4,  
+}
+
+
+/**
  * 
  * @param a 
  * @param b 
@@ -36,9 +49,9 @@ export const newVector = <A, B>(a: A, b: B): [A, B] => [a, b]
  *             1 represents a scalar,
  *             and any positive integer N represents an N-dimensional vector.
  */
-export type Vector<T, D extends Dimension> = D extends Dimension.Unbounded
+export type Vector<T, D extends Dimension | Cardinality> = D extends Dimension.Unbounded | Cardinality.Unbounded
   ? T[] // For D = 0, return an array of type T representing an unbounded vector.
-  : D extends Dimension.Scalar
+  : D extends Dimension.Scalar | Cardinality.One
     ? T // For D = 1, return the type T itself, representing a scalar.
     : D extends D
       ? number extends D
@@ -56,6 +69,6 @@ export type Vector<T, D extends Dimension> = D extends Dimension.Unbounded
  *             Initially starts with a single element of type `T`.
  * @private Internal use for constructing the Vector type.
  */
-type _Vector<T, D extends Dimension, R extends unknown[]> = R['length'] extends D
+type _Vector<T, D extends Dimension | Cardinality, R extends unknown[]> = R['length'] extends D
   ? R // If the current vector's length matches the desired dimension `D`, return it.
   : _Vector<T, D, [T, ...R]> // Otherwise, prepend another element of type T and recurse.
