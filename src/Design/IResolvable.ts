@@ -1,5 +1,4 @@
 import { type Output } from './Types/Output.js'
-import { type Cardinality, type Dimension } from './Types/Vector.js'
 
 /**
  * Something that can be resolved to something concrete that requires no further execution.
@@ -9,7 +8,7 @@ import { type Cardinality, type Dimension } from './Types/Vector.js'
  * @param {number} C The number objects resolved.
  * @interface
  */
-export interface IResolvable<T, D extends Dimension, C extends Cardinality> {
+export interface IResolvable<T, D extends number, C extends number> {
   /**
    * If true then this has been resolved.
    *

@@ -2,7 +2,6 @@ import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IDestination } from '../../Design/IDestination.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementDestination } from '../Element/ElementDestination.js'
 import { StateDestinationMemory } from '../State/StateDestinationMemory.js'
@@ -18,7 +17,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * @author James McParlane
  * @interface
  */
-export class DestinationMemory<T, D extends Dimension, C extends Cardinality> extends ElementDestination implements IDestination<T, D, C> {
+export class DestinationMemory<T, D extends number, C extends number> extends ElementDestination implements IDestination<T, D, C> {
   /**
    * The configuration for the destination.
    * @type {IConfig}

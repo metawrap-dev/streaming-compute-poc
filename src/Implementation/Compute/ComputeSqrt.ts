@@ -1,6 +1,5 @@
 import { isResolvable, isSource } from '../../Design/ElementType.js'
-import { type InputPermissive, type Input } from '../../Design/Types/Input.js'
-import { type Dimension } from '../../Design/Types/Vector.js'
+import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { resolve } from '../Utility/Resolve.js'
@@ -12,7 +11,7 @@ import { Compute } from './Compute.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeSqrt extends Compute<number, Dimension.Scalar, 1, number, Dimension.Scalar, 1> {
+export class ComputeSqrt extends Compute<number, 1, 1, number, 1, 1> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
@@ -22,10 +21,10 @@ export class ComputeSqrt extends Compute<number, Dimension.Scalar, 1, number, Di
 
   /**
    * @constructor
-   * @param {InputPermissive<number, Dimension.Scalar, 1>)} input The input for dot4
+   * @param {InputPermissive<number, 1, 1>)} input The input for dot4
    */
-  constructor(inputs:  InputPermissive<number, Dimension.Scalar, 1>) {    
-    super(inputs  as Input<number, Dimension.Scalar, 1>, 1, new DataNumber())
+  constructor(inputs: InputPermissive<number, 1, 1>) {
+    super(inputs as Input<number, 1, 1>, 1, new DataNumber())
   }
 
   /**
@@ -38,7 +37,7 @@ export class ComputeSqrt extends Compute<number, Dimension.Scalar, 1, number, Di
     const inputs = this.Inputs
 
     // If it is a source...
-    if (isSource<number, Dimension.Scalar, 1>(inputs)) {
+    if (isSource<number, 1, 1>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
@@ -50,7 +49,7 @@ export class ComputeSqrt extends Compute<number, Dimension.Scalar, 1, number, Di
 
       // Set the output value with the returned value from the source.
       this.set(Math.sqrt(a))
-    } else if (isResolvable<number, Dimension.Scalar, 1>(inputs)) {
+    } else if (isResolvable<number, 1, 1>(inputs)) {
       // Extract the values
       const a = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
@@ -58,11 +57,11 @@ export class ComputeSqrt extends Compute<number, Dimension.Scalar, 1, number, Di
       this.set(Math.sqrt(a))
     } else {
       // Resolve it as a Value
-      const a = await resolve<number, Dimension.Scalar, 1>(wait, inputs)
+      const a = await resolve<number, 1, 1>(wait, inputs)
 
       // Set the output value.
       this.set(Math.sqrt(a))
-    } 
+    }
 
     // Return the resolved data
     return this.Data

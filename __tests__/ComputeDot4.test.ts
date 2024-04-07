@@ -1,4 +1,3 @@
-import { Dimension } from '../src/Design/Types/Vector.js'
 import { ComputeDot4 } from '../src/Implementation/Compute/ComputeDot4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
@@ -115,7 +114,7 @@ describe('ComputeDot4', () => {
   })
 
   it('Dot4 From Source', async () => {
-    const a = new SourceMemory<number, Dimension.V4, 2>(
+    const a = new SourceMemory<number, 4, 2>(
       [
         [10, 10, 10, 10],
         [10, 10, 10, 10],
@@ -141,7 +140,7 @@ describe('ComputeDot4', () => {
 
   /*
   it('Streamer', async () => {
-    type v4 = Vector<number, Dimension.V4> | DataVectorN | (number | IData<number>)[]
+    type v4 = Vector<number, 4> | DataVectorN | (number | IData<number>)[]
 
     const source = new SourceMemory<[v4, v4]>(
       [

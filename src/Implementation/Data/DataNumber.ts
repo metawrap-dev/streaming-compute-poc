@@ -1,7 +1,6 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataNumber } from '../State/StateDataNumber.js'
@@ -11,7 +10,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * A "simple" number.
  * @class
  */
-export class DataNumber extends ElementData implements IData<number, Dimension.Scalar, Cardinality.One>, ISettable<number, Dimension.Scalar> {
+export class DataNumber extends ElementData implements IData<number, 1, 1>, ISettable<number, 1> {
   //
   // The below is overkill for a simple number, but this is just a toy example of how to implement a data element.
   //
@@ -42,7 +41,7 @@ export class DataNumber extends ElementData implements IData<number, Dimension.S
    * @type {number}
    * @readonly
    */
-  get Data(): Output<number, Dimension.Scalar, Cardinality.One> {
+  get Data(): Output<number, 1, 1> {
     if (this.Resolved) {
       return this.State.Number
     }
@@ -85,7 +84,7 @@ export class DataNumber extends ElementData implements IData<number, Dimension.S
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<Output<number, Dimension.Scalar, Cardinality.One>> {
+  async resolve(_wait: boolean = false): Promise<Output<number, 1, 1>> {
     this.State.setResolved(true)
     return this.Data
   }

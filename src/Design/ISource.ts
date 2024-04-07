@@ -2,7 +2,6 @@ import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type Input } from './Types/Input.js'
 import { type Output } from './Types/Output.js'
-import { type Cardinality, type Dimension } from './Types/Vector.js'
 
 /**
  * A source of multiple data elements.
@@ -10,7 +9,7 @@ import { type Cardinality, type Dimension } from './Types/Vector.js'
  * @author James McParlane
  * @interface
  */
-export interface ISource<T, D extends Dimension, C extends Cardinality> extends IDescribable, IElement {
+export interface ISource<T, D extends number, C extends number> extends IDescribable, IElement {
   /**
    * If true then there is no more data to read.
    * @type {number}

@@ -1,7 +1,6 @@
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type Input } from './Types/Input.js'
-import { type Cardinality, type Dimension } from './Types/Vector.js'
 
 /**
  * A destination for multiple data elements.
@@ -13,7 +12,7 @@ import { type Cardinality, type Dimension } from './Types/Vector.js'
  * @author James McParlane
  * @interface
  */
-export interface IDestination<T, D extends Dimension, C extends Cardinality> extends IDescribable, IElement {
+export interface IDestination<T, D extends number, C extends number> extends IDescribable, IElement {
   /**
    * How how many elements the destination can store.
    * @type {number}

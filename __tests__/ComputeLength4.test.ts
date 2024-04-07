@@ -1,4 +1,4 @@
-import { Dimension, Vector } from '../src/Design/Types/Vector.js'
+import { Vector } from '../src/Design/Types/Vector.js'
 import { ComputeLength4 } from '../src/Implementation/Compute/ComputeLength4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
@@ -39,7 +39,7 @@ describe('ComputeLength4', () => {
   })
 
   it('Vector Parameter', async () => {
-    const a = [1, 1, 1, 1] as Vector<number, Dimension.V4>
+    const a = [1, 1, 1, 1] as Vector<number, 4>
 
     const m = new ComputeLength4(a)
 
@@ -99,7 +99,7 @@ describe('ComputeLength4', () => {
 
   /*
   it('Streamer', async () => {
-    type v4 = Vector<number, Dimension.V4>
+    type v4 = Vector<number, 4>
 
     const source = new SourceMemory<v4>([1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1])
 
@@ -115,7 +115,7 @@ describe('ComputeLength4', () => {
   })
 
   it('Streamer Compact', async () => {
-    type v4 = Vector<number, Dimension.V4>
+    type v4 = Vector<number, 4>
 
     const streamer = new Streamer<v4, number>(new SourceMemory([1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]), new ComputeLength4())
 
@@ -127,7 +127,7 @@ describe('ComputeLength4', () => {
   })
 
   it('Streamer Mixed', async () => {
-    type v4 = Vector<number, Dimension.V4> | DataVectorN
+    type v4 = Vector<number, 4> | DataVectorN
 
     const source = new SourceMemory<v4>([1, 1, 1, 1], new DataVectorN([1, 1, 1, 1]), [1, 1, 1, 1], [1, 1, 1, 1])
 
@@ -143,7 +143,7 @@ describe('ComputeLength4', () => {
   })
 
   it('Streamer Very Mixed', async () => {
-    type v4 = Vector<number, Dimension.V4> | DataVectorN | (number | IData<number>)[]
+    type v4 = Vector<number, 4> | DataVectorN | (number | IData<number>)[]
 
     const source = new SourceMemory([1, 1, 1, 1], new DataVectorN([1, 1, 1, 1]), [1, new DataNumber(1), 1, 1], [1, 1, 1, 1])
 

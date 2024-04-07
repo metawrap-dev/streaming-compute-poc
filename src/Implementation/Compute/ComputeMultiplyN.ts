@@ -2,7 +2,6 @@ import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ICompute } from '../../Design/ICompute.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
@@ -21,7 +20,7 @@ import { resolve } from '../Utility/Resolve.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiplyN extends ElementCompute implements ICompute<number, Dimension.Scalar, Cardinality.Unbounded, number, Dimension.Scalar, 1> {
+export class ComputeMultiplyN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -50,7 +49,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @type {ISource<I>}
    * @readonly
    */
-  readonly Inputs: Input<number, Dimension.Scalar, Cardinality.Unbounded>
+  readonly Inputs: Input<number, 1, 0>
 
   /**
    * What is the output of the multiplication.
@@ -74,19 +73,19 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: InputPermissive<number, Dimension.Scalar, Cardinality.Unbounded>) {
+  constructor(input: InputPermissive<number, 1, 0>) {
     super()
 
     console.log('ComputeMultiply:input ', input)
 
-    this.Inputs = input as Input<number, Dimension.Scalar, Cardinality.Unbounded>
+    this.Inputs = input as Input<number, 1, 0>
   }
 
   /**
    * The output as data.
    * @type {IData<number>}
    */
-  get Data(): Output<number, Dimension.Scalar, Cardinality.One> {
+  get Data(): Output<number, 1, 1> {
     return this.Output.Data
   }
 
@@ -121,12 +120,12 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<Output<number, Dimension.Scalar, Cardinality.One>> {
+  async resolve(wait: boolean = false): Promise<Output<number, 1, 1>> {
     // Grab a reference here to we can reduce types as we progress through the type-guards
     const inputs = this.Inputs
 
     // If it is a source...
-    if (isSource<number, Dimension.Scalar, Cardinality.Unbounded>(inputs)) {
+    if (isSource<number, 1, 0>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
@@ -140,7 +139,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
 
       // Set the output value with the returned value from the source.
       this.set(multiplyN(a))
-    } else if (isResolvable<number, Dimension.Scalar, Cardinality.Unbounded>(inputs)) {
+    } else if (isResolvable<number, 1, 0>(inputs)) {
       // Extract the values
       const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
@@ -148,7 +147,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
       this.set(multiplyN(value))
     } else {
       // Resolve the whole vector
-      const resolved = await resolve<number, Dimension.Scalar, 0>(wait, inputs)
+      const resolved = await resolve<number, 1, 0>(wait, inputs)
 
       // Set the output value.
       this.set(multiplyN(resolved))

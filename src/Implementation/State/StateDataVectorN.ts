@@ -1,11 +1,11 @@
-import { type Cardinality, type Dimension, type Vector } from '../../Design/Types/Vector.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [DataVectorN ]{@link DataVectorN }.
  * @class
  */
-export class StateDataVectorN<T, D extends Dimension, C extends Cardinality> extends StateCommon {
+export class StateDataVectorN<T, D extends number, C extends number> extends StateCommon {
   /**
    * The value of the number.
    * @type {Vector<Vector<T,D>,C>| undefined}

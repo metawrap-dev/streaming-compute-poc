@@ -23,14 +23,6 @@ export enum Cardinality {
 }
 
 /**
- *
- * @param a
- * @param b
- * @returns
- */
-export const newVector = <A, B>(a: A, b: B): [A, B] => [a, b]
-
-/**
  * Defines a type `Vector` that represents a vector of a specific dimension `D` and type `T`.
  * The dimension `D` determines the shape of the vector:
  * - `D = 0`: Represents an unbounded vector with elements of type `T`, essentially `T[]`.

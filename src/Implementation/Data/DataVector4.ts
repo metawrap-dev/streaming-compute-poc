@@ -1,7 +1,7 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Cardinality, type Dimension, type Vector } from '../../Design/Types/Vector.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataVectorN } from '../State/StateDataVectorN.js'
@@ -11,7 +11,7 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
  * A "simple" number.
  * @class
  */
-export class DataVector4 extends ElementData implements IData<number, Dimension.V4, Cardinality.One>, ISettable<number, Dimension.V4> {
+export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISettable<number, 4> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
@@ -24,7 +24,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDataVectorN<number, Dimension.V4, Cardinality.One> = new StateDataVectorN<number, Dimension.V4, Cardinality.One>()
+  readonly State: StateDataVectorN<number, 4, 1> = new StateDataVectorN<number, 4, 1>()
 
   /**
    * The strategy that can be applied to the number's config.
@@ -38,7 +38,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * @type {number}
    * @readonly
    */
-  get Data(): Output<number, Dimension.V4, Cardinality.One> {
+  get Data(): Output<number, 4, 1> {
     if (this.Resolved) {
       return this.State.VectorN
     }
@@ -49,7 +49,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * @constructor
    * @param {number} vector The value of the number.
    */
-  constructor(vector?: Vector<number, Dimension.V4>) {
+  constructor(vector?: Vector<number, 4>) {
     super()
     this.State.setVectorN(vector)
     this.State.setResolved(vector !== undefined)
@@ -81,7 +81,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<Output<number, Dimension.V4, 1>> {
+  async resolve(_wait: boolean = false): Promise<Output<number, 4, 1>> {
     this.State.setResolved(true)
     return this.Data
   }
@@ -90,7 +90,7 @@ export class DataVector4 extends ElementData implements IData<number, Dimension.
    * Sets the value of the number data and marks it as resolved.
    * @param {number[]} value The value to set.
    */
-  set(value: Vector<Vector<number, Dimension.V4>, 1>): void {
+  set(value: Vector<Vector<number, 4>, 1>): void {
     this.State.setVectorN(value)
     this.State.setResolved(true)
   }

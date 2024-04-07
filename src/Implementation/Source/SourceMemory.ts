@@ -2,7 +2,6 @@ import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js
 import { type ISource } from '../../Design/ISource.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Cardinality, type Dimension } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateSourceMemory } from '../State/StateSourceMemory.js'
@@ -13,7 +12,7 @@ import { resolve } from '../Utility/Resolve.js'
  * Data Element: Some form of data that can be fed into a compute element.
  * @class
  */
-export class SourceMemory<T, D extends Dimension, C extends Cardinality> extends ElementSource implements ISource<T, D, C> {
+export class SourceMemory<T, D extends number, C extends number> extends ElementSource implements ISource<T, D, C> {
   /**
    * The configuration for the source.
    * @type {IConfig}

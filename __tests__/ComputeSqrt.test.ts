@@ -40,7 +40,7 @@ describe('ComputeSqrt', () => {
   })
 
   it('Source', async () => {
-    const m = new ComputeSqrt(new SourceMemory(10, 10, 10, 10))
+    const m = new ComputeSqrt(new SourceMemory<number, 1, 1>(10, 10, 10, 10))
 
     expect(m).toBeDefined()
 
@@ -56,7 +56,7 @@ describe('ComputeSqrt', () => {
   })
 
   it('Source', async () => {
-    const m = new ComputeSqrt(new ComputeSqrt(new SourceMemory(10, 10, 10, 10)))
+    const m = new ComputeSqrt(new ComputeSqrt(new SourceMemory<number, 1, 1>(10, 10, 10, 10)))
 
     expect(m).toBeDefined()
 

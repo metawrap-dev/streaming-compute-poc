@@ -1,5 +1,5 @@
 import { type IData } from '../IData.js'
-import { type Cardinality, type Dimension, type Vector } from './Vector.js'
+import { type Vector } from './Vector.js'
 
 /**
  * Represents a value that can be passed as an argument in a generic data structure or operation.
@@ -9,6 +9,6 @@ import { type Cardinality, type Dimension, type Vector } from './Vector.js'
  * @template D The dimension of the value, influencing the structure of the vector.
  */
 
-export type Value<T, D extends Dimension> =
-  | Vector<T | IData<T, Dimension.Scalar, Cardinality.One>, D> // Allows using either basic types or wrapped data types as vector elements. The 1 denotes that it is a single entity.
-  | IData<T, D, Cardinality.One> // Represents a wrapped vector, enforcing single-dimensionality and singularity on the wrapping.
+export type Value<T, D extends number> =
+  | Vector<T | IData<T, 1, 1>, D> // Allows using either basic types or wrapped data types as vector elements. The 1 denotes that it is a single entity.
+  | IData<T, D, 1> // Represents a wrapped vector, enforcing single-dimensionality and singularity on the wrapping.
