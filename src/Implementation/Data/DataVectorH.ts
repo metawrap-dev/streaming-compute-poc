@@ -1,11 +1,11 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
 import { StateDataVectorN } from '../State/StateDataVectorN.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { resolve } from '../Utility/Resolve.js'
 
 /**
  * A "simple" number.
@@ -51,7 +51,7 @@ export class DataVectorH extends ElementData implements IData<number, 1, 0>, ISe
    */
   get Data(): Output<number, 1, 0> {
     if (this.Resolved) {
-      return this.State.VectorN
+      return this.State.VectorN as Output<number, 1, 0>
     }
     throw new Error(`VectorN is not resolved.`)
   }
@@ -92,8 +92,8 @@ export class DataVectorH extends ElementData implements IData<number, 1, 0>, ISe
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(_wait: boolean = false): Promise<Output<number, 1, 0>> {
-    this.State.setResolved(true)
+  async resolve(wait: boolean = false): Promise<Output<number, 1, 0>> {
+    this.set(await resolve<number, 1, 0>(wait, this.State.VectorN))
     return this.Data
   }
 
@@ -101,7 +101,7 @@ export class DataVectorH extends ElementData implements IData<number, 1, 0>, ISe
    * Sets the value of the number data and marks it as resolved.
    * @param {number[]} value The value to set.
    */
-  set(value: Vector<number, 0>): void {
+  set(value: Output<number, 1, 0>): void {
     this.State.setVectorN(value)
     this.State.setResolved(true)
   }

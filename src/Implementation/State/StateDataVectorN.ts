@@ -1,3 +1,4 @@
+import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
@@ -8,25 +9,25 @@ import { StateCommon } from './StateCommon.js'
 export class StateDataVectorN<T, D extends number, C extends number> extends StateCommon {
   /**
    * The value of the number.
-   * @type {Vector<Vector<T,D>,C>| undefined}
+   * @type {Vector<Value<T,D>,C>| undefined}
    * @private
    */
-  #VectorN?: Vector<Vector<T, D>, C>
+  #VectorN?: Vector<Value<T, D>, C>
 
   /**
    * The value of the number.
    * @type {Vector<T,D> | undefined}
    * @readonly
    */
-  get VectorN(): Vector<Vector<T, D>, C> | undefined {
+  get VectorN(): Vector<Value<T, D>, C> | undefined {
     return this.#VectorN
   }
 
   /**
    * Set the number.
-   * @param {Vector<Vector<T,D>,C>} number The number to set.
+   * @param {Vector<Value<T,D>,C>} number The number to set.
    */
-  setVectorN(number: Vector<Vector<T, D>, C>): void {
+  setVectorN(number: Vector<Value<T, D>, C>): void {
     this.#VectorN = number
   }
 }
