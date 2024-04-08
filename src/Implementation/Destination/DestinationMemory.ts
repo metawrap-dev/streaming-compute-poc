@@ -1,5 +1,5 @@
-import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type IDestination } from '../../Design/IDestination.js'
+import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
@@ -82,93 +82,12 @@ export class DestinationMemory<T, D extends number, C extends number> extends El
       // Check the buffer and see if we can resolve the destination.
       await this.#checkBuffer()
     }
-
-    /*
-    console.log(`write`, one)
-
-    // How many arguments did we get?
-    const args = arguments.length
-
-    // Is this a data-source?
-    if (isOneSourceParameter<T>(args, one, rest)) {
-      // Yes, let's add it in order
-      console.log('SourceMemory: Source passed')
-      this.State.Buffer.push(one)
-    } else if (isParameters<T>(args, rest)) {
-      // Is it multiple parameters?
-      // Multiple arguments
-      console.log(`DestinationMemory:multiple arguments`)
-      // Write the first...
-      await this.#writeArgument(one)
-      // Then we write the rest...
-      for (const r of rest) {
-        // but as atoms.
-        await this.#writeAtom(r)
-      }
-    } else if (isOneParameter<T>(args, one)) {
-      // Is it just a single parameter
-      console.log('SourceMemory: One parameter passed')
-      await this.#writeArgument(one)
-    } else {
-      // Not a combination we can handle.
-      throw new Error(`SourceMemory: Invalid parameters`)
-    }
-    */
   }
-
-  /**
-   * Write one parameter to the destination.
-   * @param {T | (T | IData<T>)[]} data The single argument of data to write.
-   */
-  /*
-  async #writeArgument(data: T | IData<T,D<> | (T | IData<T>)[]): Promise<void> {
-    // If it ios an array..
-    if (isDataArray(data)) {
-      // .. then write many
-      await this.#writeMany(data)
-    } else {
-      // ... otherwise write one
-      await this.#writeAtom(data)
-    }
-  }
-  */
-
-  /**
-   * Write one parameter to the destination.
-   * @param {T | IData<T>} data The single argument of data to write.
-   */
-  /*
-  async #writeAtom(data: T | IData<T>): Promise<void> {
-    if (data === undefined) {
-      // Not a combination we can handle.
-      throw new Error(`SourceMemory: Invalid parameters`)
-    }
-
-    this.State.Buffer.push(data)
-
-    // Check the buffer and see if we can resolve the destination.
-    await this.#checkBuffer()
-  }
-  */
-
-  /**
-   * Write one parameter to the destination.
-   * @param {T | (T | IData<T>)[]}
-   */
-  /*
-  async #writeMany(data: (T | IData<T>)[]): Promise<void> {
-    // Add to the memory as a batch.
-    this.State.Buffer.push(...data)
-
-    // Check the buffer and see if we can resolve the destination.
-    await this.#checkBuffer()
-  }
-  */
 
   /**
    * Check the buffer to see if we can resolve the destination.
+   * @async
    */
-
   async #checkBuffer(): Promise<void> {
     console.log(`CHECK BUFFER`)
 

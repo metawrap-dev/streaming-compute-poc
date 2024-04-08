@@ -1,7 +1,7 @@
 import { Vector } from '../src/Design/Types/Vector.js'
-import { ComputeLength4 } from '../src/Implementation/Compute/ComputeLength4.js'
+import { ComputeLengthV4 } from '../src/Implementation/Compute/ComputeLengthV4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
-import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
+import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
 
 describe('ComputeLength4', () => {
   beforeAll(async () => {})
@@ -9,7 +9,7 @@ describe('ComputeLength4', () => {
   afterAll(() => {})
 
   it('Primitive Parameters', async () => {
-    const m = new ComputeLength4([1, 1, 1, 1])
+    const m = new ComputeLengthV4([1, 1, 1, 1])
 
     console.log(m.toString())
 
@@ -23,9 +23,9 @@ describe('ComputeLength4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVector4([1, 1, 1, 1])
+    const a = new DataVectorV4([1, 1, 1, 1])
 
-    const m = new ComputeLength4(a)
+    const m = new ComputeLengthV4(a)
 
     console.log(m.toString())
 
@@ -41,7 +41,7 @@ describe('ComputeLength4', () => {
   it('Vector Parameter', async () => {
     const a = [1, 1, 1, 1] as Vector<number, 4>
 
-    const m = new ComputeLength4(a)
+    const m = new ComputeLengthV4(a)
 
     console.log(m.toString())
 
@@ -60,7 +60,7 @@ describe('ComputeLength4', () => {
     const c = new DataNumber(10)
     const d = new DataNumber(10)
 
-    const m = new ComputeLength4([a, b, c, d])
+    const m = new ComputeLengthV4([a, b, c, d])
 
     console.log(m.toString())
 

@@ -1,4 +1,4 @@
-import { DataVectorV } from '../src/Implementation/Data/DataVectorV.js'
+import { DataVectorHN } from '../src/Implementation/Data/DataVectorHN.js'
 
 describe('DataVectorN', () => {
   beforeAll(async () => {})
@@ -6,7 +6,7 @@ describe('DataVectorN', () => {
   afterAll(() => {})
 
   it('A vector can be resolved', async () => {
-    const number = new DataVectorV([1, 2, 3])
+    const number = new DataVectorHN([1, 2, 3])
 
     expect(number.Resolved).toBe(true)
 
@@ -16,7 +16,7 @@ describe('DataVectorN', () => {
   })
 
   it('A vector can be unresolved and set', async () => {
-    const number = new DataVectorV()
+    const number = new DataVectorHN()
 
     await expect(async () => number.Data).rejects.toThrow(Error)
 
@@ -32,6 +32,6 @@ describe('DataVectorN', () => {
 
     expect(await number.resolve()).toEqual([1, 2, 3])
 
-    expect(number.toString()).toBe('{DataVectorV <= [1,2,3]}')
+    expect(number.toString()).toBe('{DataVectorHN <= [1,2,3]}')
   })
 })

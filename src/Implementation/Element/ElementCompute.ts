@@ -1,4 +1,4 @@
-import { ElementType } from '../../Design/ElementType.js'
+import { ElementType } from '../../Design/Types/ElementType.js'
 import { ElementCommon } from './ElementCommon.js'
 
 /**

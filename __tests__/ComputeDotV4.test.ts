@@ -1,6 +1,6 @@
-import { ComputeDot4 } from '../src/Implementation/Compute/ComputeDot4.js'
+import { ComputeDotV4 } from '../src/Implementation/Compute/ComputeDotV4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
-import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
+import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeDot4', () => {
@@ -9,7 +9,7 @@ describe('ComputeDot4', () => {
   afterAll(() => {})
 
   it('Primitive Parameters', async () => {
-    const m = new ComputeDot4([
+    const m = new ComputeDotV4([
       [1, 1, 1, 1],
       [1, 1, 1, 1],
     ])
@@ -28,9 +28,9 @@ describe('ComputeDot4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVector4([1, 1, 1, 1])
+    const a = new DataVectorV4([1, 1, 1, 1])
 
-    const m = new ComputeDot4([a, a])
+    const m = new ComputeDotV4([a, a])
 
     expect(m).toBeDefined()
 
@@ -46,11 +46,11 @@ describe('ComputeDot4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVector4([1, 1, 1, 1])
+    const a = new DataVectorV4([1, 1, 1, 1])
 
     const b = [1, new DataNumber(1), 1, 1]
 
-    const m = new ComputeDot4([a, b])
+    const m = new ComputeDotV4([a, b])
 
     expect(m).toBeDefined()
 
@@ -68,7 +68,7 @@ describe('ComputeDot4', () => {
   it('Vector Parameter', async () => {
     const a = [1, 1, 1, 1]
 
-    const m = new ComputeDot4([a, a])
+    const m = new ComputeDotV4([a, a])
 
     expect(m).toBeDefined()
 
@@ -89,17 +89,47 @@ describe('ComputeDot4', () => {
     const c = new DataNumber(10)
     const d = new DataNumber(10)
 
-    const m = new ComputeDot4([
+    const m = new ComputeDotV4([
       [
         a,
         b,
-        new ComputeDot4([
+        new ComputeDotV4([
           [a, b, c, d],
           [a, b, c, d],
         ]),
         d,
       ],
       [a, b, c, d],
+    ])
+
+    console.log(m.toString())
+
+    await m.resolve()
+
+    console.log(m.toString())
+
+    console.log(m.Data.toString())
+
+    expect(m.Data).toBe(4300)
+  })
+
+  it.skip('Composite Dot2', async () => {
+    const a = new DataNumber(10)
+    const b = new DataNumber(10)
+    const c = new DataNumber(10)
+    const d = new DataNumber(10)
+
+    const m = new ComputeDotV4([
+      [
+        a,
+        b,
+        new ComputeDotV4([
+          [a, b, c, d],
+          [a, b, c, d],
+        ]),
+        d,
+      ],
+      new DataVectorV4([a, b, c, d]),
     ])
 
     console.log(m.toString())
@@ -125,7 +155,7 @@ describe('ComputeDot4', () => {
       ],
     )
 
-    const m = new ComputeDot4(a)
+    const m = new ComputeDotV4(a)
 
     console.log(m.toString())
 

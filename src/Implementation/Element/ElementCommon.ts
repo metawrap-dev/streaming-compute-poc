@@ -1,8 +1,8 @@
-import { type ElementType } from '../../Design/ElementType.js'
 import { type IConfig } from '../../Design/IConfig.js'
 import { type IElement } from '../../Design/IElement.js'
 import { type IState } from '../../Design/IState.js'
 import { type IStrategy } from '../../Design/IStrategy.js'
+import { type ElementType } from '../../Design/Types/ElementType.js'
 import { Synchronizer } from '../Utility/Synchronizer.js'
 
 /**

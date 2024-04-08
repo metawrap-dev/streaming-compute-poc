@@ -21,15 +21,6 @@ export type Input<T, D extends number, C extends number> =
  *
  * @template T The type of elements within the input.
  * @template D The dimensionality of the input elements, affecting their structure.
- * @template C The number of arguments or elements expected in the input.
+ * @template C The cardinality of the element.
  */
 export type InputPermissive<T, D extends number, C extends number> = Input<T, D, C> | Input<T, D | 0, C | 0>
-/*
-  | Input<T, D, 0> 
-  | Input<T, 0, C> 
-  | Input<T, 0, 0> 
-  | IData<T, D, C> 
-  | IData<T, 0, C> 
-  | IData<T, D, 0>
-  | IData<T, 0, 0>
-*/

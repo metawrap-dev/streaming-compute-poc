@@ -1,12 +1,12 @@
-import { DataVector4 } from '../src/Implementation/Data/DataVector4.js'
+import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
 
-describe('DataVector4', () => {
+describe('DataVectorV4', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
 
   it('A vector can be resolved', async () => {
-    const number = new DataVector4([1, 2, 3, 4])
+    const number = new DataVectorV4([1, 2, 3, 4])
 
     expect(number.Resolved).toBe(true)
 
@@ -16,7 +16,7 @@ describe('DataVector4', () => {
   })
 
   it('A vector can be unresolved and set', async () => {
-    const number = new DataVector4()
+    const number = new DataVectorV4()
 
     await expect(async () => number.Data).rejects.toThrow(Error)
 
@@ -32,6 +32,6 @@ describe('DataVector4', () => {
 
     expect(await number.resolve()).toEqual([1, 2, 3, 4])
 
-    expect(number.toString()).toBe('{DataVector4 <= [1,2,3,4]}')
+    expect(number.toString()).toBe('{DataVectorV4 <= [1,2,3,4]}')
   })
 })

@@ -5,15 +5,18 @@ import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
-import { StateDataVectorN } from '../State/StateDataVectorN.js'
+import { StateDataVariable } from '../State/StateDataVariable.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 import { resolve } from '../Utility/Resolve.js'
 
 /**
- * A "simple" number.
+ * Implements a generic *Value* representation.
+ *
+ * This is used when composing more complex items to built the pipeline graph.
+ *
  * @class
  */
-export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISettable<number, 4, 1> {
+export class DataVariable<T, D extends number, C extends number> extends ElementData implements IData<T, D, C>, ISettable<T, D, C> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
@@ -26,7 +29,7 @@ export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISe
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDataVectorN<number, 4, 1> = new StateDataVectorN<number, 4, 1>()
+  readonly State: StateDataVariable<T, D, C> = new StateDataVariable<T, D, C>()
 
   /**
    * The strategy that can be applied to the number's config.
@@ -40,21 +43,21 @@ export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISe
    * @type {number}
    * @readonly
    */
-  get Data(): Output<number, 4, 1> {
+  get Data(): Output<T, D, C> {
     if (this.Resolved) {
-      return this.State.VectorN as Vector<Vector<number, 4>, 1>
+      return this.State.Number as Vector<Vector<T, D>, C>
     }
-    throw new Error(`VectorN is not resolved.`)
+    throw new Error(`Number is not resolved.`)
   }
 
   /**
    * @constructor
-   * @param {number} vector The value of the number.
+   * @param {number} number The value of the number.
    */
-  constructor(vector?: Vector<Value<number, 4>, 1>) {
+  constructor(number?: Vector<Value<T, D>, C>) {
     super()
-    this.State.setVectorN(vector)
-    this.State.setResolved(vector !== undefined)
+    this.State.setNumber(number)
+    this.State.setResolved(number !== undefined)
   }
 
   /**
@@ -72,7 +75,11 @@ export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISe
    */
   toString(): string {
     if (this.Resolved) {
-      return `{DataVectorN <= [${this.State.VectorN.toString()}]}`
+      if (typeof this.State.Number === 'number') {
+        return `{${this.constructor.name} <= ${this.State.Number}}`
+      } else {
+        return `{${this.constructor.name} <= [${this.State.Number.toString()}]}`
+      }
     } else {
       return 'unresolved'
     }
@@ -83,17 +90,21 @@ export class DataVector4 extends ElementData implements IData<number, 4, 1>, ISe
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<Output<number, 4, 1>> {
-    this.set(await resolve<number, 4, 1>(wait, this.State.VectorN))
+  async resolve(wait: boolean = false): Promise<Output<T, D, C>> {
+    // Resolve and set it
+    this.set(await resolve<T, D, C>(wait, this.State.Number))
     return this.Data
   }
 
   /**
    * Sets the value of the number data and marks it as resolved.
-   * @param {number[]} value The value to set.
+   * @param {number} value The value to set.
    */
-  set(value: Vector<Vector<number, 4>, 1>): void {
-    this.State.setVectorN(value)
+  set(value: Output<T, D, C>): void {
+    // Set the value
+    this.State.setNumber(value)
+
+    // We now consider it resolved.
     this.State.setResolved(true)
   }
 }

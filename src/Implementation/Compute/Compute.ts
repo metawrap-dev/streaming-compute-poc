@@ -9,15 +9,14 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 
 /**
  * Abstract Generic [ICompute] element.
- *
  * @author James McParlane
- * @interface
  * @template {type} IT The compute input type
  * @template {Dimension} ID The compute input dimension (The width of the input vector)
  * @template {Cardinality} IC The compute input cardinality (The number of items consumed by an invocation)
  * @template {type} IT The compute output type
  * @template {Dimension} ID The compute output dimension (The width of the output vector)
  * @template {Cardinality} IC The compute output cardinality (The number of items emitted by an invocation)
+ * @class
  */
 export abstract class Compute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends ElementCompute implements ICompute<IT, ID, IC, OT, OD, OC> {
   /**

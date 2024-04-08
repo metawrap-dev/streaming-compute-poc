@@ -1,5 +1,5 @@
-import { isDataArray, isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ISource } from '../../Design/ISource.js'
+import { isResolvable, isSource, isValueArray } from '../../Design/Types/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
@@ -80,9 +80,9 @@ export class SourceMemory<T, D extends number, C extends number> extends Element
     for (let i = 0; i < this.State.Data.length; i++) {
       const data = this.State.Data[i]
 
-      if (isDataArray(data)) result.push('[')
+      if (isValueArray<T, D, C>(data)) result.push('[')
       result.push(data.toString())
-      if (isDataArray(data)) result.push(']')
+      if (isValueArray<T, D, C>(data)) result.push(']')
 
       if (i !== this.State.Data.length - 1) {
         result.push(',')

@@ -1,6 +1,6 @@
-import { isResolvable } from '../../Design/ElementType.js'
 import { type IData } from '../../Design/IData.js'
 import { type IResolvable } from '../../Design/IResolvable.js'
+import { isResolvable } from '../../Design/Types/ElementType.js'
 import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 

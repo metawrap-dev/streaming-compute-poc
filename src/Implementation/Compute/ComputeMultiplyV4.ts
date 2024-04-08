@@ -1,5 +1,5 @@
-import { isResolvable, isSource } from '../../Design/ElementType.js'
 import { type ICompute } from '../../Design/ICompute.js'
+import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
@@ -11,16 +11,14 @@ import { multiplyN } from '../Utility/Maths.js'
 import { resolve } from '../Utility/Resolve.js'
 
 /**
- * This can multiply any number of numbers
+ * This can multiply four number of numbers from a `Vertical` vector `Column`.
  *
- * Provides an example GPU small kernel that can be built up with other instructions.
- *
- * eg. We implement it with sets of multiply4/3/2
+ * Provides an example GPU instruction primitive we can use for prototyping some ideas.
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiplyN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
+export class ComputeMultiplyV4 extends ElementCompute implements ICompute<number, 1, 4, number, 1, 1> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -49,7 +47,7 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
    * @type {ISource<I>}
    * @readonly
    */
-  readonly Inputs: Input<number, 1, 0>
+  readonly Inputs: Input<number, 1, 4>
 
   /**
    * What is the output of the multiplication.
@@ -67,18 +65,18 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
     return this.Output.Resolved
   }
 
-  InputWidth: 0
+  InputWidth: 4
 
   /**
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: InputPermissive<number, 1, 0>) {
+  constructor(input: InputPermissive<number, 1, 4>) {
     super()
 
-    console.log('ComputeMultiply:input ', input)
+    console.log('ComputeMultiply4:input ', input)
 
-    this.Inputs = input as Input<number, 1, 0>
+    this.Inputs = input as Input<number, 1, 4>
   }
 
   /**
@@ -128,29 +126,19 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
     let accumulator = this.State.Accumulator
 
     // If it is a source...
-    if (isSource<number, 1, 0>(inputs)) {
+    if (isSource<number, 1, 4>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
       // We want to clock out results one at a time.
       inputs.Config.setBatchSize(1)
 
-      // Get the value from the source
+      // Resolve one element from source and multiply
       accumulator *= multiplyN((await inputs.resolve(wait))[0])
-
-      // Set the output value with the returned value from the source.
-    } else if (isResolvable<number, 1, 0>(inputs)) {
-      // Extract the values
-      const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
-
-      // Set the output value with resolved values returned value from the source.
-      accumulator *= multiplyN(value)
+    } else if (isResolvable<number, 1, 4>(inputs)) {
+      accumulator *= multiplyN(await inputs.resolve(wait))
     } else {
-      // Resolve the whole vector
-      const resolved = await resolve<number, 1, 0>(wait, inputs)
-
-      // Set the output value.
-      accumulator *= multiplyN(resolved)
+      accumulator *= multiplyN(await resolve<number, 1, 4>(wait, inputs))
     }
 
     // Save the state
@@ -159,7 +147,6 @@ export class ComputeMultiplyN extends ElementCompute implements ICompute<number,
     // Set the result so far
     this.set(accumulator)
 
-    // Return the result.
     return this.Data
   }
 }

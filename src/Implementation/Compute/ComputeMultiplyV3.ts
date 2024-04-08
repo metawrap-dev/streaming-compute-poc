@@ -1,4 +1,4 @@
-import { isResolvable, isSource } from '../../Design/ElementType.js'
+import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { DataNumber } from '../Data/DataNumber.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
@@ -7,14 +7,14 @@ import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
- * This can perform `multiply` on 3 scalars.
+ * This can multiply 3 of numbers from a `Vertical` vector `Column`.
  *
- * Provides an example GPU
+ * Provides an example GPU instruction primitive we can use for prototyping some ideas.
  *
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiply3 extends Compute<number, 1, 3, number, 1, 1> {
+export class ComputeMultiplyV3 extends Compute<number, 1, 3, number, 1, 1> {
   /**
    * The runtime state of the compute multiply.
    * @type {IState}
