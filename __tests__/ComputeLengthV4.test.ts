@@ -2,6 +2,7 @@ import { Vector } from '../src/Design/Types/Vector.js'
 import { ComputeLengthV4 } from '../src/Implementation/Compute/ComputeLengthV4.js'
 import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
 import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
+import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeLength4', () => {
   beforeAll(async () => {})
@@ -73,11 +74,10 @@ describe('ComputeLength4', () => {
     expect(m.Data).toBe(20)
   })
 
-  /*
   it('Length4 From Source', async () => {
-    const a = new SourceMemory(10, 10, 10, 10)
+    const a = new SourceMemory<number, 4, 1>([10, 10, 10, 10])
 
-    const m = new ComputeLength4(a)
+    const m = new ComputeLengthV4(a)
 
     console.log(m.toString())
 
@@ -87,9 +87,8 @@ describe('ComputeLength4', () => {
 
     console.log(m.Data.toString())
 
-    expect(m.Data).toBe(10000)
+    expect(m.Data).toBe(20)
   })
-  */
 
   /*
   it('should be fail with bad inputs', async () => {
