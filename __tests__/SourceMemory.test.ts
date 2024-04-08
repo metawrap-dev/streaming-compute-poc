@@ -1,84 +1,77 @@
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { ComputeMultiplyVN } from '../src/Implementation/Compute/ComputeMultiplyVN.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
+import { DataVariableVectorVN } from '../src/Implementation/Data/DataVariableVectorVN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('SourceMemory', () => {
-  // Act before assertions
   beforeAll(async () => {})
 
   afterAll(() => {})
 
   it('should initialize with primitive parameters', async () => {
-    const a = new SourceMemory<number>(1, 2, 3, 4)
+    const a = new SourceMemory<number, 1, 1>(1, 2, 3, 4)
 
     expect(a).toBeDefined()
 
+    console.log(a.toString())
+
     expect(a.Empty).toBe(false)
+
+    expect(a.Count).toBe(4)
 
     expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}')
 
-    const d1 = await a.resolve()
+    for (let i = 1; i <= 4; i++) {
+      const d = await a.resolve()
+      expect(d).toEqual([i])
+      expect(a.Empty).toBe(i == 4)
+    }
+  })
 
-    expect(d1).toEqual([1])
+  it('should initialize with primitive parameters', async () => {
+    const a = new SourceMemory<number, 1, 0>([1, 2, 3, 4])
 
-    expect(a.Empty).toBe(false)
+    expect(a).toBeDefined()
 
-    const d2 = await a.resolve()
-
-    expect(d2).toEqual([2])
-
-    expect(a.Empty).toBe(false)
-
-    const d3 = await a.resolve()
-
-    expect(d3).toEqual([3])
+    console.log(a.toString())
 
     expect(a.Empty).toBe(false)
 
-    const d4 = await a.resolve()
+    expect(a.Count).toBe(1)
 
-    expect(d4).toEqual([4])
+    expect(a.toString()).toBe('{SourceMemory(1 elements, atoms 1, 0 index, 1 batch size) <= [[1,2,3,4]]}')
 
-    expect(a.Empty).toBe(true)
+    const d = await a.resolve()
+
+    console.log(d[0])
+
+    expect(d[0]).toEqual([1, 2, 3, 4])
   })
 
   it('should initialize with hybrid parameters', async () => {
-    const a = new SourceMemory<number>(new DataNumber(1), 2, new DataNumber(3), 4)
+    const a = new SourceMemory<number, 1, 1>(new DataVariableNumber(1), 2, new DataVariableNumber(3), 4)
 
     expect(a).toBeDefined()
 
-    expect(a.Empty).toBe(false)
-
-    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [{DataNumber <= 1},2,{DataNumber <= 3},4]}')
-
-    const d1 = await a.resolve()
-
-    expect(d1).toEqual([1])
+    console.log(a.toString())
 
     expect(a.Empty).toBe(false)
 
-    const d2 = await a.resolve()
+    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [{DataVariableNumber <= 1},2,{DataVariableNumber <= 3},4]}')
 
-    expect(d2).toEqual([2])
-
-    expect(a.Empty).toBe(false)
-
-    const d3 = await a.resolve()
-
-    expect(d3).toEqual([3])
-
-    expect(a.Empty).toBe(false)
-
-    const d4 = await a.resolve()
-
-    expect(d4).toEqual([4])
-
-    expect(a.Empty).toBe(true)
+    for (let i = 1; i <= 4; i++) {
+      const d = await a.resolve()
+      expect(d).toEqual([i])
+      expect(a.Empty).toBe(i == 4)
+    }
   })
 
   it('should be able to chain sources', async () => {
-    const a = new SourceMemory<number>(new SourceMemory<number>(1, 2, 3, 4))
+    const a = new SourceMemory<number, 1, 1>(new SourceMemory<number, 1, 1>(1, 2, 3, 4))
 
     expect(a).toBeDefined()
+
+    console.log(a.toString())
 
     expect(a.Empty).toBe(false)
 
@@ -86,106 +79,119 @@ describe('SourceMemory', () => {
 
     expect(a.toString()).toBe('{SourceMemory(1 elements, atoms 4, 0 index, 1 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}]}')
 
-    const d1 = await a.resolve()
-
-    expect(d1).toEqual([1])
-
-    expect(a.Empty).toBe(false)
-
-    const d2 = await a.resolve()
-
-    expect(d2).toEqual([2])
-
-    expect(a.Empty).toBe(false)
-
-    const d3 = await a.resolve()
-
-    expect(d3).toEqual([3])
-
-    expect(a.Empty).toBe(false)
-
-    const d4 = await a.resolve()
-
-    expect(d4).toEqual([4])
-
-    expect(a.Empty).toBe(true)
+    for (let i = 1; i <= 4; i++) {
+      const d = await a.resolve()
+      expect(d).toEqual([i])
+      expect(a.Empty).toBe(i == 4)
+    }
   })
 
-  it('should be able to batch sources and imply type', async () => {
-    const a = new SourceMemory(new SourceMemory(1, 2, 3, 4))
-
-    a.Config.setBatchSize(2)
-
-    expect(a.Config.BatchSize).toBe(2)
+  it('should be able to chain composed hybrid sources', async () => {
+    const a = new SourceMemory<number, 1, 1>(1, new SourceMemory<number, 1, 1>(2, 3, 4, 5), new SourceMemory<number, 1, 1>(6, 7, 8, 9), 10)
 
     expect(a).toBeDefined()
 
-    expect(a.Empty).toBe(false)
-
-    expect(a.toString()).toBe('{SourceMemory(1 elements, atoms 4, 0 index, 2 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]}]}')
-
-    const d1 = await a.resolve()
-
-    expect(d1).toEqual([1, 2])
+    console.log(a.toString())
 
     expect(a.Empty).toBe(false)
 
-    const d2 = await a.resolve()
+    expect(a.Config.BatchSize).toBe(1)
 
-    expect(d2).toEqual([3, 4])
+    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 10, 0 index, 1 batch size) <= [1,{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [2,3,4,5]},{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [6,7,8,9]},10]}')
 
-    expect(a.Empty).toBe(true)
+    for (let i = 1; i <= 10; i++) {
+      const d = await a.resolve()
+      expect(d).toEqual([i])
+      expect(a.Empty).toBe(i == 10)
+    }
   })
 
-  it('should be able to batch sources and imply type', async () => {
-    const a = new SourceMemory(new SourceMemory(1, 2, 3, 4), new SourceMemory(5, 6, 7, 8), 9)
-
-    a.Config.setBatchSize(2)
-
-    expect(a.Config.BatchSize).toBe(2)
+  it('should be able to chain composed hybrid sources and control batch size', async () => {
+    const a = new SourceMemory<number, 1, 1>(1, new SourceMemory<number, 1, 1>(2, 3, 4, 5), new SourceMemory<number, 1, 1>(6, 7, 8, 9), 10)
 
     expect(a).toBeDefined()
 
-    expect(a.Empty).toBe(false)
+    a.Config.setBatchSize(2)
 
-    expect(a.toString()).toBe('{SourceMemory(3 elements, atoms 9, 0 index, 2 batch size) <= [{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [1,2,3,4]},{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [5,6,7,8]},9]}')
-
-    const d1 = await a.resolve()
-
-    expect(d1).toEqual([1, 2])
+    console.log(a.toString())
 
     expect(a.Empty).toBe(false)
 
-    const d2 = await a.resolve()
+    expect(a.Config.BatchSize).toBe(2)
 
-    expect(d2).toEqual([3, 4])
+    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 10, 0 index, 2 batch size) <= [1,{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [2,3,4,5]},{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [6,7,8,9]},10]}')
+
+    for (let i = 1; i <= 10; i += 2) {
+      const d = await a.resolve()
+      expect(d).toEqual([i, i + 1])
+      expect(a.Empty).toBe(i == 9)
+    }
+  })
+
+  it('should be able to chain composed hybrid sources and control batch size', async () => {
+    const a = new SourceMemory<number, 1, 1>(1, new SourceMemory<number, 1, 1>(2, 3, 4, 5), new SourceMemory<number, 1, 1>(6, 7, 8, 9), 10, 11)
+
+    expect(a).toBeDefined()
+
+    a.Config.setBatchSize(2)
+
+    console.log(a.toString())
 
     expect(a.Empty).toBe(false)
 
-    const d3 = await a.resolve()
+    expect(a.Config.BatchSize).toBe(2)
 
-    expect(d3).toEqual([5, 6])
-
-    expect(a.Empty).toBe(false)
-
-    const d4 = await a.resolve()
-
-    expect(d4).toEqual([7, 8])
-
-    expect(a.Empty).toBe(false)
+    expect(a.toString()).toBe('{SourceMemory(5 elements, atoms 11, 0 index, 2 batch size) <= [1,{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [2,3,4,5]},{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [6,7,8,9]},10,11]}')
 
     // Set a timeout
     setTimeout(async () => {
-      console.log(`TIMER FIRES - write 6`)
+      console.log(`TIMER FIRES - write 12`)
 
       // When this fires..
-      await a.queue(10)
+      await a.queue(12)
     }, 1000)
 
-    const d5 = await a.resolve(true)
+    for (let i = 1; i <= 12; i += 2) {
+      console.log(a.toString())
+      const d = await a.resolve(true) // We want to wait
+      console.log(a.toString())
+      console.log(d)
+      expect(d).toEqual([i, i + 1])
+      expect(a.Empty).toBe(i == 11)
+    }
+  })
 
-    expect(d5).toEqual([9, 10])
+  it('should initialize with primitive parameters', async () => {
+    // A source of an array of number
+    const a = new SourceMemory<number, 1, 1>(
+      new ComputeMultiplyVN(new DataVariableVectorVN([1, 2, 3, 4, 5])),
+      new ComputeMultiplyVN(new DataVariableVectorVN([1, 2, 3, 4, 5])),
+      new ComputeMultiplyVN(new DataVariableVectorVN([1, 2, 3, 4, 5])),
+      new ComputeMultiplyVN(new DataVariableVectorVN([1, 2, 3, 4, 5])),
+    )
+
+    expect(a).toBeDefined()
+
+    console.log(a.toString())
+
+    expect(a.Empty).toBe(false)
+
+    expect(a.toString()).toBe(
+      '{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved)]}',
+    )
+
+    for (let i = 1; i <= 4; i++) {
+      const d = await a.resolve()
+      expect(d).toEqual([120])
+      expect(a.Empty).toBe(i == 4)
+    }
+
+    console.log(a.toString())
 
     expect(a.Empty).toBe(true)
+
+    expect(a.toString()).toBe(
+      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120})]}',
+    )
   })
 })

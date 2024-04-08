@@ -1,12 +1,11 @@
-import { type IData } from '../../Design/IData.js'
-import { type ISource } from '../../Design/ISource.js'
+import { type Input } from '../../Design/Types/Input.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
  * The execution state for [SourceMemory]{@link SourceMemory}.
  * @class
  */
-export class StateSourceMemory<T> extends StateCommon {
+export class StateSourceMemory<T, D extends number, C extends number> extends StateCommon {
   /**
    * How are are we into the source in memory.
    * @type {number}
@@ -16,8 +15,8 @@ export class StateSourceMemory<T> extends StateCommon {
 
   /**
    * The data stored in memory that we are reading out of.
-   * @type {(ISource<T> | T | IData<T>)[]}
+   * @type {Input<T,D,C>[]}
    * @readonly
    */
-  readonly Data: (ISource<T> | T | IData<T>)[] = []
+  readonly Data: Input<T, D, C>[] = []
 }

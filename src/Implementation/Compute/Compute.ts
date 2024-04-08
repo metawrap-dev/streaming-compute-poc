@@ -1,18 +1,24 @@
 import { type ICompute } from '../../Design/ICompute.js'
 import { type IData } from '../../Design/IData.js'
 import { type IState } from '../../Design/IState.js'
+import { type Input } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { type Input } from '../Utility/Input.js'
 
 /**
  * Abstract Generic [ICompute] element.
- *
  * @author James McParlane
- * @interface
+ * @template {type} IT The compute input type
+ * @template {Dimension} ID The compute input dimension (The width of the input vector)
+ * @template {Cardinality} IC The compute input cardinality (The number of items consumed by an invocation)
+ * @template {type} IT The compute output type
+ * @template {Dimension} ID The compute output dimension (The width of the output vector)
+ * @template {Cardinality} IC The compute output cardinality (The number of items emitted by an invocation)
+ * @class
  */
-export abstract class Compute<I, N extends number, O> extends ElementCompute implements ICompute<I,N,O> {
+export abstract class Compute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends ElementCompute implements ICompute<IT, ID, IC, OT, OD, OC> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -38,17 +44,17 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
   /**
    * Inputs for the computation.
    * We massage everything into a source.
-   * @type {ISource<I>}
-   * @readonly  
+   * @type {Input<IT, ID, IC>}
+   * @readonly
    */
-  readonly Inputs: Input<I,N>
+  readonly Inputs: Input<IT, ID, IC>
 
   /**
    * What is the output of the multiplication.
-   * @type {IData<O>}
+   * @type {IData<OT, OD, OC>}
    * @readonly
    */
-  readonly Output: IData<O>
+  readonly Output: IData<OT, OD, OC>
 
   /**
    * If true then this has been resolved.
@@ -61,38 +67,29 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
 
   /**
    * Sets the value of the output
-   * @param {O} value The value to set.
+   * @param {Output<OT,OD,OC} value The value to set.
    */
-  set(value: O): void {
+  set(value: Output<OT, OD, OC>): void {
     this.Output.set(value)
   }
 
   /**
    * The output as data.
-   * @type {IData<O>}
+   * @type {IData<OT>}
    */
-  get Data(): O {
+  get Data(): Output<OT, OD, OC> {
     return this.Output.Data
   }
 
   /**
-   * Return the number of arguments
-   * @type {N}
-   * @readonly
-   */
-   readonly InputWidth: N 
-
-  /**
    *
    * @param inputs
-   * @param n 
    * @param output
    */
-  constructor(inputs: Input<I,N>, n: N, output: IData<O>) {
+  constructor(inputs: Input<IT, ID, IC>, output: IData<OT, OD, OC>) {
     super()
     this.Inputs = inputs
     this.Output = output
-    this.InputWidth = n
   }
 
   /**
@@ -116,5 +113,5 @@ export abstract class Compute<I, N extends number, O> extends ElementCompute imp
    * @async
    * @abstract
    */
-  abstract resolve(wait?: boolean): Promise<O>
+  abstract resolve(wait?: boolean): Promise<Output<OT, OD, OC>>
 }

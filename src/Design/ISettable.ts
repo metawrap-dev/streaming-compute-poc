@@ -1,3 +1,5 @@
+import { type Output } from './Types/Output.js'
+
 /**
  * Something that can be set with a value.
  *
@@ -6,10 +8,10 @@
  * @author James McParlane
  * @interface
  */
-export interface ISettable<T> {
+export interface ISettable<T, D extends number, C extends number> {
   /**
    * Sets the value.
-   * @param {T} value The value to set
+   * @param {Output<T,D, C>} value The value to set
    */
-  set(value: T): void
+  set(value: Output<T, D, C>): void
 }

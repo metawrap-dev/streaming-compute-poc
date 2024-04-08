@@ -1,9 +1,6 @@
-import { type IData } from './IData.js'
-import { type IDataWithoutIResolvable } from './IDataWithoutResolvable.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
-import { type IResolvable } from './IResolvable.js'
-import { type ISource } from './ISource.js'
+import { type Input } from './Types/Input.js'
 
 /**
  * A destination for multiple data elements.
@@ -15,7 +12,7 @@ import { type ISource } from './ISource.js'
  * @author James McParlane
  * @interface
  */
-export interface IDestination<T> extends IDescribable, IResolvable<void>, IDataWithoutIResolvable<T>, IElement {
+export interface IDestination<T, D extends number, C extends number> extends IDescribable, IElement {
   /**
    * How how many elements the destination can store.
    * @type {number}
@@ -31,8 +28,14 @@ export interface IDestination<T> extends IDescribable, IResolvable<void>, IDataW
   readonly Empty: boolean
 
   /**
+   * Resolve the destination.
+   * @param {boolean} wait If true then wait for batch sizes to be met before writing
+   */
+  resolve(wait?: boolean): Promise<void>
+
+  /**
    * Write some data to the destination.
    * @param {T} data The data to write.
    */
-  write(data: ISource<T> | T | IData<T> | (T | IData<T>)[], ...rest: (T | IData<T>)[]): Promise<void>
+  write(...data: Input<T, D, C>[]): Promise<void>
 }

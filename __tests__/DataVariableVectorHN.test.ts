@@ -1,23 +1,22 @@
-import { DataVectorN } from '../src/Implementation/Data/DataVectorN.js'
+import { DataVariableVectorHN } from '../src/Implementation/Data/DataVariableVectorHN.js'
 
-describe('VectorNData', () => {
-  // Act before assertions
+describe('DataVariableVectorHN', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
 
   it('A vector can be resolved', async () => {
-    const number = new DataVectorN([1, 2, 3])
+    const number = new DataVariableVectorHN([1, 2, 3])
 
-    expect(number.Resolved).toBe(true)
-
-    expect(number.Data).toEqual([1, 2, 3])
+    expect(number.Resolved).toBe(false)
 
     expect(await number.resolve()).toEqual([1, 2, 3])
+
+    expect(number.Data).toEqual([1, 2, 3])
   })
 
   it('A vector can be unresolved and set', async () => {
-    const number = new DataVectorN()
+    const number = new DataVariableVectorHN()
 
     await expect(async () => number.Data).rejects.toThrow(Error)
 
@@ -33,6 +32,6 @@ describe('VectorNData', () => {
 
     expect(await number.resolve()).toEqual([1, 2, 3])
 
-    expect(number.toString()).toBe('{DataVectorN <= [1,2,3]}')
+    expect(number.toString()).toBe('{DataVariableVectorHN <= [1,2,3]}')
   })
 })
