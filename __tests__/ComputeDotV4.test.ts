@@ -1,9 +1,9 @@
 import { ComputeDotV4 } from '../src/Implementation/Compute/ComputeDotV4.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
-describe('ComputeDot4', () => {
+describe('ComputeDotV4', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -48,7 +48,7 @@ describe('ComputeDot4', () => {
   it('Complex Parameter', async () => {
     const a = new DataVectorV4([1, 1, 1, 1])
 
-    const b = [1, new DataNumber(1), 1, 1]
+    const b = [1, new DataVariableNumber(1), 1, 1]
 
     const m = new ComputeDotV4([a, b])
 
@@ -84,10 +84,10 @@ describe('ComputeDot4', () => {
   })
 
   it('Composite Dot', async () => {
-    const a = new DataNumber(10)
-    const b = new DataNumber(10)
-    const c = new DataNumber(10)
-    const d = new DataNumber(10)
+    const a = new DataVariableNumber(10)
+    const b = new DataVariableNumber(10)
+    const c = new DataVariableNumber(10)
+    const d = new DataVariableNumber(10)
 
     const m = new ComputeDotV4([
       [
@@ -114,10 +114,10 @@ describe('ComputeDot4', () => {
   })
 
   it.skip('Composite Dot2', async () => {
-    const a = new DataNumber(10)
-    const b = new DataNumber(10)
-    const c = new DataNumber(10)
-    const d = new DataNumber(10)
+    const a = new DataVariableNumber(10)
+    const b = new DataVariableNumber(10)
+    const c = new DataVariableNumber(10)
+    const d = new DataVariableNumber(10)
 
     const m = new ComputeDotV4([
       [
@@ -167,39 +167,4 @@ describe('ComputeDot4', () => {
 
     expect(m.Data).toBe(400)
   })
-
-  /*
-  it('Streamer', async () => {
-    type v4 = Vector<number, 4> | DataVectorN | (number | IData<number>)[]
-
-    const source = new SourceMemory<[v4, v4]>(
-      [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-      ],
-      [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-      ],
-    )
-
-    const compute = new ComputeDot4()
-
-    const streamer = new Streamer2<v4, v4, number>(source, compute)
-
-    console.log(streamer.toString())
-
-    const answer = await streamer.resolve()
-
-    console.log(streamer.toString())
-
-    expect(answer).toBe(2)
-  })
-  */
-
-  /*
-  it('should be fail with bad inputs', async () => {
-    expect(() => new (ComputeDot4 as any)()).toThrow(Error)
-  })
-  */
 })

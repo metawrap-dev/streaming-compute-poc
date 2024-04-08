@@ -1,7 +1,7 @@
 import { StateCommon } from './StateCommon.js'
 
 /**
- * The execution state for [ComputeDot4]{@link ComputeDot4}.
+ *
  * @class
  */
 export class StateComputeLength4 extends StateCommon {

@@ -8,11 +8,11 @@ describe('DataVectorV4', () => {
   it('A vector can be resolved', async () => {
     const number = new DataVectorV4([1, 2, 3, 4])
 
-    expect(number.Resolved).toBe(true)
-
-    expect(number.Data).toEqual([1, 2, 3, 4])
+    expect(number.Resolved).toBe(false)
 
     expect(await number.resolve()).toEqual([1, 2, 3, 4])
+
+    expect(number.Data).toEqual([1, 2, 3, 4])
   })
 
   it('A vector can be unresolved and set', async () => {

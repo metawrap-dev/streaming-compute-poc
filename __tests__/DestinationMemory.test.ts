@@ -1,5 +1,5 @@
 import { ComputeMultiplyVN } from '../src/Implementation/Compute/ComputeMultiplyVN.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DestinationMemory } from '../src/Implementation/Destination/DestinationMemory.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
@@ -163,9 +163,9 @@ describe('DestinationMemory', () => {
     a.Config.setBatchSize(2)
     expect(a.Config.BatchSize).toBe(2)
 
-    await a.write(new DataNumber(1), new DataNumber(2), new DataNumber(3), new DataNumber(4), new DataNumber(5))
+    await a.write(new DataVariableNumber(1), new DataVariableNumber(2), new DataVariableNumber(3), new DataVariableNumber(4), new DataVariableNumber(5))
 
-    expect(a.toString()).toBe('{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [{DataNumber <= 5}]=>[1,2,3,4]}')
+    expect(a.toString()).toBe('{DestinationMemory(4 stored, 1 in buffer, 2 batch size) <= [{DataVariableNumber <= 5}]=>[1,2,3,4]}')
   })
 
   it('should write the result of computation immediately', async () => {

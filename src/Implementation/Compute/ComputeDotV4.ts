@@ -1,6 +1,6 @@
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
-import { DataNumber } from '../Data/DataNumber.js'
+import { DataVariableNumber } from '../Data/DataVariableNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { dot4 } from '../Utility/Maths.js'
 import { resolve } from '../Utility/Resolve.js'
@@ -28,7 +28,7 @@ export class ComputeDotV4 extends Compute<number, 4, 2, number, 1, 1> {
    */
   constructor(inputs: InputPermissive<number, 4, 2>) {
     // Assign inputs
-    super(inputs as Input<number, 4, 2>, new DataNumber())
+    super(inputs as Input<number, 4, 2>, new DataVariableNumber())
   }
 
   /**

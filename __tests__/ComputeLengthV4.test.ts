@@ -1,10 +1,10 @@
 import { Vector } from '../src/Design/Types/Vector.js'
 import { ComputeLengthV4 } from '../src/Implementation/Compute/ComputeLengthV4.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
-describe('ComputeLength4', () => {
+describe('ComputeLengthV4', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -56,10 +56,10 @@ describe('ComputeLength4', () => {
   })
 
   it('Composite Length', async () => {
-    const a = new DataNumber(10)
-    const b = new DataNumber(10)
-    const c = new DataNumber(10)
-    const d = new DataNumber(10)
+    const a = new DataVariableNumber(10)
+    const b = new DataVariableNumber(10)
+    const c = new DataVariableNumber(10)
+    const d = new DataVariableNumber(10)
 
     const m = new ComputeLengthV4([a, b, c, d])
 
@@ -89,72 +89,4 @@ describe('ComputeLength4', () => {
 
     expect(m.Data).toBe(20)
   })
-
-  /*
-  it('should be fail with bad inputs', async () => {
-    expect(() => new (ComputeLength4 as any)()).toThrow(Error)
-  })
-  */
-
-  /*
-  it('Streamer', async () => {
-    type v4 = Vector<number, 4>
-
-    const source = new SourceMemory<v4>([1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1])
-
-    const compute = new ComputeLength4<v4>()
-
-    const streamer = new Streamer<v4, number>(source, compute)
-
-    console.log(streamer.toString())
-
-    await streamer.resolve()
-
-    console.log(streamer.toString())
-  })
-
-  it('Streamer Compact', async () => {
-    type v4 = Vector<number, 4>
-
-    const streamer = new Streamer<v4, number>(new SourceMemory([1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]), new ComputeLength4())
-
-    console.log(streamer.toString())
-
-    await streamer.resolve()
-
-    console.log(streamer.toString())
-  })
-
-  it('Streamer Mixed', async () => {
-    type v4 = Vector<number, 4> | DataVectorN
-
-    const source = new SourceMemory<v4>([1, 1, 1, 1], new DataVectorN([1, 1, 1, 1]), [1, 1, 1, 1], [1, 1, 1, 1])
-
-    const compute = new ComputeLength4<v4>()
-
-    const streamer = new Streamer<v4, number>(source, compute)
-
-    console.log(streamer.toString())
-
-    await streamer.resolve()
-
-    console.log(streamer.toString())
-  })
-
-  it('Streamer Very Mixed', async () => {
-    type v4 = Vector<number, 4> | DataVectorN | (number | IData<number>)[]
-
-    const source = new SourceMemory([1, 1, 1, 1], new DataVectorN([1, 1, 1, 1]), [1, new DataNumber(1), 1, 1], [1, 1, 1, 1])
-
-    const compute = new ComputeLength4()
-
-    const streamer = new Streamer<v4, number>(source, compute)
-
-    console.log(streamer.toString())
-
-    await streamer.resolve()
-
-    console.log(streamer.toString())
-  })
-  */
 })

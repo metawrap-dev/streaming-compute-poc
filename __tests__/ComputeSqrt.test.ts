@@ -1,5 +1,5 @@
 import { ComputeSqrt } from '../src/Implementation/Compute/ComputeSqrt.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeSqrt', () => {
@@ -24,7 +24,7 @@ describe('ComputeSqrt', () => {
   })
 
   it('Mixed Parameters 1', async () => {
-    const m = new ComputeSqrt(new DataNumber(2))
+    const m = new ComputeSqrt(new DataVariableNumber(2))
 
     expect(m).toBeDefined()
 

@@ -2,6 +2,7 @@
  * The dimensions that vector can have.
  * @enum
  */
+/*
 export enum Dimension {
   Unbounded = 0,
   Scalar = 1,
@@ -9,11 +10,13 @@ export enum Dimension {
   V3 = 3,
   V4 = 4,
 }
+*/
 
 /**
  * The cardinality of a result.
  * @enum
  */
+/*
 export enum Cardinality {
   Unbounded = 0,
   One = 1,
@@ -21,6 +24,7 @@ export enum Cardinality {
   Three = 3,
   Four = 4,
 }
+*/
 
 /**
  * Defines a type `Vector` that represents a vector of a specific dimension `D` and type `T`.

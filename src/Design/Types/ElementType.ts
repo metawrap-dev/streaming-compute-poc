@@ -1,3 +1,4 @@
+import { type IData } from '../IData.js'
 import { type IElement } from '../IElement.js'
 import { type IResolvable } from '../IResolvable.js'
 import { type ISource } from '../ISource.js'
@@ -53,16 +54,14 @@ export function isSource<T, D extends number, C extends number>(object: unknown)
 }
 
 /**
- * Type-guard method to check if the object is data
+ * Type-guard method to check if the object is IData
  * @note Might not be needed.
  * @param {unknown} object The object to identify.
  * @returns {boolean} True if the object is a source.
  */
-/*
 export function isData<T, D extends number, C extends number>(object: unknown): object is IData<T, D, C> {
   return isNotUndefined(object) && (object as IData<T, D, C>).Type === ElementType.Data
 }
-*/
 
 /**
  * Type-guard method to check if the object is an array of values.

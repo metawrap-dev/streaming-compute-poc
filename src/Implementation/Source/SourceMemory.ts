@@ -9,7 +9,18 @@ import { StrategyCommon } from '../Strategy/StrategyCommon.js'
 import { resolve } from '../Utility/Resolve.js'
 
 /**
- * Data Element: Some form of data that can be fed into a compute element.
+ * A Source of data that resides in memory and can stream data.
+ *
+ *
+ * @note We can use different strategies to store the data. Packed data buffer? Even something like https://github.com/stdlib-js/stdlib/tree/develop/lib/node_modules/%40stdlib/ndarray/ctor for node.js.
+ *
+ * We want this to also potentially be able to be sent to the GPU and reside there as a source.
+ *
+ * eg. Data or in code-data or texture memory?
+ *
+ * Concept of global address may need to be considered. SO we separate generic source and memory source.
+ * We want to be able to load a disk source into a memory source.
+ *
  * @class
  */
 export class SourceMemory<T, D extends number, C extends number> extends ElementSource implements ISource<T, D, C> {

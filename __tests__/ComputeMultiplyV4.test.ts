@@ -1,9 +1,9 @@
 import { ComputeMultiplyV4 } from '../src/Implementation/Compute/ComputeMultiplyV4.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DataVectorVN } from '../src/Implementation/Data/DataVectorVN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
-describe('ComputeMultiply4', () => {
+describe('ComputeMultiplyV4', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -25,7 +25,7 @@ describe('ComputeMultiply4', () => {
   })
 
   it('Mixed Parameters 1', async () => {
-    const m = new ComputeMultiplyV4([1, new DataNumber(2), 3, 4])
+    const m = new ComputeMultiplyV4([1, new DataVariableNumber(2), 3, 4])
 
     expect(m).toBeDefined()
 
@@ -73,7 +73,7 @@ describe('ComputeMultiply4', () => {
   })
 
   it('Source', async () => {
-    const m = new ComputeMultiplyV4(new SourceMemory([new DataNumber(10), new DataNumber(10), new DataNumber(10), new DataNumber(10)]))
+    const m = new ComputeMultiplyV4(new SourceMemory([new DataVariableNumber(10), new DataVariableNumber(10), new DataVariableNumber(10), new DataVariableNumber(10)]))
 
     expect(m).toBeDefined()
 

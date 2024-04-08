@@ -1,23 +1,20 @@
 import { type IData } from '../../Design/IData.js'
 import { type ISettable } from '../../Design/ISettable.js'
-import { isData, isResolvable } from '../../Design/Types/ElementType.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementData } from '../Element/ElementData.js'
-import { StateDataVariable } from '../State/StateDataVariable.js'
+import { StateDataStatic } from '../State/StateDataStatic.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { resolve } from '../Utility/Resolve.js'
 
 /**
- * Implements a generic *Value* representation.
+ * Implements a generic *Static* representation.
  *
- * This is used when composing more complex items to built the pipeline graph.
+ * This is used when composing more static data.
  *
  * @class
  */
-export class DataVariable<T, D extends number, C extends number> extends ElementData implements IData<T, D, C>, ISettable<T, D, C> {
+export class DataStatic<T, D extends number, C extends number> extends ElementData implements IData<T, D, C>, ISettable<T, D, C> {
   /**
    * The configuration for this number.
    * @type {ConfigCommon}
@@ -30,7 +27,7 @@ export class DataVariable<T, D extends number, C extends number> extends Element
    * @type {IState}
    * @readonly
    */
-  readonly State: StateDataVariable<T, D, C> = new StateDataVariable<T, D, C>()
+  readonly State: StateDataStatic<T, D, C> = new StateDataStatic<T, D, C>()
 
   /**
    * The strategy that can be applied to the number's config.
@@ -48,36 +45,17 @@ export class DataVariable<T, D extends number, C extends number> extends Element
     if (this.Resolved) {
       return this.State.Number as Vector<Vector<T, D>, C>
     }
-    throw new Error(`${this.constructor.name} is not resolved.`)
+    throw new Error(`Number is not resolved.`)
   }
 
   /**
    * @constructor
-   * @param {number} value The value of the number.
+   * @param {number} number The value of the number.
    */
-  constructor(value?: Vector<Value<T, D>, C>) {
+  constructor(number?: Vector<Vector<T, D>, C>) {
     super()
-
-    // Got a value?
-    if (value !== undefined) {
-      // If it can be resolved...
-      if (isResolvable<T, D, C>(value)) {
-        // ... and is resolved...
-        if (value.Resolved) {
-          // Just pass on its data
-          this.set(value.Data)
-        } else {
-          // Set it without it being resolved
-          this.State.setNumber(value)
-        }
-      } else if (typeof value === 'number') {
-        // If it is a number then we are done
-        this.set(value as Output<T, D, C>)
-      } else {
-        // Set it without it being resolved
-        this.State.setNumber(value)
-      }
-    }
+    this.State.setNumber(number)
+    this.State.setResolved(number !== undefined)
   }
 
   /**
@@ -94,25 +72,14 @@ export class DataVariable<T, D extends number, C extends number> extends Element
    * @returns {string}
    */
   toString(): string {
-    console.log('this.State.Number', this.State.Number)
-    console.log('this.Resolved', this.Resolved)
-
     if (this.Resolved) {
       if (typeof this.State.Number === 'number') {
         return `{${this.constructor.name} <= ${this.State.Number}}`
-      } else if (isData(this.State.Number)) {
-        return `{${this.constructor.name} <= ${this.State.Number.toString()}}`
       } else {
         return `{${this.constructor.name} <= [${this.State.Number.toString()}]}`
       }
     } else {
-      if (isData(this.State.Number)) {
-        return `{${this.constructor.name} <= ${this.State.Number.toString()}}`
-      } else if (Array.isArray(this.State.Number)) {
-        return `{${this.constructor.name} <= [${this.State.Number.toString()}]}`
-      } else {
-        return 'unresolved'
-      }
+      return 'unresolved'
     }
   }
 
@@ -121,9 +88,8 @@ export class DataVariable<T, D extends number, C extends number> extends Element
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
    */
-  async resolve(wait: boolean = false): Promise<Output<T, D, C>> {
-    // Resolve and set it
-    this.set(await resolve<T, D, C>(wait, this.State.Number))
+  async resolve(_wait: boolean = false): Promise<Output<T, D, C>> {
+    // There is nothing to do, Static data does not need to be resolved.
     return this.Data
   }
 

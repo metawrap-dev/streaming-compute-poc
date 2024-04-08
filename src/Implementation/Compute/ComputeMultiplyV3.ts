@@ -1,6 +1,6 @@
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
-import { DataNumber } from '../Data/DataNumber.js'
+import { DataVariableNumber } from '../Data/DataVariableNumber.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
 import { multiplyN } from '../Utility/Maths.js'
 import { resolve } from '../Utility/Resolve.js'
@@ -28,7 +28,7 @@ export class ComputeMultiplyV3 extends Compute<number, 1, 3, number, 1, 1> {
    */
   constructor(inputs: Input<number, 1, 3>) {
     // We pass in the inputs and the output object placeholder
-    super(inputs, new DataNumber())
+    super(inputs, new DataVariableNumber())
   }
 
   /**

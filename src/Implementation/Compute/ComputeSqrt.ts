@@ -1,6 +1,6 @@
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
-import { DataNumber } from '../Data/DataNumber.js'
+import { DataVariableNumber } from '../Data/DataVariableNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
@@ -26,7 +26,7 @@ export class ComputeSqrt extends Compute<number, 1, 1, number, 1, 1> {
    * @param {InputPermissive<number, 1, 1>} input The input for sqrt
    */
   constructor(inputs: InputPermissive<number, 1, 1>) {
-    super(inputs as Input<number, 1, 1>, new DataNumber())
+    super(inputs as Input<number, 1, 1>, new DataVariableNumber())
   }
 
   /**

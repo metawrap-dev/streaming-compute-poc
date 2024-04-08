@@ -1,6 +1,6 @@
 import { DataVectorVN } from '../src/Implementation/Data/DataVectorVN.js'
 
-describe('DataVectorN', () => {
+describe('DataVectorVN', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -8,11 +8,11 @@ describe('DataVectorN', () => {
   it('A vector can be resolved', async () => {
     const number = new DataVectorVN([1, 2, 3])
 
-    expect(number.Resolved).toBe(true)
-
-    expect(number.Data).toEqual([1, 2, 3])
+    expect(number.Resolved).toBe(false)
 
     expect(await number.resolve()).toEqual([1, 2, 3])
+
+    expect(number.Data).toEqual([1, 2, 3])
   })
 
   it('A vector can be unresolved and set', async () => {

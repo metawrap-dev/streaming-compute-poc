@@ -1,5 +1,5 @@
 import { ComputeMultiplyVN } from '../src/Implementation/Compute/ComputeMultiplyVN.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DataVectorVN } from '../src/Implementation/Data/DataVectorVN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
@@ -9,7 +9,6 @@ describe('SourceMemory', () => {
   afterAll(() => {})
 
   it('should initialize with primitive parameters', async () => {
-    // A source of an array of number
     const a = new SourceMemory<number, 1, 1>(1, 2, 3, 4)
 
     expect(a).toBeDefined()
@@ -30,7 +29,6 @@ describe('SourceMemory', () => {
   })
 
   it('should initialize with primitive parameters', async () => {
-    // A source of an array of number
     const a = new SourceMemory<number, 1, 0>([1, 2, 3, 4])
 
     expect(a).toBeDefined()
@@ -51,7 +49,7 @@ describe('SourceMemory', () => {
   })
 
   it('should initialize with hybrid parameters', async () => {
-    const a = new SourceMemory<number, 1, 1>(new DataNumber(1), 2, new DataNumber(3), 4)
+    const a = new SourceMemory<number, 1, 1>(new DataVariableNumber(1), 2, new DataVariableNumber(3), 4)
 
     expect(a).toBeDefined()
 
@@ -59,7 +57,7 @@ describe('SourceMemory', () => {
 
     expect(a.Empty).toBe(false)
 
-    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [{DataNumber <= 1},2,{DataNumber <= 3},4]}')
+    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [{DataVariableNumber <= 1},2,{DataVariableNumber <= 3},4]}')
 
     for (let i = 1; i <= 4; i++) {
       const d = await a.resolve()
@@ -188,7 +186,7 @@ describe('SourceMemory', () => {
     expect(a.Empty).toBe(true)
 
     expect(a.toString()).toBe(
-      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataNumber <= 120})]}',
+      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120})]}',
     )
   })
 })

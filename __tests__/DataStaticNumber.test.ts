@@ -1,12 +1,12 @@
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataStaticNumber } from '../src/Implementation/Data/DataStaticNumber.js'
 
-describe('NumberData', () => {
+describe('DataStaticNumber', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
 
   it('A number can be resolved', async () => {
-    const number = new DataNumber(123)
+    const number = new DataStaticNumber(123)
 
     expect(number.Resolved).toBe(true)
 
@@ -16,7 +16,7 @@ describe('NumberData', () => {
   })
 
   it('A number can be unresolved and set', async () => {
-    const number = new DataNumber()
+    const number = new DataStaticNumber()
 
     await expect(async () => number.Data).rejects.toThrow(Error)
 
@@ -32,6 +32,6 @@ describe('NumberData', () => {
 
     expect(await number.resolve()).toBe(123)
 
-    expect(number.toString()).toBe('{DataNumber <= 123}')
+    expect(number.toString()).toBe('{DataStaticNumber <= 123}')
   })
 })

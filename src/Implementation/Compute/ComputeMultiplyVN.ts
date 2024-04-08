@@ -3,7 +3,7 @@ import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
-import { DataNumber } from '../Data/DataNumber.js'
+import { DataVariableNumber } from '../Data/DataVariableNumber.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
@@ -53,10 +53,10 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
 
   /**
    * What is the output of the multiplication.
-   * @type {DataNumber}
+   * @type {DataVariableNumber}
    * @readonly
    */
-  readonly Output: DataNumber = new DataNumber()
+  readonly Output: DataVariableNumber = new DataVariableNumber()
 
   /**
    * If true then this has been resolved.

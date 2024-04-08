@@ -1,10 +1,10 @@
 import { ComputeMultiplyV3 } from '../src/Implementation/Compute/ComputeMultiplyV3.js'
-import { DataNumber } from '../src/Implementation/Data/DataNumber.js'
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DataVectorHN } from '../src/Implementation/Data/DataVectorHN.js'
 import { DataVectorVN } from '../src/Implementation/Data/DataVectorVN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
-describe('ComputeMultiply3', () => {
+describe('ComputeMultiplyV3', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
@@ -26,7 +26,7 @@ describe('ComputeMultiply3', () => {
   })
 
   it('Mixed Parameters 1', async () => {
-    const m = new ComputeMultiplyV3([1, new DataNumber(2), 3])
+    const m = new ComputeMultiplyV3([1, new DataVariableNumber(2), 3])
 
     expect(m).toBeDefined()
 
@@ -76,7 +76,7 @@ describe('ComputeMultiply3', () => {
   })
 
   it('Source', async () => {
-    const m = new ComputeMultiplyV3(new SourceMemory([10, 10, 10]))
+    const m = new ComputeMultiplyV3(new SourceMemory<number, 1, 3>([10, 10, 10]))
 
     expect(m).toBeDefined()
 
@@ -91,9 +91,8 @@ describe('ComputeMultiply3', () => {
     expect(m.Data).toEqual(1000)
   })
 
-  /*
   it('Source', async () => {
-    const m = new ComputeMultiply3(new SourceMemory([new DataNumber(10), new DataNumber(10), new DataNumber(10)))
+    const m = new ComputeMultiplyV3(new SourceMemory([new DataVariableNumber(10), new DataVariableNumber(10), new DataVariableNumber(10)]))
 
     expect(m).toBeDefined()
 
@@ -105,7 +104,6 @@ describe('ComputeMultiply3', () => {
 
     console.log(m.Data.toString())
 
-    expect(m.Data).toEqual(10000)
+    expect(m.Data).toEqual(1000)
   })
-  */
 })

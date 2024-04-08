@@ -60,6 +60,8 @@ export async function resolve<T, D extends number, C extends number>(wait: boole
     for (let a = 0; a < data.length; a++) {
       data[a] = await resolveValue<T, D>(wait, data[a])
     }
+  } else if (isResolvable<T, D, C>(data)) {
+    return await data.resolve(wait)
   }
 
   // Return as Vector of Vector. All resolvable `Value` elements have been resolved.
