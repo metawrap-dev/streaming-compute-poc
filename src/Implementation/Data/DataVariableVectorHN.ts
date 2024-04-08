@@ -14,4 +14,4 @@ import { DataVariable } from './DataVariable.js'
  *
  * @class
  */
-export class DataVectorHN extends DataVariable<number, 1, 0> {}
+export class DataVariableVectorHN extends DataVariable<number, 1, 0> {}

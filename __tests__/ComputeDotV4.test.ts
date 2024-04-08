@@ -1,6 +1,6 @@
 import { ComputeDotV4 } from '../src/Implementation/Compute/ComputeDotV4.js'
 import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
+import { DataVariableVectorV4 } from '../src/Implementation/Data/DataVariableVectorV4.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeDotV4', () => {
@@ -28,7 +28,7 @@ describe('ComputeDotV4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVectorV4([1, 1, 1, 1])
+    const a = new DataVariableVectorV4([1, 1, 1, 1])
 
     const m = new ComputeDotV4([a, a])
 
@@ -46,7 +46,7 @@ describe('ComputeDotV4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVectorV4([1, 1, 1, 1])
+    const a = new DataVariableVectorV4([1, 1, 1, 1])
 
     const b = [1, new DataVariableNumber(1), 1, 1]
 
@@ -129,7 +129,7 @@ describe('ComputeDotV4', () => {
         ]),
         d,
       ],
-      new DataVectorV4([a, b, c, d]),
+      new DataVariableVectorV4([a, b, c, d]),
     ])
 
     console.log(m.toString())

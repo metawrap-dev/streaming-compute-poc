@@ -1,7 +1,7 @@
 import { ComputeMultiplyV3 } from '../src/Implementation/Compute/ComputeMultiplyV3.js'
 import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { DataVectorHN } from '../src/Implementation/Data/DataVectorHN.js'
-import { DataVectorVN } from '../src/Implementation/Data/DataVectorVN.js'
+import { DataVariableVectorHN } from '../src/Implementation/Data/DataVariableVectorHN.js'
+import { DataVariableVectorVN } from '../src/Implementation/Data/DataVariableVectorVN.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeMultiplyV3', () => {
@@ -42,9 +42,9 @@ describe('ComputeMultiplyV3', () => {
   })
 
   it('Mixed Parameters 2', async () => {
-    const v = new DataVectorVN([1, 2, 3])
+    const v = new DataVariableVectorVN([1, 2, 3])
 
-    const h = new DataVectorHN([1, 2, 3])
+    const h = new DataVariableVectorHN([1, 2, 3])
 
     const m = new ComputeMultiplyV3(h as any)
 

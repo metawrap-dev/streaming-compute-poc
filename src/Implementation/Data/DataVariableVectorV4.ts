@@ -7,4 +7,4 @@ import { DataVariable } from './DataVariable.js'
  *
  * @class
  */
-export class DataVectorV4 extends DataVariable<number, 4, 1> {}
+export class DataVariableVectorV4 extends DataVariable<number, 4, 1> {}

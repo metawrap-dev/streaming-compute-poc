@@ -1,7 +1,7 @@
 import { Vector } from '../src/Design/Types/Vector.js'
 import { ComputeLengthV4 } from '../src/Implementation/Compute/ComputeLengthV4.js'
 import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { DataVectorV4 } from '../src/Implementation/Data/DataVectorV4.js'
+import { DataVariableVectorV4 } from '../src/Implementation/Data/DataVariableVectorV4.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeLengthV4', () => {
@@ -24,7 +24,7 @@ describe('ComputeLengthV4', () => {
   })
 
   it('Complex Parameter', async () => {
-    const a = new DataVectorV4([1, 1, 1, 1])
+    const a = new DataVariableVectorV4([1, 1, 1, 1])
 
     const m = new ComputeLengthV4(a)
 
