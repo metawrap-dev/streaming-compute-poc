@@ -32,6 +32,6 @@ describe('DataVectorN', () => {
 
     expect(await number.resolve()).toEqual([1, 2, 3])
 
-    expect(number.toString()).toBe('{DataVectorN <= [1,2,3]}')
+    expect(number.toString()).toBe('{DataVectorV <= [1,2,3]}')
   })
 })

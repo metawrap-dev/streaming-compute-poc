@@ -173,7 +173,7 @@ describe('SourceMemory', () => {
 
     expect(a.Empty).toBe(false)
 
-    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [(multiply{DataVectorN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVectorN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVectorN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVectorN <= [1,2,3,4,5]}=>unresolved)]}')
+    expect(a.toString()).toBe('{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [(multiply{DataVectorV <= [1,2,3,4,5]}=>unresolved),(multiply{DataVectorV <= [1,2,3,4,5]}=>unresolved),(multiply{DataVectorV <= [1,2,3,4,5]}=>unresolved),(multiply{DataVectorV <= [1,2,3,4,5]}=>unresolved)]}')
 
     for (let i = 1; i <= 4; i++) {
       const d = await a.resolve()
@@ -186,7 +186,7 @@ describe('SourceMemory', () => {
     expect(a.Empty).toBe(true)
 
     expect(a.toString()).toBe(
-      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [(multiply{DataVectorN <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorN <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorN <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorN <= [1,2,3,4,5]}=>{DataNumber <= 120})]}',
+      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [(multiply{DataVectorV <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorV <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorV <= [1,2,3,4,5]}=>{DataNumber <= 120}),(multiply{DataVectorV <= [1,2,3,4,5]}=>{DataNumber <= 120})]}',
     )
   })
 })
