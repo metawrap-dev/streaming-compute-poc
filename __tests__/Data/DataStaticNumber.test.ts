@@ -1,22 +1,12 @@
-import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
+import { DataStaticNumber } from '../../src/Implementation/Data/Static/DataStaticNumber.js'
 
-describe('DataVariableNumber', () => {
+describe('DataStaticNumber', () => {
   beforeAll(async () => {})
 
   afterAll(() => {})
 
   it('A number can be resolved', async () => {
-    const number = new DataVariableNumber(123)
-
-    expect(number.Resolved).toBe(true)
-
-    expect(number.Data).toBe(123)
-
-    expect(await number.resolve()).toBe(123)
-  })
-
-  it('A number can be resolved when nested', async () => {
-    const number = new DataVariableNumber(new DataVariableNumber(123))
+    const number = new DataStaticNumber(123)
 
     expect(number.Resolved).toBe(true)
 
@@ -26,7 +16,7 @@ describe('DataVariableNumber', () => {
   })
 
   it('A number can be unresolved and set', async () => {
-    const number = new DataVariableNumber()
+    const number = new DataStaticNumber()
 
     await expect(async () => number.Data).rejects.toThrow(Error)
 
@@ -42,6 +32,6 @@ describe('DataVariableNumber', () => {
 
     expect(await number.resolve()).toBe(123)
 
-    expect(number.toString()).toBe('{DataVariableNumber <= 123}')
+    expect(number.toString()).toBe('{DataStaticNumber <= 123}')
   })
 })

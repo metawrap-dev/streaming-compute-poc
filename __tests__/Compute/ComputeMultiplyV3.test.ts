@@ -1,8 +1,8 @@
-import { ComputeMultiplyV3 } from '../src/Implementation/Compute/ComputeMultiplyV3.js'
-import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { DataVariableVectorHN } from '../src/Implementation/Data/DataVariableVectorHN.js'
-import { DataVariableVectorVN } from '../src/Implementation/Data/DataVariableVectorVN.js'
-import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
+import { ComputeMultiplyV3 } from '../../src/Implementation/Compute/Multiply/ComputeMultiplyV3.js'
+import { DataVariableVectorVN } from '../../src/Implementation/Data/DataVariableVectorVN.js'
+import { DataVariableNumber } from '../../src/Implementation/Data/Variable/DataVariableNumber.js'
+import { DataVariableVectorHN } from '../../src/Implementation/Data/Variable/DataVariableVectorHN.js'
+import { SourceMemory } from '../../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeMultiplyV3', () => {
   beforeAll(async () => {})

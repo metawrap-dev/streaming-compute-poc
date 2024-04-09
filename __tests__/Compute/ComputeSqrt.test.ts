@@ -1,6 +1,6 @@
-import { ComputeSqrt } from '../src/Implementation/Compute/ComputeSqrt.js'
-import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
+import { ComputeSqrt } from '../../src/Implementation/Compute/ComputeSqrt.js'
+import { DataVariableNumber } from '../../src/Implementation/Data/Variable/DataVariableNumber.js'
+import { SourceMemory } from '../../src/Implementation/Source/SourceMemory.js'
 
 describe('ComputeSqrt', () => {
   beforeAll(async () => {})

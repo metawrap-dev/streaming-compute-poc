@@ -4,7 +4,7 @@ import { DataVariable } from './DataVariable.js'
  *
  * Example of an entity with Dimension `Singleton` and Cardinality `Unlimited`
  *
- * "Horizontal" vector.
+ * A `Unlimited` dimension `Horizontal` vector `Row`.
  *
  *```
  *  +-                  -+

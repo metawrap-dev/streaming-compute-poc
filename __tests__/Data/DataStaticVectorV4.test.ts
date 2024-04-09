@@ -1,4 +1,4 @@
-import { DataStaticVectorV4 } from '../src/Implementation/Data/DataStaticVectorV4.js'
+import { DataStaticVectorV4 } from '../../src/Implementation/Data/Static/DataStaticVectorV4.js'
 
 describe('DataStaticVectorV4', () => {
   beforeAll(async () => {})

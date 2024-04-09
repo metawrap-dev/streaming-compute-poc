@@ -1,6 +1,6 @@
-import { ComputeMultiplyVN } from '../src/Implementation/Compute/ComputeMultiplyVN.js'
-import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
+import { ComputeMultiplyVN } from '../src/Implementation/Compute/Multiply/ComputeMultiplyVN.js'
 import { DataVariableVectorVN } from '../src/Implementation/Data/DataVariableVectorVN.js'
+import { DataVariableNumber } from '../src/Implementation/Data/Variable/DataVariableNumber.js'
 import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
 
 describe('SourceMemory', () => {

@@ -1,7 +1,7 @@
-import { ComputeMultiplyVN } from '../src/Implementation/Compute/ComputeMultiplyVN.js'
-import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { DestinationMemory } from '../src/Implementation/Destination/DestinationMemory.js'
-import { SourceMemory } from '../src/Implementation/Source/SourceMemory.js'
+import { ComputeMultiplyHN } from '../../src/Implementation/Compute/Multiply/ComputeMultiplyHN.js'
+import { DataVariableNumber } from '../../src/Implementation/Data/Variable/DataVariableNumber.js'
+import { DestinationMemory } from '../../src/Implementation/Destination/DestinationMemory.js'
+import { SourceMemory } from '../../src/Implementation/Source/SourceMemory.js'
 
 describe('DestinationMemory', () => {
   beforeAll(async () => {})
@@ -172,7 +172,7 @@ describe('DestinationMemory', () => {
     const a = new DestinationMemory<number, 1, 1>()
     expect(a).toBeDefined()
 
-    const b = new ComputeMultiplyVN(new SourceMemory([10, 10, 10, 10]))
+    const b = new ComputeMultiplyHN(new SourceMemory([10, 10, 10, 10]))
 
     expect(b.toString()).toBe('(multiply{SourceMemory(1 elements, atoms 1, 0 index, 1 batch size) <= [[10,10,10,10]]}=>unresolved)')
 
@@ -193,7 +193,7 @@ describe('DestinationMemory', () => {
     expect(a.Config.BatchSize).toBe(5)
 
     // Because we have a batch size of 5, the result will not be flushed until we resolve.
-    await a.write(new ComputeMultiplyVN(new SourceMemory<number, 1, 0>([10, 10, 10, 10])))
+    await a.write(new ComputeMultiplyHN(new SourceMemory<number, 1, 0>([10, 10, 10, 10])))
     expect(a.toString()).toBe('{DestinationMemory(0 stored, 1 in buffer, 5 batch size) <= [(multiply{SourceMemory(1 elements, atoms 1, 0 index, 1 batch size) <= [[10,10,10,10]]}=>unresolved)]=>[]}')
     await a.resolve()
     expect(a.toString()).toBe('{DestinationMemory(1 stored, 0 in buffer, 5 batch size) <= []=>[10000]}')

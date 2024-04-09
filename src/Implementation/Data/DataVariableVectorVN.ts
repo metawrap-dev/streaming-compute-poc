@@ -1,4 +1,4 @@
-import { DataVariable } from './DataVariable.js'
+import { DataVariable } from './Variable/DataVariable.js'
 
 /**
  * Example of an entity with Dimension `Unlimited` and Cardinality `1`

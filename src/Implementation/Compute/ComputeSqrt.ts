@@ -1,6 +1,6 @@
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
-import { DataVariableNumber } from '../Data/DataVariableNumber.js'
+import { DataVariableNumber } from '../Data/Variable/DataVariableNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { resolve } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'

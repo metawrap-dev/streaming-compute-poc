@@ -1,11 +1,11 @@
-import { type IData } from '../../Design/IData.js'
-import { type ISettable } from '../../Design/ISettable.js'
-import { type Output } from '../../Design/Types/Output.js'
-import { type Vector } from '../../Design/Types/Vector.js'
-import { ConfigCommon } from '../Config/ConfigCommon.js'
-import { ElementData } from '../Element/ElementData.js'
-import { StateDataStatic } from '../State/StateDataStatic.js'
-import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { type IData } from '../../../Design/IData.js'
+import { type ISettable } from '../../../Design/ISettable.js'
+import { type Output } from '../../../Design/Types/Output.js'
+import { type Vector } from '../../../Design/Types/Vector.js'
+import { ConfigCommon } from '../../Config/ConfigCommon.js'
+import { ElementData } from '../../Element/ElementData.js'
+import { StateDataStatic } from '../../State/StateDataStatic.js'
+import { StrategyCommon } from '../../Strategy/StrategyCommon.js'
 
 /**
  * Implements a generic *Static* representation.

@@ -1,5 +1,5 @@
-import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
-import { DataVariableVectorHN } from '../src/Implementation/Data/DataVariableVectorHN.js'
+import { DataVariableNumber } from '../../src/Implementation/Data/Variable/DataVariableNumber'
+import { DataVariableVectorHN } from '../../src/Implementation/Data/Variable/DataVariableVectorHN'
 
 describe('DataVariableVectorHN', () => {
   beforeAll(async () => {})

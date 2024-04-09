@@ -1,14 +1,14 @@
-import { type ICompute } from '../../Design/ICompute.js'
-import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
-import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
-import { type Output } from '../../Design/Types/Output.js'
-import { ConfigCommon } from '../Config/ConfigCommon.js'
-import { DataVariableNumber } from '../Data/DataVariableNumber.js'
-import { ElementCompute } from '../Element/ElementCompute.js'
-import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
-import { StrategyCommon } from '../Strategy/StrategyCommon.js'
-import { multiplyN } from '../Utility/Maths.js'
-import { resolve } from '../Utility/Resolve.js'
+import { type ICompute } from '../../../Design/ICompute.js'
+import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
+import { type Input, type InputPermissive } from '../../../Design/Types/Input.js'
+import { type Output } from '../../../Design/Types/Output.js'
+import { ConfigCommon } from '../../Config/ConfigCommon.js'
+import { DataVariableNumber } from '../../Data/Variable/DataVariableNumber.js'
+import { ElementCompute } from '../../Element/ElementCompute.js'
+import { StateComputeMultiply } from '../../State/StateComputeMultiply.js'
+import { StrategyCommon } from '../../Strategy/StrategyCommon.js'
+import { multiplyN } from '../../Utility/Maths.js'
+import { resolve } from '../../Utility/Resolve.js'
 
 /**
  * This can multiply any number of numbers from a `Vertical` vector `Column`.
@@ -20,7 +20,7 @@ import { resolve } from '../Utility/Resolve.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiplyVN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
+export class ComputeMultiplyHN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.

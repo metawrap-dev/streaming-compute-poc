@@ -1,10 +1,10 @@
-import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
-import { type Input } from '../../Design/Types/Input.js'
-import { DataVariableNumber } from '../Data/DataVariableNumber.js'
-import { StateComputeMultiply } from '../State/StateComputeMultiply.js'
-import { multiplyN } from '../Utility/Maths.js'
-import { resolve } from '../Utility/Resolve.js'
-import { Compute } from './Compute.js'
+import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
+import { type Input } from '../../../Design/Types/Input.js'
+import { DataVariableNumber } from '../../Data/Variable/DataVariableNumber.js'
+import { StateComputeMultiply } from '../../State/StateComputeMultiply.js'
+import { multiplyN } from '../../Utility/Maths.js'
+import { resolve } from '../../Utility/Resolve.js'
+import { Compute } from '../Compute.js'
 
 /**
  * This can multiply 3 of numbers from a `Vertical` vector `Column`.

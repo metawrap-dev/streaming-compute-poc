@@ -1,4 +1,4 @@
-import { DataStaticVectorHN } from '../src/Implementation/Data/DataStaticVectorHN.js'
+import { DataStaticVectorHN } from '../../src/Implementation/Data/Static/DataStaticVectorHN.js'
 
 describe('DataVariableVectorHN', () => {
   beforeAll(async () => {})
