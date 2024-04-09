@@ -2,6 +2,7 @@ import { type IData } from '../../../Design/IData.js'
 import { type ISettable } from '../../../Design/ISettable.js'
 import { type Output } from '../../../Design/Types/Output.js'
 import { type Vector } from '../../../Design/Types/Vector.js'
+import { describe } from '../../../Implementation/Utility/Describe.js'
 import { ConfigCommon } from '../../Config/ConfigCommon.js'
 import { ElementData } from '../../Element/ElementData.js'
 import { StateDataStatic } from '../../State/StateDataStatic.js'
@@ -76,7 +77,7 @@ export class DataStatic<T, D extends number, C extends number> extends ElementDa
       if (typeof this.State.Number === 'number') {
         return `{${this.constructor.name} <= ${this.State.Number}}`
       } else {
-        return `{${this.constructor.name} <= [${this.State.Number.toString()}]}`
+        return `{${this.constructor.name} <= ${describe(this.State.Number)}}`
       }
     } else {
       return 'unresolved'

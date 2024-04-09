@@ -38,6 +38,24 @@ export function dot4(vectorA: Vector<number, 4>, vectorB: Vector<number, 4>): nu
 }
 
 /**
+ * Add v4
+ * @param {number[4]} vectorA
+ * @param {number[4]} vectorB
+ * @returns
+ */
+export function add4(vectorA: Vector<number, 4>, vectorB: Vector<number, 4>): Vector<number, 4> {
+  if (vectorA.length !== 4) {
+    throw new Error(`dot4:Vectors must be of length (4) ${vectorA.length}`)
+  }
+
+  if (vectorB.length !== 4) {
+    throw new Error(`dot4:Vectors must be of length (4) ${vectorB.length}`)
+  }
+
+  return [vectorA[0] + vectorB[0], vectorA[1] + vectorB[1], vectorA[2] + vectorB[2], vectorA[3] + vectorB[3]]
+}
+
+/**
  * Multiply all the values in the vector together
  * @param {number[4]} vectorA
  * @returns

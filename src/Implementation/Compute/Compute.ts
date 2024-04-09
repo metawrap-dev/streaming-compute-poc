@@ -3,6 +3,7 @@ import { type IData } from '../../Design/IData.js'
 import { type IState } from '../../Design/IState.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { describe } from '../../Implementation/Utility/Describe.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
@@ -100,9 +101,9 @@ export abstract class Compute<IT, ID extends number, IC extends number, OT, OD e
     const out: string[] = []
     out.push('{')
     out.push(this.constructor.name)
-    out.push(this.Inputs.toString())
+    out.push(describe<IT, ID, IC>(this.Inputs))
     out.push('=>')
-    out.push(this.Output.toString())
+    out.push(describe<OT, OD, OC>(this.Output))
     out.push('}')
     return out.join('')
   }

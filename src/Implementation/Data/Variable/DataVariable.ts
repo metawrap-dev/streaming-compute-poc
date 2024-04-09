@@ -8,6 +8,7 @@ import { ConfigCommon } from '../../Config/ConfigCommon.js'
 import { ElementData } from '../../Element/ElementData.js'
 import { StateDataVariable } from '../../State/StateDataVariable.js'
 import { StrategyCommon } from '../../Strategy/StrategyCommon.js'
+import { describe } from '../../Utility/Describe.js'
 import { resolve } from '../../Utility/Resolve.js'
 
 /**
@@ -100,16 +101,14 @@ export class DataVariable<T, D extends number, C extends number> extends Element
     if (this.Resolved) {
       if (typeof this.State.Number === 'number') {
         return `{${this.constructor.name} <= ${this.State.Number}}`
-      } else if (isData(this.State.Number)) {
-        return `{${this.constructor.name} <= ${this.State.Number.toString()}}`
       } else {
-        return `{${this.constructor.name} <= [${this.State.Number.toString()}]}`
+        return `{${this.constructor.name} <= ${describe(this.State.Number)}}`
       }
     } else {
       if (isData(this.State.Number)) {
-        return `{${this.constructor.name} <= ${this.State.Number.toString()}}`
+        return `{${this.constructor.name} <= ${describe(this.State.Number)}}`
       } else if (Array.isArray(this.State.Number)) {
-        return `{${this.constructor.name} <= [${this.State.Number.toString()}]}`
+        return `{${this.constructor.name} <= ${describe(this.State.Number)}}`
       } else {
         return 'unresolved'
       }
