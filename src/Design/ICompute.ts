@@ -4,30 +4,39 @@ import { type IElement } from './IElement.js'
 import { type Input } from './Types/Input.js'
 
 /**
- * A Compute ELement: Something that can take some inputs and compute a value that is returned.
+ * Defines the contract for a computational element capable of processing inputs to produce outputs.
+ * The compute element is designed to work with inputs and outputs of specified types, dimensions, and
+ * cardinalities, ensuring type safety and predictability in data processing operations.
  *
- * For now we assume that the inputs are of the same type.
+ * For simplicity, this version assumes that all inputs share the same type and structure, and similarly,
+ * all outputs conform to a unified type and structure.
  *
  * @author James McParlane
- * @template {type} IT The compute input type
- * @template {Dimension} ID The compute input dimension (The width of the input vector)
- * @template {Cardinality} IC The compute input cardinality (The number of items consumed by an invocation)
- * @template {type} IT The compute output type
- * @template {Dimension} ID The compute output dimension (The width of the output vector)
- * @template {Cardinality} IC The compute output cardinality (The number of items emitted by an invocation)
+ * @template {type} IT Input type: The type of data this compute element accepts.
+ * @template {number} ID Input dimension: Specifies the "shape" or structure of each input item (e.g., scalar, vector).
+ * @template {number}IC Input cardinality: The number of items consumed by the compute element in a single operation.
+ * @template {type} OT Output type: The type of data this compute element produces.
+ * @template {number}OD Output dimension: Defines the structure of the output data, similar to input dimension.
+ * @template {number}OC Output cardinality: The number of items produced by the compute element upon completion of its computation.
  * @interface
  */
 export interface ICompute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends IDescribable, IData<OT, OD, OC>, IElement {
   /**
-   * Inputs for the computation are a source of N inputs.
-   * @type {Input<IT,ID>}
+   * Represents the inputs required for computation, encapsulating the types, dimensions, and cardinalities of the
+   * data that this compute element processes. The inputs are specified as a vector, ensuring that they align with
+   * the declared type, dimension, and cardinality requirements.
+   *
+   * @type {Input<IT, ID, IC>}
    * @readonly
    */
   readonly Inputs: Input<IT, ID, IC>
 
   /**
-   * Output of the computation which is wrapped in IData so that we can built the AST
-   * @type {IData<OT,OD,OC>}
+   * Encapsulates the output produced by the computation, wrapped within the `IData` interface to integrate seamlessly
+   * into the pipeline's abstract syntax tree (AST). This design allows for the outputs to be not just data, but also
+   * descriptive elements that can be further analyzed or processed within the pipeline.
+   *
+   * @type {IData<OT, OD, OC>}
    * @readonly
    */
   readonly Output: IData<OT, OD, OC>

@@ -1,5 +1,6 @@
 /**
- * The type of tactic that can be applied to an element.
+ * Enumerates the types of tactics that can be applied to an element, providing a specific operational focus.
+ * For example, a 'Range' tactic might specify operations within a certain range of values.
  * @enum {string}
  */
 export enum TacticType {
@@ -7,7 +8,8 @@ export enum TacticType {
 }
 
 /**
- * The type of value that a tactic can take.
+ * Defines the nature of values a tactic can work with, distinguishing between discrete (fixed values) and continuous (any value within a range).
+ * This classification aids in applying tactics appropriately based on the type of data they are designed to manipulate.
  * @enum {string}
  */
 export enum TacticValueType {
@@ -16,36 +18,37 @@ export enum TacticValueType {
 }
 
 /**
- * A component of a strategy that can be applied to an element.
+ * Represents a single component of a strategy, detailing an operational approach that can be applied to an element.
+ * Tactics encapsulate actionable directives or policies as part of a broader strategic framework, each with its own
+ * name, description, operational type, and value nature.
  *
- * @author James McParlane
  * @interface
  */
 export interface ITactic {
   /**
-   * The name of the tactic.
+   * The unique identifier or common name of the tactic, providing a quick reference to its purpose or action.
    * @type {string}
    * @readonly
    */
   readonly Name: string
 
   /**
-   * The description of the tactic.
+   * A brief explanation of the tactic's function, objectives, and application context, helping users understand its role within a strategy.
    * @type {string}
    * @readonly
    */
   readonly Description: string
 
   /**
-   * The type of the tactic.
+   * Specifies the operational category of the tactic, aiding in its classification and application within strategic operations.
    * @type {TacticType}
    * @readonly
    */
   readonly Type: TacticType
 
   /**
-   * The type of the tactic.
-   * @type {TacticType}
+   * Indicates the nature of the values that the tactic deals with, guiding its implementation and integration with system elements.
+   * @type {TacticValueType}
    * @readonly
    */
   readonly ValueType: TacticValueType

@@ -5,34 +5,42 @@ import { type ISynchronizable } from './ISynchronizable.js'
 import { type ElementType } from './Types/ElementType.js'
 
 /**
- * An Element: A component of a the design.
+ * Defines a system component with configurable behavior and state synchronization capabilities.
+ * `IElement` represents foundational elements in the system's design, providing interfaces for
+ * their type, current state, configuration settings, and strategic behavior. This setup allows
+ * elements to be dynamically adjusted and interact cohesively within the system.
  *
+ * @extends ISynchronizable Ensures elements can be synchronized with the system's state.
  * @author James McParlane
  * @interface
  */
 export interface IElement extends ISynchronizable {
   /**
-   * The type of an element
+   * Identifies the element's type, determining its role and capabilities within the system.
    * @type {ElementType}
    * @readonly
    */
   readonly Type: ElementType
 
   /**
-   * The runtime state of the element.
+   * Captures the current operational state of the element, facilitating state-based behaviors
+   * and interactions within the system.
    * @type {IState}
    * @readonly
    */
   readonly State: IState
 
   /**
-   * Reflects the current applied strategy and tactics.
+   * Contains configuration settings for the element, reflecting its current setup and operational
+   * parameters. This property allows for dynamic adjustments to the element's behavior.
    * @type {IConfig}
+   * @readonly
    */
   readonly Config: IConfig
 
   /**
-   * The base strategy that can be applied to the element's config.
+   * Describes the base strategy applied to the element, guiding its behavior and interactions
+   * according to predefined tactical considerations.
    * @type {IStrategy}
    * @readonly
    */

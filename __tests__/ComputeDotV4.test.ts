@@ -113,7 +113,7 @@ describe('ComputeDotV4', () => {
     expect(m.Data).toBe(4300)
   })
 
-  it.skip('Composite Dot2', async () => {
+  it('Composite Dot2', async () => {
     const a = new DataVariableNumber(10)
     const b = new DataVariableNumber(10)
     const c = new DataVariableNumber(10)

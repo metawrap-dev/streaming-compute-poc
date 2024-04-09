@@ -5,13 +5,14 @@ import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 
 /**
- * Resolves a value into a Vector.
- * Data can be a scalar, or a vector or scalars or a vector of objects.
- * Converting a [Value] into a [Vector] is a matter of replacing its elements with unresolvable elements.
- * @warning This mutates and returns [data]
- * @param {boolean} wait
- * @param {Value<T,D>} data
- * @returns
+ * Attempts to resolve a single value to a vector, handling both scalar and vector data types. If the data is already
+ * resolved, it returns the existing data. Otherwise, it actively resolves the data, potentially waiting for
+ * asynchronous processes to complete if `wait` is true.
+ *
+ * @warning Mutates and returns the provided data `data`.
+ * @param {boolean} wait - If true, the resolution process may wait for additional data to fulfill batch sizes.
+ * @param {Value<T, D> | IResolvable<T, D, 1>} data - The data to be resolved, which can be a scalar, vector of scalars, or vector of objects.
+ * @returns {Promise<Vector<T, D>>} A promise that resolves to a vector of the specified type and dimension.
  */
 async function resolveValue<T, D extends number>(wait: boolean, data: IResolvable<T, D, 1> | Value<T, D>): Promise<Vector<T, D>> {
   // Is the value itself resolvable?
@@ -46,10 +47,14 @@ async function resolveValue<T, D extends number>(wait: boolean, data: IResolvabl
 }
 
 /**
+ * Resolves a collection of data elements or a single resolvable entity into a structured vector form. It processes
+ * arrays by resolving each contained value, and directly resolves singular resolvable entities. The function is designed
+ * to handle various input structures, ensuring they are all brought to a fully resolved state.
  *
- * @warning This mutates and returns [data]. Note that we replace each cell in `Vector<Value<T, D>, A>` with `Value<T, D>` transforming it into a `Vector<Vector<T, D>, A>`
- * @param data Value<T, T>[] | IData<Value<number, 1>, 0, 1> | Value<number, 0>[]
- * @returns
+ * @warning This function mutates the provided data `data`, especially when dealing with arrays.
+ * @param {boolean} wait - Indicates if the resolution should pause for batch completions.
+ * @param {T | IData<T, D, 1> | IResolvable<T, D, C> | Vector<Value<T, D>, C | 0>} data - The data to resolve, accommodating a range of input structures.
+ * @returns {Promise<Vector<Vector<T, D>, C>>} - A promise that resolves to a vector of vectors, following the specified types and dimensions.
  */
 export async function resolve<T, D extends number, C extends number>(wait: boolean, data: T | IData<T, D, 1> | IResolvable<T, D, C> | Vector<Value<T, D>, C | 0>): Promise<Vector<Vector<T, D>, C>> {
   console.log(`resolveWhole`, data)

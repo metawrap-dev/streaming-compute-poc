@@ -1,44 +1,16 @@
 /**
- * The dimensions that vector can have.
- * @enum
- */
-/*
-export enum Dimension {
-  Unbounded = 0,
-  Scalar = 1,
-  V2 = 2,
-  V3 = 3,
-  V4 = 4,
-}
-*/
-
-/**
- * The cardinality of a result.
- * @enum
- */
-/*
-export enum Cardinality {
-  Unbounded = 0,
-  One = 1,
-  Two = 2,
-  Three = 3,
-  Four = 4,
-}
-*/
-
-/**
  * Defines a type `Vector` that represents a vector of a specific dimension `D` and type `T`.
  * The dimension `D` determines the shape of the vector:
- * - `D = 0`: Represents an unbounded vector with elements of type `T`, essentially `T[]`.
+ * - `D = 0`: Represents an unbounded vector array with elements of type `T`, essentially `T[]`.
  * - `D = 1`: Represents a scalar value of type `T`.
- * - `D = 2`: Represents a 2D vector with two elements of type `T`, `[T, T]`.
+ * - `D = 2`: Represents a 2D vector tuple with two elements of type `T`, `[T, T]`.
  * - `D = N`: Represents an N-dimensional vector with N elements of type `T`, `[T, ..., T] (N times)`.
  *
  * @template T The type of the elements within the vector.
  * @template D The dimension of the vector. Must be a number where:
- *             0 represents an unbounded dimension,
+ *             0 represents an unbounded dimension, resulting in an array,
  *             1 represents a scalar,
- *             and any positive integer N represents an N-dimensional vector.
+ *             and any positive integer N represents an N-dimensional vector tuple.
  */
 export type Vector<T, D extends number> = D extends 0
   ? T[] // For D = 0, return an array of type T representing an unbounded vector.
