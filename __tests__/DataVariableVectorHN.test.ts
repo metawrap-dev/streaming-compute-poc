@@ -1,3 +1,4 @@
+import { DataVariableNumber } from '../src/Implementation/Data/DataVariableNumber.js'
 import { DataVariableVectorHN } from '../src/Implementation/Data/DataVariableVectorHN.js'
 
 describe('DataVariableVectorHN', () => {
@@ -7,6 +8,16 @@ describe('DataVariableVectorHN', () => {
 
   it('A vector can be resolved', async () => {
     const number = new DataVariableVectorHN([1, 2, 3])
+
+    expect(number.Resolved).toBe(false)
+
+    expect(await number.resolve()).toEqual([1, 2, 3])
+
+    expect(number.Data).toEqual([1, 2, 3])
+  })
+
+  it('A nested vector can be resolved', async () => {
+    const number = new DataVariableVectorHN([1, new DataVariableNumber(2), 3])
 
     expect(number.Resolved).toBe(false)
 
