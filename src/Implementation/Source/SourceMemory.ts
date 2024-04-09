@@ -92,7 +92,7 @@ export class SourceMemory<T, D extends number, C extends number> extends Element
     for (let i = 0; i < this.State.Data.length; i++) {
       const data = this.State.Data[i]
 
-      result.push(describe(data as any))
+      result.push(describe(data))
 
       if (i !== this.State.Data.length - 1) {
         result.push(',')

@@ -101,9 +101,9 @@ export abstract class Compute<IT, ID extends number, IC extends number, OT, OD e
     const out: string[] = []
     out.push('{')
     out.push(this.constructor.name)
-    out.push(describe<IT, ID, IC>(this.Inputs))
+    out.push(describe(this.Inputs))
     out.push('=>')
-    out.push(describe<OT, OD, OC>(this.Output))
+    out.push(describe(this.Output))
     out.push('}')
     return out.join('')
   }

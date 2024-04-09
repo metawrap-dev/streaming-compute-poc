@@ -51,35 +51,24 @@ export class ComputeAddV4 extends Compute<number, 4, 2, number, 4, 1> {
       // We want to clock out results one at a time.
       inputs.Config.setBatchSize(1)
 
-      const r = await inputs.resolve(wait)
+      // Dereference the first item to clock out of the source
+      const [a, b] = (await inputs.resolve(wait))[0]
 
-      console.log('r', r)
-
-      const [a, b] = r[0]
-
-      // Resolve one element from source and multiply
+      // Add and set
       this.set(add4(a, b))
     } else if (isResolvable<number, 4, 2>(inputs)) {
-      //accumulator *= multiplyN(await inputs.resolve(wait))
-
+      // Dereference the arguments.
       const [a, b] = await inputs.resolve(wait)
 
-      // Resolve one element from source and multiply
+      // Add and set
       this.set(add4(a, b))
     } else {
+      // Dereference the arguments.
       const [a, b] = await resolve<number, 4, 2>(wait, inputs)
 
-      // Resolve one element from source and multiply
+      // Add and set
       this.set(add4(a, b))
-
-      //accumulator *= multiplyN(await resolve<number, 1, 4>(wait, inputs))
     }
-
-    // Save the state
-    //this.State.setAccumulator(accumulator)
-
-    // Set the result so far
-    //this.set(accumulator)
 
     return this.Data
   }
