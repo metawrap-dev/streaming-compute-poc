@@ -12,7 +12,7 @@ import { type Vector } from './Vector.js'
  *             or a more complex type.
  * @template D The dimensionality of the value, influencing its structure:
  *             - When `D` is 0, it represents an unbounded array of type `T`.
- *             - When `D` is 0, it represents a singleton.
+ *             - When `D` is 1, it represents a singleton.
  *             - A positive integer `D` indicates a vector or wrapped tuple of that dimension.
  *
  * The type can be one of the following forms:

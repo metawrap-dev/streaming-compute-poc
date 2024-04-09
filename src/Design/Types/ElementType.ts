@@ -87,14 +87,18 @@ export function isValueArray<T, D extends number, C extends number>(object: unkn
  * Confirms whether the provided object can be considered as an input value, distinct from being a data source.
  * This type guard factors in dimensionality and cardinality to accommodate various data structures beyond sources.
  *
+ * @todo Do we need this?
+ *
  * @param {unknown} object - The object to evaluate.
  * @param {D} dimension - The expected dimension of the input values.
  * @param {C} width - The expected cardinality of the input values.
  * @returns {boolean} `true` if the object matches the criteria for an input value.
  */
+/*
 export function isInputValue<T, D extends number, C extends number>(object: unknown, dimension: D, width: C): object is Vector<Value<T, D>, C> {
   return isNotUndefined(object) && Array.isArray(object) && ((width === 1 && (dimension == 0 || object.length === dimension)) || width === 0 || object.length === width)
 }
+*/
 
 /**
  * Evaluates whether the provided object adheres to the `IResolvable` interface, indicating that it
