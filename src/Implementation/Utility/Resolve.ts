@@ -57,8 +57,6 @@ async function resolveValue<T, D extends number>(wait: boolean, data: IResolvabl
  * @returns {Promise<Vector<Vector<T, D>, C>>} - A promise that resolves to a vector of vectors, following the specified types and dimensions.
  */
 export async function resolve<T, D extends number, C extends number>(wait: boolean, data: T | IData<T, D, 1> | IResolvable<T, D, C> | Vector<Value<T, D>, C | 0>): Promise<Vector<Vector<T, D>, C>> {
-  console.log(`resolveWhole`, data)
-
   // Cheap test for being a vector
   if (Array.isArray(data)) {
     // Resolve and replace each element if needed.

@@ -24,7 +24,7 @@ import { resolve } from '../Utility/Resolve.js'
  *
  * @class
  */
-export class SourceMemory<T, D extends number, C extends number> extends ElementSource implements ISource<T, D, C> {
+export class SourceMemory<const T, const D extends number, const C extends number> extends ElementSource implements ISource<T, D, C> {
   /**
    * The configuration for the source.
    * @type {IConfig}

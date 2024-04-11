@@ -1,7 +1,10 @@
 import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
+import { type Arguments } from './Types/Arguments.js'
 import { type Input } from './Types/Input.js'
+import { type Output } from './Types/Output.js'
+import { type Value } from './Types/Value.js'
 
 /**
  * Defines the contract for a computational element capable of processing inputs to produce outputs.
@@ -30,6 +33,14 @@ export interface ICompute<IT, ID extends number, IC extends number, OT, OD exten
    * @readonly
    */
   readonly Inputs: Input<IT, ID, IC>
+
+  /**
+   * Evaluate the compute element
+   * @param {Arguments<Value<IT, ID>, IC>} inputs Arguments spread into a tuple or array
+   * @returns
+   * @async
+   */
+  evaluate(...inputs: Arguments<Value<IT, ID>, IC>): Promise<Output<OT, OD, OC>>
 
   /**
    * Encapsulates the output produced by the computation, wrapped within the `IData` interface to integrate seamlessly

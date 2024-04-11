@@ -1,6 +1,7 @@
-import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
+import { isSource } from '../../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../../Design/Types/Input.js'
 import { type Output } from '../../../Design/Types/Output.js'
+import { type Value } from '../../../Design/Types/Value.js'
 import { DataVariableVectorV4 } from '../../Data/Variable/DataVariableVectorV4.js'
 import { StateComputeMultiply } from '../../State/StateComputeMultiply.js'
 import { add4 } from '../../Utility/Maths.js'
@@ -27,8 +28,19 @@ export class ComputeAddV4 extends Compute<number, 4, 2, number, 4, 1> {
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(inputs: InputPermissive<number, 4, 2>) {
+  constructor(inputs?: InputPermissive<number, 4, 2>) {
     super(inputs as Input<number, 4, 2>, new DataVariableVectorV4())
+  }
+
+  /**
+   * Evaluate the compute element.
+   * @param {Value<number, 4>} a The a vector to add
+   * @param {Value<number, 4>} b The b vector to add
+   * @returns {Promise<Output<number, 4, 1>>}
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(a: Value<number, 4>, b: Value<number, 4>): Promise<Output<number, 4, 1>> {
+    return add4(await resolve<number, 4, 1>(true, a), await resolve<number, 4, 1>(true, b))
   }
 
   /**
@@ -39,9 +51,6 @@ export class ComputeAddV4 extends Compute<number, 4, 2, number, 4, 1> {
   async resolve(wait: boolean = false): Promise<Output<number, 4, 1>> {
     // Grab a reference here to we can reduce types as we progress through the type-guards
     const inputs = this.Inputs
-
-    // Get the accumulator
-    // let accumulator = this.State.Accumulator
 
     // If it is a source...
     if (isSource<number, 4, 2>(inputs)) {
@@ -56,7 +65,7 @@ export class ComputeAddV4 extends Compute<number, 4, 2, number, 4, 1> {
 
       // Add and set
       this.set(add4(a, b))
-    } else if (isResolvable<number, 4, 2>(inputs)) {
+    } /*else if (isResolvable<number, 4, 2>(inputs)) {
       // Dereference the arguments.
       const [a, b] = await inputs.resolve(wait)
 
@@ -68,8 +77,12 @@ export class ComputeAddV4 extends Compute<number, 4, 2, number, 4, 1> {
 
       // Add and set
       this.set(add4(a, b))
-    }
+    } */ else {
+      // Dereference the arguments.
+      const [a, b] = await resolve<number, 4, 2>(wait, inputs)
 
+      this.set(await this.evaluate(a, b))
+    }
     return this.Data
   }
 }
