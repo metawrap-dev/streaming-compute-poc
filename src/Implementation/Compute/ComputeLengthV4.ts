@@ -1,5 +1,7 @@
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
 import { DataVariableNumber } from '../Data/Variable/DataVariableNumber.js'
 import { StateComputeLength4 } from '../State/StateComputeLength4.js'
 import { length4 } from '../Utility/Maths.js'
@@ -29,6 +31,16 @@ export class ComputeLengthV4 extends Compute<number, 4, 1, number, 1, 1> {
   constructor(inputs: Input<number, 4, 1>) {
     // We pass in the inputs and the output object placeholder
     super(inputs, new DataVariableNumber())
+  }
+
+  /**
+   * Evaluate the compute element.
+   * @param {Value<number, 4>} a The vector to get the length of
+   * @returns {Promise<Output<number, 1, 1>>} The length of the vector
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(a: Value<number, 4>): Promise<Output<number, 1, 1>> {
+    return length4(await resolve<number, 4, 1>(true, a))
   }
 
   /**

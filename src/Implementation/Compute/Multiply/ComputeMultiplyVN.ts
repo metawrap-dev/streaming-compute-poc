@@ -2,6 +2,7 @@ import { type ICompute } from '../../../Design/ICompute.js'
 import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../../Design/Types/Input.js'
 import { type Output } from '../../../Design/Types/Output.js'
+import { type Value } from '../../../Design/Types/Value.js'
 import { ConfigCommon } from '../../Config/ConfigCommon.js'
 import { DataVariableNumber } from '../../Data/Variable/DataVariableNumber.js'
 import { ElementCompute } from '../../Element/ElementCompute.js'
@@ -20,7 +21,7 @@ import { resolve } from '../../Utility/Resolve.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiplyVN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
+export class ComputeMultiplyVN extends ElementCompute implements ICompute<number, 0, 1, number, 1, 1> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
@@ -49,7 +50,7 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
    * @type {ISource<I>}
    * @readonly
    */
-  readonly Inputs: Input<number, 1, 0>
+  readonly Inputs: Input<number, 0, 1>
 
   /**
    * What is the output of the multiplication.
@@ -67,18 +68,13 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
     return this.Output.Resolved
   }
 
-  InputWidth: 0
-
   /**
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: InputPermissive<number, 1, 0>) {
+  constructor(input: InputPermissive<number, 0, 1>) {
     super()
-
-    console.log('ComputeMultiply:input ', input)
-
-    this.Inputs = input as Input<number, 1, 0>
+    this.Inputs = input as Input<number, 0, 1>
   }
 
   /**
@@ -116,6 +112,16 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
   }
 
   /**
+   * Evaluate the compute element.
+   * @param {Value<number, 0>} a The vertical vector to get the length of
+   * @returns {Promise<Output<number, 1, 1>>} The length of the vector
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(a: Value<number, 0>): Promise<Output<number, 1, 1>> {
+    return multiplyN(await resolve<number, 0, 1>(true, a))
+  }
+
+  /**
    * Resolve it using a promise.
    * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
    * @async
@@ -128,7 +134,7 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
     let accumulator = this.State.Accumulator
 
     // If it is a source...
-    if (isSource<number, 1, 0>(inputs)) {
+    if (isSource<number, 0, 1>(inputs)) {
       // ...if we are not waiting and there is no data then return with the null answer?
       if (!wait && inputs.Empty) return 0
 
@@ -139,7 +145,7 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
       accumulator *= multiplyN((await inputs.resolve(wait))[0])
 
       // Set the output value with the returned value from the source.
-    } else if (isResolvable<number, 1, 0>(inputs)) {
+    } else if (isResolvable<number, 0, 1>(inputs)) {
       // Extract the values
       const value = await inputs.resolve(wait) // Why does this return a Value<T,D>?
 
@@ -147,7 +153,7 @@ export class ComputeMultiplyVN extends ElementCompute implements ICompute<number
       accumulator *= multiplyN(value)
     } else {
       // Resolve the whole vector
-      const resolved = await resolve<number, 1, 0>(wait, inputs)
+      const resolved = await resolve<number, 0, 1>(wait, inputs)
 
       // Set the output value.
       accumulator *= multiplyN(resolved)

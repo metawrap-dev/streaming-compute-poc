@@ -1,5 +1,8 @@
+import { type Arguments } from '../../../Design/Types/Arguments.js'
 import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
 import { type Input } from '../../../Design/Types/Input.js'
+import { type Output } from '../../../Design/Types/Output.js'
+import { type Value } from '../../../Design/Types/Value.js'
 import { DataVariableNumber } from '../../Data/Variable/DataVariableNumber.js'
 import { StateComputeMultiply } from '../../State/StateComputeMultiply.js'
 import { multiplyN } from '../../Utility/Maths.js'
@@ -29,6 +32,16 @@ export class ComputeMultiplyV3 extends Compute<number, 1, 3, number, 1, 1> {
   constructor(inputs: Input<number, 1, 3>) {
     // We pass in the inputs and the output object placeholder
     super(inputs, new DataVariableNumber())
+  }
+
+  /**
+   * Evaluate the compute element.
+   * @param {Value<number, 4>} a The vector to multiply
+   * @returns {Promise<Output<number, 1, 1>>} The result of multiplying the elements of the vector together.
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(...a: Arguments<Value<number, 1>, 3>): Promise<Output<number, 1, 1>> {
+    return multiplyN(await resolve<number, 3, 1>(true, a))
   }
 
   /**

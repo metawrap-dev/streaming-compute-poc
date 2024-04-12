@@ -1,5 +1,7 @@
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
+import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
 import { DataVariableNumber } from '../Data/Variable/DataVariableNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { dot4 } from '../Utility/Maths.js'
@@ -29,6 +31,17 @@ export class ComputeDotV4 extends Compute<number, 4, 2, number, 1, 1> {
   constructor(inputs: InputPermissive<number, 4, 2>) {
     // Assign inputs
     super(inputs as Input<number, 4, 2>, new DataVariableNumber())
+  }
+
+  /**
+   * Evaluate the compute element.
+   * @param {Value<number, 4>} a The a vector to add
+   * @param {Value<number, 4>} b The b vector to add
+   * @returns {Promise<Output<number, 4, 1>>}
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(a: Value<number, 4>, b: Value<number, 4>): Promise<Output<number, 1, 1>> {
+    return dot4(await resolve<number, 4, 1>(true, a), await resolve<number, 4, 1>(true, b))
   }
 
   /**

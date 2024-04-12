@@ -65,19 +65,7 @@ export class ComputeAddV4 extends Compute<number, 4, 2, number, 4, 1> {
 
       // Add and set
       this.set(add4(a, b))
-    } /*else if (isResolvable<number, 4, 2>(inputs)) {
-      // Dereference the arguments.
-      const [a, b] = await inputs.resolve(wait)
-
-      // Add and set
-      this.set(add4(a, b))
     } else {
-      // Dereference the arguments.
-      const [a, b] = await resolve<number, 4, 2>(wait, inputs)
-
-      // Add and set
-      this.set(add4(a, b))
-    } */ else {
       // Dereference the arguments.
       const [a, b] = await resolve<number, 4, 2>(wait, inputs)
 

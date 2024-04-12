@@ -1,7 +1,9 @@
 import { type ICompute } from '../../../Design/ICompute.js'
+import { type Arguments } from '../../../Design/Types/Arguments.js'
 import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
 import { type Input, type InputPermissive } from '../../../Design/Types/Input.js'
 import { type Output } from '../../../Design/Types/Output.js'
+import { type Value } from '../../../Design/Types/Value.js'
 import { ConfigCommon } from '../../Config/ConfigCommon.js'
 import { DataVariableNumber } from '../../Data/Variable/DataVariableNumber.js'
 import { ElementCompute } from '../../Element/ElementCompute.js'
@@ -65,7 +67,15 @@ export class ComputeMultiplyV4 extends ElementCompute implements ICompute<number
     return this.Output.Resolved
   }
 
-  InputWidth: 4
+  /**
+   * Evaluate the compute element.
+   * @param {Value<number, 4>} a The vector to get the length of
+   * @returns {Promise<Output<number, 1, 1>>} The length of the vector
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(...a: Arguments<Value<number, 1>, 4>): Promise<Output<number, 1, 1>> {
+    return multiplyN(await resolve<number, 4, 1>(true, a))
+  }
 
   /**
    * @constructor
@@ -73,9 +83,6 @@ export class ComputeMultiplyV4 extends ElementCompute implements ICompute<number
    */
   constructor(input: InputPermissive<number, 1, 4>) {
     super()
-
-    console.log('ComputeMultiply4:input ', input)
-
     this.Inputs = input as Input<number, 1, 4>
   }
 

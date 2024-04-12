@@ -2,7 +2,6 @@ import { type ICompute } from './ICompute.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type ISource } from './ISource.js'
-import { type Output } from './Types/Output.js'
 
 /**
  * Orchestrates a data processing pipeline, linking an `ISource` with an `ICompute` to produce another `ISource` containing

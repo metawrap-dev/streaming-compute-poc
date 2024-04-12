@@ -1,14 +1,13 @@
-import { type ICompute } from '../../../Design/ICompute.js'
+import { type Arguments } from '../../../Design/Types/Arguments.js'
 import { isResolvable, isSource } from '../../../Design/Types/ElementType.js'
-import { type Input, type InputPermissive } from '../../../Design/Types/Input.js'
+import { type Input } from '../../../Design/Types/Input.js'
 import { type Output } from '../../../Design/Types/Output.js'
-import { ConfigCommon } from '../../Config/ConfigCommon.js'
+import { type Value } from '../../../Design/Types/Value.js'
 import { DataVariableNumber } from '../../Data/Variable/DataVariableNumber.js'
-import { ElementCompute } from '../../Element/ElementCompute.js'
 import { StateComputeMultiply } from '../../State/StateComputeMultiply.js'
-import { StrategyCommon } from '../../Strategy/StrategyCommon.js'
 import { multiplyN } from '../../Utility/Maths.js'
 import { resolve } from '../../Utility/Resolve.js'
+import { Compute } from '../Compute.js'
 
 /**
  * This can multiply any number of numbers from a `Vertical` vector `Column`.
@@ -20,14 +19,14 @@ import { resolve } from '../../Utility/Resolve.js'
  * @author James McParlane
  * @interface
  */
-export class ComputeMultiplyHN extends ElementCompute implements ICompute<number, 1, 0, number, 1, 1> {
+export class ComputeMultiplyHN extends Compute<number, 1, 0, number, 1, 1> {
   /**
    * The configuration for the compute multiply.
    * This is the applied strategy.
    * @type {IConfig}
    * @readonly
    */
-  readonly Config: ConfigCommon = new ConfigCommon()
+  //readonly Config: ConfigCommon = new ConfigCommon()
 
   /**
    * The runtime state of the compute multiply.
@@ -41,15 +40,7 @@ export class ComputeMultiplyHN extends ElementCompute implements ICompute<number
    * @type {IStrategy}
    * @readonly
    */
-  readonly Strategy: StrategyCommon = new StrategyCommon()
-
-  /**
-   * Inputs for the computation.
-   * We massage everything into a source.
-   * @type {ISource<I>}
-   * @readonly
-   */
-  readonly Inputs: Input<number, 1, 0>
+  //readonly Strategy: StrategyCommon = new StrategyCommon()
 
   /**
    * What is the output of the multiplication.
@@ -67,52 +58,22 @@ export class ComputeMultiplyHN extends ElementCompute implements ICompute<number
     return this.Output.Resolved
   }
 
-  InputWidth: 0
+  /**
+   * Evaluate the compute element.
+   * @param {Value<number, 4>} a The vector to get the length of
+   * @returns {Promise<Output<number, 1, 1>>} The length of the vector
+   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   */
+  async evaluate(...a: Arguments<Value<number, 1>, 0>): Promise<Output<number, 1, 1>> {
+    return multiplyN(await resolve<number, 1, 0>(true, a))
+  }
 
   /**
    * @constructor
    * @param {ISource<number> | number | IData<number>} input The input for the source that allows source chaining and composition
    */
-  constructor(input: InputPermissive<number, 1, 0>) {
-    super()
-
-    console.log('ComputeMultiply:input ', input)
-
-    this.Inputs = input as Input<number, 1, 0>
-  }
-
-  /**
-   * The output as data.
-   * @type {IData<number>}
-   */
-  get Data(): Output<number, 1, 1> {
-    return this.Output.Data
-  }
-
-  /**
-   * Sets the value of the output
-   * @param {number} value The value to set.
-   */
-  set(value: number): void {
-    this.Output.set(value)
-  }
-
-  /**
-   * Describe the element as a string.
-   * @returns {string}
-   */
-  toString(): string {
-    const out: string[] = []
-    out.push('(')
-
-    out.push('multiply')
-
-    out.push(this.Inputs.toString())
-
-    out.push('=>')
-    out.push(this.Output.toString())
-    out.push(')')
-    return out.join('')
+  constructor(input: Input<number, 1, 0>) {
+    super(input, new DataVariableNumber())
   }
 
   /**
