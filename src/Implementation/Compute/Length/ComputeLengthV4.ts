@@ -32,7 +32,7 @@ export class ComputeLengthV4 extends Compute<number, 4, 1, number, 1, 1> {
 
   /**
    * Evaluate the compute element.
-   * @param {Value<number, 4>} a The vector to get the length of.
+   * @param {Argument<number, 4>} a The vector to get the length of.
    * @returns {Promise<Output<number, 1, 1>>}
    * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
    */

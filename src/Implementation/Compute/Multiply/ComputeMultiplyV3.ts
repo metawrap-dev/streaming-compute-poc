@@ -32,7 +32,7 @@ export class ComputeMultiplyV3 extends Compute<number, 3, 1, number, 1, 1> {
 
   /**
    * Evaluate the compute element.
-   * @param {Value<number, 3>} a The a vector to add
+   * @param {Argument<number, 3>} a The a vector to add
    * @returns {Promise<Output<number, 1, 1>>}
    * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
    */
