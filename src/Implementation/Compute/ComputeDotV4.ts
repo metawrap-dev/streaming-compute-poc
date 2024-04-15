@@ -1,16 +1,13 @@
-import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
-import { type Input, type InputPermissive } from '../../Design/Types/Input.js'
+import { type Argument } from '../../Design/Types/Arguments.js'
+import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Value } from '../../Design/Types/Value.js'
 import { DataVariableNumber } from '../Data/Variable/DataVariableNumber.js'
 import { StateComputeDot4 } from '../State/StateComputeDot4.js'
 import { dot4 } from '../Utility/Maths.js'
-import { resolve } from '../Utility/Resolve.js'
+import { resolveValue } from '../Utility/Resolve.js'
 import { Compute } from './Compute.js'
 
 /**
- * This can perform `dot4` on `v4`
- *
  * Provides an example GPU instruction primitive we can use for prototyping some ideas.
  *
  * @author James McParlane
@@ -26,61 +23,20 @@ export class ComputeDotV4 extends Compute<number, 4, 2, number, 1, 1> {
 
   /**
    * @constructor
-   * @param {InputPermissive<number, 4, 2>} input The input for dot4
+   * @param {Input<number, 4, 2>} input The input for dot4
    */
-  constructor(inputs: InputPermissive<number, 4, 2>) {
-    // Assign inputs
-    super(inputs as Input<number, 4, 2>, new DataVariableNumber())
+  constructor(...inputs: Input<number, 4, 2>) {
+    super(inputs, new DataVariableNumber())
   }
 
   /**
    * Evaluate the compute element.
-   * @param {Value<number, 4>} a The a vector to add
-   * @param {Value<number, 4>} b The b vector to add
+   * @param {Argument<number, 4>} a The a vector to get the dot product of
+   * @param {Argument<number, 4>} b The b vector to get the dot product of
    * @returns {Promise<Output<number, 4, 1>>}
-   * @note `true` for resolve needs to come from internal Config for the current resolve/code gen session.
+   * @note `true` for resolveValue needs to come from internal Config for the current resolve/code gen session.
    */
-  async evaluate(a: Value<number, 4>, b: Value<number, 4>): Promise<Output<number, 1, 1>> {
-    return dot4(await resolve<number, 4, 1>(true, a), await resolve<number, 4, 1>(true, b))
-  }
-
-  /**
-   * Resolve it using a promise.
-   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
-   * @async
-   */
-  async resolve(wait: boolean = false): Promise<number> {
-    // Grab a reference here to we can reduce types as we progress through the type-guards
-    const inputs = this.Inputs
-
-    // If it is a source...
-    if (isSource<number, 4, 2>(inputs)) {
-      // ...if we are not waiting and there is no data then return with the null answer?
-      if (!wait && inputs.Empty) return 0
-
-      // We want to clock out results one at a time.
-      inputs.Config.setBatchSize(1)
-
-      // Get the value from the source (There will only be one because we set the batch size to 1.)
-      const [a, b] = (await inputs.resolve(wait))[0]
-
-      // Set the output value with the returned value from the source.
-      this.set(dot4(a, b))
-    } else if (isResolvable<number, 4, 2>(inputs)) {
-      // Extract the values
-      const [a, b] = await inputs.resolve(wait) // Why does this return a Value<T,D>?
-
-      // Set the output value with resolved values returned value from the source.
-      this.set(dot4(a, b))
-    } else {
-      // Resolve it as a Value
-      const [a, b] = await resolve<number, 4, 2>(wait, inputs)
-
-      // Set the output value.
-      this.set(dot4(a, b))
-    }
-
-    // Return the resolved data
-    return this.Data
+  async evaluate(a: Argument<number, 4>, b: Argument<number, 4>): Promise<Output<number, 1, 1>> {
+    return dot4(await resolveValue<number, 4>(true, a), await resolveValue<number, 4>(true, b))
   }
 }

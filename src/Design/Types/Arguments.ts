@@ -1,3 +1,6 @@
+import { type ISource } from '../ISource.js'
+import { type Value } from './Value.js'
+
 /**
  * A utility type for creating a tuple of type `T` with a specific length `C`. This type is intended
  * for use with functions that accept a variable number of arguments of the same type, facilitating
@@ -24,3 +27,6 @@ export type Arguments<T, C extends number> = C extends 0
 type _Argument<T, C extends number, R extends unknown[]> = R['length'] extends C
   ? R // If the current tuple's length matches the target length `C`, return it.
   : _Argument<T, C, [T, ...R]> // Otherwise, prepend another element of type T and recurse.
+
+// An argument can be a value or a source
+export type Argument<T, D extends number> = ISource<T, D, 1> | Value<T, D> | Value<T, 0>

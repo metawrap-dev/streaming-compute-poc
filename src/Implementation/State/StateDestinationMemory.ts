@@ -1,5 +1,8 @@
-import { type Input } from '../../Design/Types/Input.js'
+import { type IData } from '../../Design/IData.js'
+import { type ISource } from '../../Design/ISource.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
@@ -12,7 +15,7 @@ export class StateDestinationMemory<T, D extends number, C extends number> exten
    * @type {Input<T,D,C>[]}
    * @readonly
    */
-  readonly Buffer: Input<T, D, C>[] = []
+  readonly Buffer: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[] = []
 
   /**
    * The in memory storage data (Where buffered data is moved to after it has been resolved)

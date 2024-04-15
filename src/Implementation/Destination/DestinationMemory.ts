@@ -1,7 +1,10 @@
+import { type IData } from '../../Design/IData.js'
 import { type IDestination } from '../../Design/IDestination.js'
+import { type ISource } from '../../Design/ISource.js'
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
-import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementDestination } from '../Element/ElementDestination.js'
 import { StateDestinationMemory } from '../State/StateDestinationMemory.js'
@@ -75,7 +78,7 @@ export class DestinationMemory<T, D extends number, C extends number> extends El
    * @param {(T | IData<T>)} rest The rest of the data to write.
    * @async
    */
-  async write(...inputs: Input<T, D, C>[]): Promise<void> {
+  async write(...inputs: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]): Promise<void> {
     for (const input of inputs) {
       this.State.Buffer.push(input)
 

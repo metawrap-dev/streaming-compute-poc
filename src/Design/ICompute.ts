@@ -1,6 +1,7 @@
 import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
+import { type IRecyclable } from './IRecyclable.js'
 import { type Arguments } from './Types/Arguments.js'
 import { type Input } from './Types/Input.js'
 import { type Output } from './Types/Output.js'
@@ -23,7 +24,7 @@ import { type Value } from './Types/Value.js'
  * @template {number}OC Output cardinality: The number of items produced by the compute element upon completion of its computation.
  * @interface
  */
-export interface ICompute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends IDescribable, IData<OT, OD, OC>, IElement {
+export interface ICompute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends IDescribable, IData<OT, OD, OC>, IElement, IRecyclable {
   /**
    * Represents the inputs required for computation, encapsulating the types, dimensions, and cardinalities of the
    * data that this compute element processes. The inputs are specified as a vector, ensuring that they align with

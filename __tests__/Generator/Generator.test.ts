@@ -20,11 +20,8 @@ describe('Generator', () => {
       ],
     )
 
-    // The compute element that will take input from the source
-    const compute = new ComputeAddV4()
-
     // The generator
-    const generator = new Generator<number, 4, 2, number, 4, 2, number, 4, 1, number, 4, 1>(source, compute)
+    const generator = new Generator<number, 4, 2, number, 4, 2, number, 4, 1, number, 4, 1>(source, ComputeAddV4)
     expect(generator).toBeDefined()
 
     const result = await generator.resolve()
@@ -50,11 +47,8 @@ describe('Generator', () => {
       [10, 10, 10, 10],
     ])
 
-    // The compute element that will take input from the source
-    const compute = new ComputeAddV4()
-
     // The generator
-    const generator = new Generator<number, 4, 0, number, 4, 2, number, 4, 1, number, 4, 1>(source, compute)
+    const generator = new Generator<number, 4, 0, number, 4, 2, number, 4, 1, number, 4, 1>(source, ComputeAddV4)
 
     // input pairs       output vectors
     // <number,4,0>[] => <number,4,1>[]

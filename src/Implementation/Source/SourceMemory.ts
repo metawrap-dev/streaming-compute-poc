@@ -1,7 +1,9 @@
+import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
-import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { describe } from '..//Utility/Describe.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
@@ -50,7 +52,7 @@ export class SourceMemory<const T, const D extends number, const C extends numbe
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(...input: Input<T, D, C>[]) {
+  constructor(...input: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]) {
     super()
     // Queue the data
     this.State.Data.push(...input)
@@ -213,7 +215,7 @@ export class SourceMemory<const T, const D extends number, const C extends numbe
    * @param {data: ISource<T> | T | (T | IData<T>)[] }
    * @async
    */
-  async queue(...input: Input<T, D, C>[]): Promise<void> {
+  async queue(...input: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]): Promise<void> {
     this.State.Data.push(...input)
 
     if (this.Waiting) {

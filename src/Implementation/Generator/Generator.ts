@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-new */
 import { type ICompute } from '../../Design/ICompute.js'
+import { type IData } from '../../Design/IData.js'
 import { type IGenerator } from '../../Design/IGenerator.js'
 import { type ISource } from '../../Design/ISource.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateGenerator } from '../State/StateGenerator.js'
@@ -40,7 +43,7 @@ export class Generator<ST, SD extends number, SC extends number, IT, ID extends 
    * @type {ICompute<IT, ID, IC, OT, OD, OC>}
    * @readonly
    */
-  readonly Compute: ICompute<IT, ID, IC, OT, OD, OC>
+  readonly Compute: new (...inputs: Input<IT, ID, IC>) => ICompute<IT, ID, IC, OT, OD, OC>
 
   /**
    * Indicates whether the source has been depleted of data. Useful for determining if further reads will yield data.
@@ -78,19 +81,13 @@ export class Generator<ST, SD extends number, SC extends number, IT, ID extends 
    */
   readonly Count: number | undefined | typeof Infinity
 
-  /*
-  toString(): string {
-    throw new Error('Method not implemented.')
-  }
-  */
-
   /**
    *
    * @param {ISource<ST, SD, SC>} source The source of input for the compute element
    * @param {ICompute<IT, ID, IC, OT, OD, OC>} compute
    * @param {IDestination<Output<OT, OD, OC>, GD, GC>} destination
    */
-  constructor(source: ISource<ST, SD, SC>, compute: ICompute<IT, ID, IC, OT, OD, OC>) {
+  constructor(source: ISource<ST, SD, SC>, compute: new (...inputs: Input<IT, ID, IC>) => ICompute<IT, ID, IC, OT, OD, OC>) {
     super()
     this.Source = source
     this.Compute = compute
@@ -121,7 +118,7 @@ export class Generator<ST, SD extends number, SC extends number, IT, ID extends 
       //
 
       //
-      // How can we take the outputs from compute and put them into our source?
+      // How can we take the outputs from compute and put them into our internal source?
       //
     }
 
@@ -135,5 +132,7 @@ export class Generator<ST, SD extends number, SC extends number, IT, ID extends 
    * @param {...Input<GT, GD, GC>[]} input Variable number of data elements to queue, each conforming to the specified type, dimension, and cardinality.
    * @returns {Promise<void>}
    */
-  async queue(..._input: Input<GT, GD, GC>[]): Promise<void> {}
+  async queue(..._input: (ISource<GT, GD, GC> | Vector<Value<GT, GD>, GC> | IData<GT, GD, GC>)[]): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
 }

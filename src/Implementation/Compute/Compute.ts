@@ -1,10 +1,8 @@
 import { type ICompute } from '../../Design/ICompute.js'
 import { type IData } from '../../Design/IData.js'
 import { type IState } from '../../Design/IState.js'
-import { type Arguments } from '../../Design/Types/Arguments.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Value } from '../../Design/Types/Value.js'
 import { describe } from '../../Implementation/Utility/Describe.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementCompute } from '../Element/ElementCompute.js'
@@ -53,6 +51,13 @@ export abstract class Compute<const IT, const ID extends number, const IC extend
   readonly Inputs: Input<IT, ID, IC>
 
   /**
+   * Indicates whether the entity can be recycled and used again.
+   * @type {boolean}
+   * @readonly
+   */
+  readonly Recyclable: boolean = true
+
+  /**
    * What is the output of the multiplication.
    * @type {IData<OT, OD, OC>}
    * @readonly
@@ -99,7 +104,7 @@ export abstract class Compute<const IT, const ID extends number, const IC extend
    * Evaluate the arguments
    * @param {Input<IT, ID, IC>} input Input to another
    */
-  abstract evaluate(...inputs: Arguments<Value<IT, ID>, IC>): Promise<Output<OT, OD, OC>>
+  abstract evaluate(...inputs: Input<IT, ID, IC>): Promise<Output<OT, OD, OC>>
 
   /**
    * Describe the element as a string.
@@ -109,7 +114,7 @@ export abstract class Compute<const IT, const ID extends number, const IC extend
     const out: string[] = []
     out.push('{')
     out.push(this.constructor.name)
-    out.push(describe(this.Inputs))
+    out.push(describe(this.Inputs as any))
     out.push('=>')
     out.push(describe(this.Output))
     out.push('}')
@@ -118,9 +123,15 @@ export abstract class Compute<const IT, const ID extends number, const IC extend
 
   /**
    * Resolve it using a promise.
-   * @param {boolean} [wait=false] If true then wait for batch sizes to be met.
+   * @param {boolean} [_wait=false] If true then wait for batch sizes to be met.
+   * @note `_wait` for resolve needs to go to internal Config for the current resolve/code gen session.
    * @async
-   * @abstract
    */
-  abstract resolve(wait?: boolean): Promise<Output<OT, OD, OC>>
+  async resolve(_wait: boolean = false): Promise<Output<OT, OD, OC>> {
+    // Evaluate and set the result.
+    this.set(await this.evaluate(...this.Inputs))
+
+    // Return it
+    return this.Data
+  }
 }

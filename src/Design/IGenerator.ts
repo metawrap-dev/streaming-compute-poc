@@ -2,6 +2,7 @@ import { type ICompute } from './ICompute.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type ISource } from './ISource.js'
+import { type Input } from './Types/Input.js'
 
 /**
  * Orchestrates a data processing pipeline, linking an `ISource` with an `ICompute` to produce another `ISource` containing
@@ -34,7 +35,7 @@ export interface IGenerator<ST, SD extends number, SC extends number, IT, ID ext
    * @type {ICompute<IT, ID, IC, OT, OD, OC>}
    * @readonly
    */
-  readonly Compute: ICompute<IT, ID, IC, OT, OD, OC>
+  readonly Compute: new (...inputs: Input<IT, ID, IC>) => ICompute<IT, ID, IC, OT, OD, OC>
 
   /**
    * @constructor
