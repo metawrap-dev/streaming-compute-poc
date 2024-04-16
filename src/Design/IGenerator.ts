@@ -36,12 +36,4 @@ export interface IGenerator<ST, SD extends number, SC extends number, IT, ID ext
    * @readonly
    */
   readonly Compute: new (...inputs: Input<IT, ID, IC>) => ICompute<IT, ID, IC, OT, OD, OC>
-
-  /**
-   * @constructor
-   * @param {ISource<ST, SD, SC>} source The source of input for the compute element
-   * @param {ICompute<IT, ID, IC, OT, OD, OC>} compute The compute element that processes the input data
-   */
-  // eslint-disable-next-line @typescript-eslint/no-misused-new
-  // new (source: ISource<ST, SD, SC>, compute: ICompute<IT, ID, IC, OT, OD, OC>): IGenerator<ST, SD, SC, IT, ID, IC, OT, OD, OC, GT, GD, GC>
 }

@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-new */
 import { type ICompute } from '../../Design/ICompute.js'
-import { type IData } from '../../Design/IData.js'
 import { type IGenerator } from '../../Design/IGenerator.js'
 import { type ISource } from '../../Design/ISource.js'
 import { isSource } from '../../Design/Types/ElementType.js'
 import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
-import { type Value } from '../../Design/Types/Value.js'
-import { type Vector } from '../../Design/Types/Vector.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
 import { StateGenerator } from '../State/StateGenerator.js'
@@ -231,15 +228,15 @@ export class Generator<ST, SD extends number, SC extends number, IT, ID extends 
   }
 
   /**
-   * Queues data for future resolution, enabling dynamic data provisioning. This method allows the source to be replenished or augmented
-   * with additional data elements, supporting flexible and adaptive data supply strategies.
-   *
-   * @param {...Input<GT, GD, GC>[]} input Variable number of data elements to queue, each conforming to the specified type, dimension, and cardinality.
+   * Queue to signal that this source can now be read from again.
+   * @param {...Output<GT, GD, GC>[]} input Variable number of data elements to queue, each conforming to the specified type, dimension, and cardinality.
    * @returns {Promise<void>}
    */
-  async queue(...input: (ISource<GT, GD, GC> | Vector<Value<GT, GD>, GC> | IData<GT, GD, GC>)[]): Promise<void> {
+  async queue(...input: Output<GT, GD, GC>[]): Promise<void> {
+    // Push the data onto the queue
     this.State.Data.push(...input)
 
+    // Signal is someone is waiting that they can now read
     if (this.Waiting) {
       console.log(`ENOUGH DATA`)
       await this.release()

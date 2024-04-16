@@ -1,9 +1,6 @@
-import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
 import { type Output } from './Types/Output.js'
-import { type Value } from './Types/Value.js'
-import { type Vector } from './Types/Vector.js'
 
 /**
  * Represents a source capable of supplying multiple data elements, potentially for processing or computation.
@@ -46,8 +43,8 @@ export interface ISource<T, D extends number, C extends number> extends IDescrib
    * Queues data for future resolution, enabling dynamic data provisioning. This method allows the source to be replenished or augmented
    * with additional data elements, supporting flexible and adaptive data supply strategies.
    *
-   * @param {...Input<T, D, C>[]} input Variable number of data elements to queue, each conforming to the specified type, dimension, and cardinality.
+   * @param {...Output<T, D, C>[]} input Variable number of data elements to queue, each conforming to the specified type, dimension, and cardinality.
    * @returns {Promise<void>}
    */
-  queue(...input: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]): Promise<void>
+  queue(...input: Output<T, D, C>[]): Promise<void>
 }
