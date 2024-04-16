@@ -5,10 +5,10 @@ import { type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
- * The execution state for [SourceMemory]{@link SourceMemory}.
+ * The execution state for [Generator]{@link Generator}.
  * @class
  */
-export class StateSourceMemory<T, D extends number, C extends number> extends StateCommon {
+export class StateGenerator<T, D extends number, C extends number> extends StateCommon {
   /**
    * How are are we into the source in memory.
    * @type {number}

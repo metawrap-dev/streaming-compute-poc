@@ -1,6 +1,9 @@
+import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
-import { type Input } from './Types/Input.js'
+import { type ISource } from './ISource.js'
+import { type Value } from './Types/Value.js'
+import { type Vector } from './Types/Vector.js'
 
 /**
  * Represents a destination within a data processing system, capable of accepting, storing, and
@@ -57,5 +60,5 @@ export interface IDestination<T, D extends number, C extends number> extends IDe
    * @param {...Input<T, D, C>[]} data Variadic arguments of data items to write, encapsulated in `Input` types.
    * @returns {Promise<void>}
    */
-  write(...data: Input<T, D, C>[]): Promise<void>
+  write(...input: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]): Promise<void>
 }

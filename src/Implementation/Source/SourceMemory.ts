@@ -1,7 +1,9 @@
+import { type IData } from '../../Design/IData.js'
 import { type ISource } from '../../Design/ISource.js'
 import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
-import { type Input } from '../../Design/Types/Input.js'
 import { type Output } from '../../Design/Types/Output.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { describe } from '..//Utility/Describe.js'
 import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementSource } from '../Element/ElementSource.js'
@@ -24,7 +26,7 @@ import { resolve } from '../Utility/Resolve.js'
  *
  * @class
  */
-export class SourceMemory<T, D extends number, C extends number> extends ElementSource implements ISource<T, D, C> {
+export class SourceMemory<const T, const D extends number, const C extends number> extends ElementSource implements ISource<T, D, C> {
   /**
    * The configuration for the source.
    * @type {IConfig}
@@ -50,7 +52,7 @@ export class SourceMemory<T, D extends number, C extends number> extends Element
    * @constructor
    * @param {T | IData<T>} inputs The input for the source
    */
-  constructor(...input: Input<T, D, C>[]) {
+  constructor(...input: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]) {
     super()
     // Queue the data
     this.State.Data.push(...input)
@@ -145,7 +147,6 @@ export class SourceMemory<T, D extends number, C extends number> extends Element
       if (isSource<T, D, C>(element)) {
         // How many remaining in the source?
         const remaining = this.Config.BatchSize - result.length
-        console.log(`isSource: result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
 
         // If we need to...
         if (element.Config.BatchSize !== remaining) {
@@ -213,7 +214,7 @@ export class SourceMemory<T, D extends number, C extends number> extends Element
    * @param {data: ISource<T> | T | (T | IData<T>)[] }
    * @async
    */
-  async queue(...input: Input<T, D, C>[]): Promise<void> {
+  async queue(...input: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[]): Promise<void> {
     this.State.Data.push(...input)
 
     if (this.Waiting) {

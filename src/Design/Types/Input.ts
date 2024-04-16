@@ -1,7 +1,4 @@
-import { type IData } from '../IData.js'
-import { type ISource } from '../ISource.js'
-import { type Value } from './Value.js'
-import { type Vector } from './Vector.js'
+import { type Argument, type Arguments } from './Arguments.js'
 
 /**
  * Defines a flexible `Input` type for various data structures, suitable for input processing. This generic type supports data from sources,
@@ -17,7 +14,9 @@ import { type Vector } from './Vector.js'
  * - `Vector<Value<T, D>, C>`: Vector encapsulating values with specified dimensionality and count.
  * - `IData<T, D, C>`: Data entity, potentially with additional metadata, structured as defined.
  */
-export type Input<T, D extends number, C extends number> = ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>
+// export type Input<T, D extends number, C extends number> = ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>
+
+export type Input<T, D extends number, C extends number> = Arguments<Argument<T, D>, C>
 
 /**
  * A more flexible version of `Input` that accommodates inputs with dynamic or undefined dimensions and cardinalities. Useful for handling
@@ -29,4 +28,6 @@ export type Input<T, D extends number, C extends number> = ISource<T, D, C> | Ve
  *
  * @template T, D, C As in `Input`.
  */
+// export type InputPermissive<T, D extends number, C extends number> = Input<T, D, C> | Input<T, D | 0, C | 0>
+
 export type InputPermissive<T, D extends number, C extends number> = Input<T, D, C> | Input<T, D | 0, C | 0>

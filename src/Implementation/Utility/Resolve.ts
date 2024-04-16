@@ -1,6 +1,8 @@
 import { type IData } from '../../Design/IData.js'
 import { type IResolvable } from '../../Design/IResolvable.js'
-import { isResolvable } from '../../Design/Types/ElementType.js'
+import { type Argument } from '../../Design/Types/Arguments.js'
+import { isResolvable, isSource } from '../../Design/Types/ElementType.js'
+import { type Input } from '../../Design/Types/Input.js'
 import { type Value } from '../../Design/Types/Value.js'
 import { type Vector } from '../../Design/Types/Vector.js'
 
@@ -14,9 +16,21 @@ import { type Vector } from '../../Design/Types/Vector.js'
  * @param {Value<T, D> | IResolvable<T, D, 1>} data - The data to be resolved, which can be a scalar, vector of scalars, or vector of objects.
  * @returns {Promise<Vector<T, D>>} A promise that resolves to a vector of the specified type and dimension.
  */
-async function resolveValue<T, D extends number>(wait: boolean, data: IResolvable<T, D, 1> | Value<T, D>): Promise<Vector<T, D>> {
+export async function resolveValue<T, D extends number>(wait: boolean, data: Input<T, 0, 1> | Input<T, 1, 0> | Argument<T, D> | IResolvable<T, D, 1> | Value<T, D>): Promise<Vector<T, D>> {
   // Is the value itself resolvable?
-  if (isResolvable<T, D, 1>(data)) {
+
+  if (isSource<T, D, 1>(data)) {
+    // ...if we are not waiting and there is no data then return with the null answer?
+    if (!wait && data.Empty) return undefined
+
+    // We want to clock out results one at a time.
+    data.Config.setBatchSize(1)
+
+    // Dereference the first item to clock out of the source
+    return (await data.resolve(wait))[0]
+
+    // Add and set
+  } else if (isResolvable<T, D, 1>(data)) {
     // If it is resolvable..
     if (data.Resolved) {
       // .. but already resolved, we just get the data.
@@ -46,6 +60,11 @@ async function resolveValue<T, D extends number>(wait: boolean, data: IResolvabl
   return data as Vector<T, D>
 }
 
+/*
+// data: T | ISource<T, D, 1> | IData<T, D, 1> | IResolvable<T, D, C> | Vector<Value<T, D>, C | 0>
+export async function resolve<T, D extends number, C extends number>(wait: boolean, data: ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>): Promise<Vector<Vector<T, D>, C>> {
+*/
+
 /**
  * Resolves a collection of data elements or a single resolvable entity into a structured vector form. It processes
  * arrays by resolving each contained value, and directly resolves singular resolvable entities. The function is designed
@@ -57,8 +76,6 @@ async function resolveValue<T, D extends number>(wait: boolean, data: IResolvabl
  * @returns {Promise<Vector<Vector<T, D>, C>>} - A promise that resolves to a vector of vectors, following the specified types and dimensions.
  */
 export async function resolve<T, D extends number, C extends number>(wait: boolean, data: T | IData<T, D, 1> | IResolvable<T, D, C> | Vector<Value<T, D>, C | 0>): Promise<Vector<Vector<T, D>, C>> {
-  console.log(`resolveWhole`, data)
-
   // Cheap test for being a vector
   if (Array.isArray(data)) {
     // Resolve and replace each element if needed.

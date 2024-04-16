@@ -177,7 +177,7 @@ describe('SourceMemory', () => {
     expect(a.Empty).toBe(false)
 
     expect(a.toString()).toBe(
-      '{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>unresolved)]}',
+      '{SourceMemory(4 elements, atoms 4, 0 index, 1 batch size) <= [{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>unresolved},{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>unresolved},{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>unresolved},{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>unresolved}]}',
     )
 
     for (let i = 1; i <= 4; i++) {
@@ -191,7 +191,7 @@ describe('SourceMemory', () => {
     expect(a.Empty).toBe(true)
 
     expect(a.toString()).toBe(
-      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120}),(multiply{DataVariableVectorVN <= [1,2,3,4,5]}=>{DataVariableNumber <= 120})]}',
+      '{SourceMemory(4 elements, atoms 0, 4 index, 1 batch size) <= [{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>{DataVariableNumber <= 120}},{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>{DataVariableNumber <= 120}},{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>{DataVariableNumber <= 120}},{ComputeMultiplyVN[{DataVariableVectorVN <= [1,2,3,4,5]}]=>{DataVariableNumber <= 120}}]}',
     )
   })
 })

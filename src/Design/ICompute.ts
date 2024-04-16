@@ -1,7 +1,11 @@
 import { type IData } from './IData.js'
 import { type IDescribable } from './IDescribable.js'
 import { type IElement } from './IElement.js'
+import { type IRecyclable } from './IRecyclable.js'
+import { type Arguments } from './Types/Arguments.js'
 import { type Input } from './Types/Input.js'
+import { type Output } from './Types/Output.js'
+import { type Value } from './Types/Value.js'
 
 /**
  * Defines the contract for a computational element capable of processing inputs to produce outputs.
@@ -20,7 +24,7 @@ import { type Input } from './Types/Input.js'
  * @template {number}OC Output cardinality: The number of items produced by the compute element upon completion of its computation.
  * @interface
  */
-export interface ICompute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends IDescribable, IData<OT, OD, OC>, IElement {
+export interface ICompute<IT, ID extends number, IC extends number, OT, OD extends number, OC extends number> extends IDescribable, IData<OT, OD, OC>, IElement, IRecyclable {
   /**
    * Represents the inputs required for computation, encapsulating the types, dimensions, and cardinalities of the
    * data that this compute element processes. The inputs are specified as a vector, ensuring that they align with
@@ -30,6 +34,14 @@ export interface ICompute<IT, ID extends number, IC extends number, OT, OD exten
    * @readonly
    */
   readonly Inputs: Input<IT, ID, IC>
+
+  /**
+   * Evaluate the compute element
+   * @param {Arguments<Value<IT, ID>, IC>} inputs Arguments spread into a tuple or array
+   * @returns
+   * @async
+   */
+  evaluate(...inputs: Arguments<Value<IT, ID>, IC>): Promise<Output<OT, OD, OC>>
 
   /**
    * Encapsulates the output produced by the computation, wrapped within the `IData` interface to integrate seamlessly

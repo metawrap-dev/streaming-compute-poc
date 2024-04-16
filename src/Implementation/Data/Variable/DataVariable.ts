@@ -95,9 +95,6 @@ export class DataVariable<T, D extends number, C extends number> extends Element
    * @returns {string}
    */
   toString(): string {
-    console.log('this.State.Number', this.State.Number)
-    console.log('this.Resolved', this.Resolved)
-
     if (this.Resolved) {
       if (typeof this.State.Number === 'number') {
         return `{${this.constructor.name} <= ${this.State.Number}}`
