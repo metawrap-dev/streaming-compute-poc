@@ -9,6 +9,7 @@ import { ConfigCommon } from '../Config/ConfigCommon.js'
 import { ElementDestination } from '../Element/ElementDestination.js'
 import { StateDestinationMemory } from '../State/StateDestinationMemory.js'
 import { StrategyCommon } from '../Strategy/StrategyCommon.js'
+import { describe } from '../Utility/Describe.js'
 
 /**
  * A destination for multiple data elements.
@@ -92,15 +93,13 @@ export class DestinationMemory<T, D extends number, C extends number> extends El
    * @async
    */
   async #checkBuffer(): Promise<void> {
-    console.log(`CHECK BUFFER`)
-
     // If we are waiting
     if (this.Waiting) {
       // Then release the resource
+      console.log(`ENOUGH DATA`)
       await this.release()
     } else {
       if (this.State.Buffer.length >= this.Config.BatchSize) {
-        console.log(`resolve chunk to memory`)
         // We can resolve now because we have enough.
         await this.resolve()
       }
@@ -119,14 +118,14 @@ export class DestinationMemory<T, D extends number, C extends number> extends El
     result.push('[')
     const buffer: string[] = []
     for (const d of this.State.Buffer) {
-      buffer.push(d.toString())
+      buffer.push(describe(d))
     }
     result.push(buffer.join(','))
     result.push(']=>')
     result.push('[')
     const storage: string[] = []
     for (const s of this.State.Storage) {
-      storage.push(s.toString())
+      storage.push(describe(s))
     }
     result.push(storage.join(','))
     result.push(']')
@@ -154,8 +153,6 @@ export class DestinationMemory<T, D extends number, C extends number> extends El
 
     // Walk the buffer and resolve each element
     for (const d of this.State.Buffer) {
-      console.log(`resolve`, d)
-
       if (isSource<T, D, C>(d)) {
         // Make it adhere to our batch-size
         d.Config.setBatchSize(this.Config.BatchSize)
@@ -171,24 +168,7 @@ export class DestinationMemory<T, D extends number, C extends number> extends El
           // Then just push the data
           this.State.Storage.push(d.Data)
         } else {
-          console.log('d', d)
-
-          const resolved = await d.resolve(wait)
-
-          console.log('resolved', resolved)
-
-          this.State.Storage.push(resolved)
-
-          /*
-          for(const r of resolved) {
-            this.State.Storage.push(await resolve<T,D>(r) as Output<T,D,A>)
-          }
-          */
-
-          //this.State.Storage.push(...await d.resolve(wait))
-
-          // Otherwise, we need to resolve and push it
-          // this.State.Storage.push(await resolve<T,D>(d))
+          this.State.Storage.push(await d.resolve(wait))
         }
       } else {
         // Just plain old data

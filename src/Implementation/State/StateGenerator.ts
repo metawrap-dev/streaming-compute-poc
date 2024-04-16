@@ -1,4 +1,7 @@
-import { type Input } from '../../Design/Types/Input.js'
+import { type IData } from '../../Design/IData.js'
+import { type ISource } from '../../Design/ISource.js'
+import { type Value } from '../../Design/Types/Value.js'
+import { type Vector } from '../../Design/Types/Vector.js'
 import { StateCommon } from './StateCommon.js'
 
 /**
@@ -18,5 +21,5 @@ export class StateGenerator<T, D extends number, C extends number> extends State
    * @type {Input<T,D,C>[]}
    * @readonly
    */
-  readonly Data: Input<T, D, C>[] = []
+  readonly Data: (ISource<T, D, C> | Vector<Value<T, D>, C> | IData<T, D, C>)[] = []
 }

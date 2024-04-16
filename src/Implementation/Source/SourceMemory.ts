@@ -147,7 +147,6 @@ export class SourceMemory<const T, const D extends number, const C extends numbe
       if (isSource<T, D, C>(element)) {
         // How many remaining in the source?
         const remaining = this.Config.BatchSize - result.length
-        console.log(`isSource: result.length ${result.length} remaining ${remaining} batchSize ${this.Config.BatchSize}`)
 
         // If we need to...
         if (element.Config.BatchSize !== remaining) {
